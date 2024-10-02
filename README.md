@@ -35,3 +35,7 @@ Example:
 
 ![meta](./public/meta.png)
 
+## Commiting
+
+Try to use conversational Commit when you commiting. like, `Doc Update : I am updated the Lesson XX documentation Commiting `
+
