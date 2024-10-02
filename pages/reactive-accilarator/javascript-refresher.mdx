@@ -54,7 +54,7 @@ import { Callout } from "nextra/components";
 
 #### উদাহরণ:
 
-```javascript
+```javascript showlineNumbers
 let originalArray = [1, 2, { a: 3, b: 4 }];
 
 // শ্যালো কপি তৈরি করা
@@ -81,7 +81,7 @@ console.log(shallowCopy); // [1, 2, { a: 10, b: 4 }] // নেস্টেড �
 
 #### উদাহরণ:
 
-```javascript
+```javascript showlineNumbers
 let originalArray = [1, 2, { a: 3, b: 4 }];
 
 // ডিপ কপি তৈরি করা (JSON পদ্ধতি ব্যবহার করে)
@@ -114,7 +114,7 @@ console.log(deepCopy); // [1, 2, { a: 10, b: 4 }]
 
 তারপর
 
-```javascript
+```javascript showlineNumbers
 const _ = require("lodash");
 
 let originalObject = { a: 1, b: { c: 2, d: 3 } };
@@ -148,7 +148,7 @@ console.log(deepCopiedObject); // { a: 1, b: { c: 10, d: 3 } }
 
 উদাহরণঃ
 
-```javascript
+```javascript showlineNumbers
 let player = {
     name: "Mashrafe",
     age: 38,
@@ -166,7 +166,7 @@ player.printPlayerName();
 
 **👉 কখনও কখনও বাহিরের কোন ফাংশনকে অন্য কোন অবজেক্ট দিয়ে কল করার প্রয়োজন হয় । সেক্ষেত্রে সিনট্যাক্স হয় এরকমঃ**
 
-```javascript
+```javascript showlineNumbers
 function printName() {
     // এটা একটা গ্লোবাল ফাংশন
     console.log(this.name);
@@ -185,7 +185,7 @@ printName.call(player); // এই গ্লোবাল ফাংশনটাক
 
 **👉 `.apply()` আর `.call()` একই কাজ করে। সবকিছুই সেম। তবে`.apply()` তার second parameter এ `Array` নিতে পারে । যেকানে `.call()` `Array` নিতে পারেনা।**
 
-```javascript
+```javascript showlineNumbers
 function printPlayerName() {
     console.log(`${this.name} is ${vertue} `);
 }
@@ -208,7 +208,7 @@ printPlayerName.apply(mashrafe, vertue);
 
 উদাহরনঃ
 
-```javascript
+```javascript showlineNumbers
 function printAPlayerName() {
     console.log(this.name);
 }
@@ -247,7 +247,7 @@ printFunction();
 
 ## `Array` কে `itarate` করা ।
 
-```javascript filename="itarate.js" copy
+```javascript showLineNumbers filename="itarate.js" copy
 const arr = [1, 2, 3, 4, 5, 6, 7];
 for (item of arr) {
     console.log(item);
@@ -257,7 +257,7 @@ for (item of arr) {
 
 ## `String` কে `itarate` করা ।
 
-```javascript filename="itarate.js" copy
+```javascript showLineNumbers filename="itarate.js" copy
 const str = "Bangladesh";
 for (character of str) {
     console.log(character);
