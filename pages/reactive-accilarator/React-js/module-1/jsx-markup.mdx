@@ -14,7 +14,7 @@
 
 `JSX` এক্টিমাত্র সিঙ্গেল রুট এলিমেন্ট রিটার্ন করতে হবে, যদি মাল্টিপল এলিমেন্ট রিটার্ন করতে হয় তাহলে অবশ্যই একটি প্যারেন্ট এলিমেন্ট দিয়ে `wrap` করে দিতে হবে। এক্ষেত্র চাইলে `<div> </div>` এলিমেন্ট ব্যাবহার করা যায়। তবে `<div> </div>` ব্যাবহার করলে `HTML` এর `Eliment Tree` তে একটা অতিরিক্ত `<div> </div>` এলিমেন্ট রেন্ডার হয়।
 
-`❌`
+❌ ভুল
 
 ```javascript filename= "Profile.jsx  "
 export default function Profile() {
@@ -26,7 +26,7 @@ export default function Profile() {
 }
 ```
 
-`✅`
+✅ সঠিক
 
 ```javascript filename= "Profile.jsx  "
 export default function Profile() {
