@@ -6,6 +6,7 @@
     "component-export-import": "1.5 - Basics of React Component: Importing & Exporting Components",
     "jsx-markup": "1.6 - Basics of JSX: React's Markup - Writing Markup with JSX",
     "javascript-in-jsx": "1.7 - Basics of JSX: React's Markup - JavaScript in JSX with Curly Braces",
-    "understanding-props": "1.8 - Understanding Props - Passing Props to a Component"
+    "understanding-props": "1.8 - Understanding Props - Passing Props to a Component",
+    "conditional-renderaing": "1.9 - Conditional Rendering"
 }
 
