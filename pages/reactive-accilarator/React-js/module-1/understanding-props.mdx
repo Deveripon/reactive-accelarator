@@ -170,7 +170,7 @@ export default function Profile(props) {
 আমরা একটা কম্পোনেন্ট দিয়ে `wrap` করে অন্য আরেকটা `Component` কে `Props` হিসেবে পাঠাতে পারি। এটাকে বলা হয় `children` `Props`। এবং রিসিভ করার সময়ও সেটাকে `children` নামেই রিসিভ করতে হয়।
 
 ```javascript filename="Card.jsx" showLineNumbers {3-5}
-export default function Profile(props) {
+export default function Profile() {
     return (
         <Card>
             <Profile />
@@ -181,6 +181,7 @@ export default function Profile(props) {
 
 ```javascript filename="Card.jsx" showLineNumbers {1,5}
 export default function Card({ children }) {
+    // এখানে `Profile` কম্পোনেন্টকে `children` হিসেবে রিসিভ করা হয়েছে।
     return (
         <div className='card'>
             <h1>This is Profile Card</h1>
