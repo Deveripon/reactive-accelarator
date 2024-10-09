@@ -148,3 +148,56 @@ function listener() {
 
 রিয়াক্টে সকল ইভেন্ট ই প্রপাগেট হয়,শুধুমাত্র `onScroll` ইভেন্ট ছাড়া ।
 
+### কিভাবে রিয়াক্টে প্রপাগেশন স্টপ করতে হয় ?
+
+রিয়াক্টে প্রপাগেশন স্টপ করার জন্য `event handler` এর ভিতরে `e.stopPropagation()` মেথড কল করে দিতে হয় ।
+
+```jsx filename="App.jsx" showLineNumbers
+function Button({ onClick, children }) {
+    return (
+        <button
+            onClick={(e) => {
+                e.stopPropagation(); // এখানে প্রপাগেশন স্টপ করা হয়েছে
+                onClick();
+            }}>
+            {children}
+        </button>
+    );
+}
+
+export default function Toolbar() {
+    // এই কম্পোনেন্টে তিনটা এলিমেট আছে নেস্টেড ভাবে এবং প্রতিটা এলিমেন্টেই ইভেন্ট হ্যান্ডেলার এড করা আছে। তার মানে ডিফল্ট ভাবে এখানে প্রপাগেশন হবে ।
+    return (
+        <div
+            className='Toolbar'
+            onClick={() => {
+                alert("You clicked on the toolbar!");
+            }}>
+            <Button onClick={() => alert("Playing!")}>Play Movie</Button>
+            <Button onClick={() => alert("Uploading!")}>Upload Image</Button>
+        </div>
+    );
+}
+```
+
+### Preventing the default behavior
+
+আমরা যখন কোন ফর্ম এর সাবমিট বাটনে ক্লিক করি,তখন ফর্মের ডিফল্ট বিহেবিয়ার হলো ফর্মটা সাবমিট হউয়ার সাথে সাথে ব্রাউজারে পেজটাও রিলোড হয়।
+
+আমরা যদি এই ডিফল্ট বিহেবিয়ার কে বন্ধ করতে চাই, তাহলে আমরা `e.preventDefault()` মেথড কল করে দিতে পারি।
+
+```jsx filename="App.js" showLineNumbers
+export default function Signup() {
+    return (
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                alert("Submitting!");
+            }}>
+            <input />
+            <button>Send</button>
+        </form>
+    );
+}
+```
+
