@@ -35,14 +35,15 @@ export default {
             />
             <meta
                 property='og:title'
-                content='Reactive Accelarator'
+                content='রিয়াক্টিভ এক্সিলারেটর'
             />
             <meta
                 property='og:description'
-                content='A documentation platform for developers'
+                content='রিয়াক্ট ও নেক্সট জে এস এর বাংলায় লিখা ডকুমেন্টেশন যা একজন ডেভেলপারকে রিয়াক্ট ও নেক্সট জে এস নিজের ভাষায় আরও সহজ করে বুঝতে সাহায্য করবে।'
             />
         </>
     ),
+
     banner: {
         key: "2.0-release",
         text: (
