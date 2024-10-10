@@ -6,7 +6,7 @@ const page = () => {
             <Link
                 className='bg-gray-100 px-6 py-3 rounded'
                 href='/reactive-accilarator'>
-                👉 Reactive Accilarator
+                👉 Reactive accelerator
             </Link>
         </div>
     );

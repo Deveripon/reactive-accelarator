@@ -1,5 +1,6 @@
 {
     "responding-to-event": "2.1 - Responding to Events - Adding Event Handlers",
-    "event-propagation": "2.2 - Responding to Events - Event Propagation"
+    "event-propagation": "2.2 - Responding to Events - Event Propagation",
+    "understanding-state": "2.3 - Understanding State - A Component's Memory"
 }
 
