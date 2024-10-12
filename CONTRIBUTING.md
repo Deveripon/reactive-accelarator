@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-When contributing to this repository, please first discuss the change you wish to make via [issue](https://github.com/Deveripon/reactive-accelarator/issues), [email](mailto:devripon.io@gmail.com), or any other method with the owners of this repository before making a change.
+When contributing to this repository, please first discuss the change you wish to make via [issue](https://github.com/Deveripon/reactive-accelarator/issues), [email](mailto:devripon.io@gmail.com), or any other method with the owners of this repository before making a change. and **Always create a new branch before pushing you changes**
 
 ## How to work on docs
 
