@@ -5,6 +5,7 @@
     "how-rendering-works": "2.4 - How Rendering Works",
     "state-as-a-snapshot": "2.5 - State as a Snapshot",
     "queueing-state": "2.6 - Queueing a Series of State Updates",
-    "updating-object-in-state": "2.7 - Updating Objects in a State"
+    "updating-object-in-state": "2.7 - Updating Objects in a State",
+    "updateing-array-in-state": "2.8 - Updating Arrays in a State"
 }
 
