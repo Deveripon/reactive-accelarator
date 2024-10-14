@@ -1,0 +1,89 @@
+{
+  "id": "9",
+  "display_override": ["window-controls-overlay"],
+  "protocol_handlers": [{ "protocol": "mailto", "url": "/newEmail?to=%s" }],
+  "name": "রিয়াক্টিভ এক্সিলারেটর",
+  "short_name": "রিয়াক্টিভ এক্সিলারেটর",
+  "description": "রিয়াক্ট ও নেক্সট জে এস এর বাংলায় লিখা ডকুমেন্টেশন যা একজন ডেভেলপারকে রিয়াক্ট ও নেক্সট জে এস নিজের ভাষায় আরও সহজ করে বুঝতে সাহায্য করবে।",
+  "theme_color": "#000000",
+  "background_color": "#70c1e4",
+  "icons": [
+    {
+      "src": "AppImages/android/android-launchericon-192-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "AppImages/android/android-launchericon-144-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "AppImages/android/android-launchericon-512-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "AppImages/ios/1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/reactive-accilarator",
+  "display": "standalone",
+  "orientation": "portrait",
+  "screenshots": [
+    {
+      "src": "/screenshot.png",
+      "sizes": "450x1024",
+      "type": "image/png"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred",
+  "dir": "ltr",
+  "prefer_related_applications": true,
+  "related_applications": [],
+  "scope": "https://reactive-accelarator.vercel.app",
+  "scope_extensions": [],
+  "iarc_rating_id": "11",
+  "lang": "en",
+  "categories": ["business", "education", "finance"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "file_handlers": [
+    {
+      "action": "/open-pdf",
+      "accept": {
+        "application/pdf": [".pdf"]
+      },
+      "icons": [
+        {
+          "src": "AppImages/android/android-launchericon-192-192.png",
+          "sizes": "256x256",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    },
+    {
+      "action": "/open-link",
+      "accept": {
+        "application/pdf": [".url"]
+      },
+      "icons": [
+        {
+          "src": "AppImages/android/android-launchericon-192-192.png",
+          "sizes": "256x256",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    }
+  ]
+}

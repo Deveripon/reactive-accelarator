@@ -1,3 +1,4 @@
+import PwaInstall from "@/components/pwa-install";
 import Link from "next/link";
 
 const page = () => {
@@ -8,6 +9,7 @@ const page = () => {
                 href='/reactive-accilarator'>
                 👉 Reactive accelerator
             </Link>
+            <PwaInstall />
         </div>
     );
 };
