@@ -39,7 +39,7 @@ Context হলো Props Drilling এর অল্টারনেটিভ। Con
 
 ```jsx filename="App.jsx" {6-8}
 import { CounterContext } from "./counterContext.js";
-const contValue = 3;
+const countValue = 3;
 export default function App() {
     return (
         <section className='section'>
@@ -85,7 +85,7 @@ export default function App() {
     const count = useContext(CounterContext);
     return (
         <section className='section'>
-            <CounterContext.Provider value={count++}>
+            <CounterContext.Provider value={count+1}>
                 {children}
             </CounterContext.Provider>
         </section>
@@ -105,7 +105,7 @@ export default function App() {
     const count = useContext(CounterContext);
     return (
         <section className='section'>
-            <CounterContext.Provider value={count++}>
+            <CounterContext.Provider value={count+1}>
                 <OtherContext.Provider value={something}>
                     {children}
                 </OtherContext.Provider>
