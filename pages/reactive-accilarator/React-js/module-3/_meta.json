@@ -4,6 +4,7 @@
     "choosing-the-state-structure": "3.3 - Choosing the state Structure in React",
     "lifting-state-up": "3.4 - Share State Between Components: Lifting State Up",
     "preserving-and-reseting-state": "3.5 - Preserving and Reseting State : Default Behaviour",
-    "reseting-state-at-same-position": "3.6 - Resetting State at Same Position : Changing Default Behaviour"
+    "reseting-state-at-same-position": "3.6 - Resetting State at Same Position : Changing Default Behaviour",
+    "extracting-state-logic-into-reducer": "3.7 - Extracting State Logic into Reducers"
 }
 

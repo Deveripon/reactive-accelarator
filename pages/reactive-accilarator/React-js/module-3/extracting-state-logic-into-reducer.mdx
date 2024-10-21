@@ -1,0 +1,172 @@
+import { Steps, Tabs } from "nextra/components";
+
+### Extracting State Logic into a Reducer
+
+এই লেসনে আমরা সর্বপ্রথম `useReducer` হুকটা নিয়ে কথা বলছি, `useReducer` হুকটা হলো রিয়াক্টের অনেকগুলো হুকের মধ্যে একটি আমাদের কমপ্লেক্স স্টেট ম্যানেজমেন্টকে এফিসিয়েন্টভাবে হ্যন্ডেল করতে সাহায্য করে।
+
+চলুন সবার প্রথমে `useReducer` হুকটা কি,কিভাবে কাজ করে এটা জেনে নেই, পরে জানবো কিভাবে এটা কোডে ব্যাবহার করতে পারি।
+
+#### Introduction of `useReducer` Hook
+
+`useReducer` হলো রিয়াক্ট এর একটি হুক যা জাভাস্ক্রিপ্ট এর `Array.reducer()` মেথড টা ইউজ করে বানানো হয়েছে । `useReducer` হুকটিও আমাদের রিয়াক্টের স্টেট ম্যনেজমেন্ট করতে হেল্প করে।
+
+আমরা এতদিন স্টেট ম্যানেজমেন্ট করার জন্য যেই `useState` হুক ব্যাবহার করতাম সেটি মূলত এই `useReducer` হুকের উপর বেইসড করেই বানানো হয়েছে।
+
+তাহলে প্রশ্ন হলো কখন আমরা কোনটা ব্যাবহার করবো? - সে বিষয়ে আমরা বিস্তারিত জানবো, তবে এখন শুধু এটা মাথায় রাখতে হবে যে রিয়াক্টের কমপ্লেক্স স্টেট ম্যানেজমেন্ট করার জন্য `useReducer` হুকটি ব্যাবহার করা হয়।
+
+#### Syntax of `useReducer` Hook
+
+```jsx
+const [updatedStateFullValue, dispatch] = useReducer(reducerFunc, initialState);
+```
+
+#### Anatomy of `useReducer` Hook
+
+![useReducer Hook](../../../../public/hookimages/useREducer.png)
+
+---
+
+`useReducer` হুকটি দুইটা আর্গুমেন্ট নেয়,
+
+-   **Reducer Function**: এই ফাংশনটির মাধ্যমে আমাদের স্টেট চেঞ্জ এর সমস্ত বিজনেস লজিকগুলো ম্যানেজ করা হয়ে থাকে। এটা প্যারামিটার হিসেবে দুইটা জিনিস নেয়,
+    -   **state**: এটা আমাদের স্টেট এর যেই ভ্যালু তা রিটার্ন করে, যাতে আমরা `reducer function` এর ভিতরে আমাদের স্টেট গুলো ম্যানেজ করতে পারি।
+    -   **action**: এটার ভিতরে মূলত থাকে আমাদের একশন, আমরা কোন একশনের ভিত্তিতে স্টেট এ কি করতে চাচ্ছি, সেই একশনটা এই `action` প্যারামিটারের ভিতর পাই, এখানে আমরা চাইলে অবজেক্ট আকারে মাল্টিপল জিনিস এক্সেস করতে পারি।
+-   **Initial State**: এইটা হলো আমাদের স্টেট এর যেই ইনিশিয়াল ভ্যালু।
+
+এবং একটা টুপল রিটার্ন করে,সেই টুপলে দুইটা জিনিস থাকে,
+
+-   **Updated stateful value**: আমাদের রিডিউসার ফাংশন স্টেটকে আপডেট বা মডিফাই করে যেই `Updated stateful value` রিটার্ন করে, সেটা এটার ভিতর থাকে যা আমরা UI তে রেন্ডার করাতে পারি।
+-   **Dispatch Method**: যেসব একশন অনুযায়ী `reducer function` স্টেট ম্যানেজ করবে সেই সব একশন `reducer function` এর কাছে পাঠানোর জন্য এর `Dispatch Method` ব্যাবহার হয়।
+
+### How to use `useReducer` Hook?
+
+আমরা তিনটা স্টেপ ফলো করে `useReducer` ব্যাবহার করতে পারি। চলুন উদাহরনের মাধ্যমে আমরা একটা `Counter` বানাই আর বুঝি কিভাবে `useReducer` ব্যবাহার করতে পারি।
+
+উদাহরনে আমারা নিচের এই `JSX` টা ব্যবাহার করবো।
+
+    ```jsx
+            export default function App(){
+                return (
+               <div>
+                  <h1> Count : 0</h1>
+                  <button>Increment</button>
+                  <button>Decrement</button>
+              </div>
+
+                )
+            }
+    ```
+
+এখানে `App.jsx` এ একটা কাউন্টার বানানো হয়েছে যেটাতে দুইটা বাটন আছে যার একটায় চাপ দিলে কাউন্টারের ভ্যালু `increment` হবে এবং অন্যটায় চাপ দিলে `decrement` হবে। চলুন তাহলে এই ফাংশনালিটি আমরা `useReducer` ব্যাবহার করে বানাই।
+
+<Steps>
+
+    ### create a reducer function and to manage state changing logic
+    প্রথমে একটা `reducer function` বানাতে হবে এবং যেখানে আমরা আমাদের সমস্ত লজিক লিখবো যে বাটনের কোন একশনে আমরা স্টেট কিভাবে পরিবর্তন করবো।
+    চলুন সেটা বানাই,
+
+```javascript
+const counterReducer = (state, action) => {
+    switch (action.type) {
+        case "INCREMENT": {
+            return state + 1;
+        }
+        case "DECREMENT": {
+            return state - 1;
+        }
+        default: {
+            return state;
+        }
+    }
+};
+```
+
+এখানে আমরা `counterReducer` নামে একটা `reducer function` নিয়েছি এবং তাতে আমরা `action.type` (action.type কি হবে তা আমরা পরে বাটন থেকে dispatch করবো) এর উপর ভিত্তি করে `switch-case` দিয়ে স্টেটকে পরিবর্তন করছি। এখানে আমরা চাইলে `if-else`ও ব্যাবহার করতে পারতাম।
+
+### Add `useReducer` to Component
+
+তারপর যেখানে আমরা স্টেট ম্যানেজ করতে চাই,(এক্ষেত্রে আমারা App কম্পোনেন্টে ব্যবাহার করছি) সেখানে `useReducer` হুকটাকে ইম্পোর্ট করে ডিফাইন করা লাগবে। এবং `Count` এর ভ্যালু ডাইনামিকভাবে `useReducer` হুক থেকে নিয়ে ব্যাবহার করতে হবে।
+
+```jsx {1,2,4,7}
+import { useReducer } from "react";
+const initialState = 0;
+export default function App() {
+    const [count, dispatch] = useReducer(counterReducer, initialState);
+    return (
+        <div>
+            <h1> Count : {count}</h1>
+            <button>Increment</button>
+            <button>Decrement</button>
+        </div>
+    );
+}
+```
+
+তারপর `useReducer` এর আর্গুমেন্ট হিসেবে `reducer function` এবং `initialState` দিতে হবে। `reducer function` যেই আপডেটেড স্টেটটা রিটার্ন করে সেটা আমরা যেকোন নামে ধরতে পারি, কিন্তু যেহেতু আমরা কাউন্টারের স্টেট মেনেজ করছি তাই আমরা এটাকে `count` নামে ধরেছি
+
+### call dispatch method on Event handlers and connect the event handlers
+
+এখন আমদের শুধু একশন গুলো `dispatch` করা বাকি। আমরা বাটনের `onClick` এ যেসব ইভেন্ট হ্যান্ডেলার এড করবো সেখানে `dispatch` মেথড কল করবো এবং আমরা যে একশন `dispatch` করতে চাই সেটা একটা অবজেক্ট আকারে পাঠিয়ে দিব `reducer function` এর কাছে। তবে আমরা চাইলে এটা ইভেন্ট হ্যন্ডেলারের মদ্ধ্যে কল না করে সরারসরি বাটনের `onClick` এ কল করে দিতে পারতাম।
+
+```jsx {1,2,4}
+import { useReducer } from "react";
+const initialState = 0;
+export default function App() {
+    const [count, dispatch] = useReducer(counterReducer, initialState);
+
+    //increment handler
+    function handleIncrementClick() {
+        return dispatch({
+            type: "INCREMENT",
+        });
+    }
+
+    //decrement handler
+    function handleDecrementClick() {
+        return dispatch({
+            type: "DECREMENT",
+        });
+    }
+
+    return (
+        <div>
+            <h1> Count : {count}</h1>
+            <button onClick={handleIncrementClick}>Increment</button>
+            <button onClick={handleDecrementClick}>Decrement</button>
+        </div>
+    );
+}
+```
+
+ব্যাস, এই তিনটা স্টেপ ঠিকঠাক ভাবে করলেই দেখবেন আমাদের হুক কাজ করছে।
+
+</Steps>
+
+### Comparing useState and useReducer
+
+রিয়াক্ট নিজেই তার ডকুমেন্টেশনে বলেছে যে, `useReducer` হুকেরও কিছু ডাউনসাইড রয়েছে, এটা এমন নয় যে আমরা সবসময় শুধু `useReducer`ই ব্যাবহার করবো, আমরা প্রয়োজন অনুযায়ী `useState` এবং `useReducer` দুইটাই ব্যবাহার করবো। তবে একটা আরেকটার সাথে তুলনা করলে কিছু পার্থক্য বুঝা যায়,সেগুলো হলোঃ
+
+-   **কোডের সাইজঃ** `useState` ব্যবহার করলে `useReducer` এর চাইতে তুলনামূলক কম কোড লেখা লাগে, কিন্তু যখন এপ্লিকেশন অনেক বড় হবে এবং অনেক অনেক স্টেট ম্যনেজ করা লাগবে তখন কিন্তু আবার `useState` সেই একই ধরেনের স্টেট এর কাজগুলোকে আলাদা করে কোডকে ম্যানেজেবল করতে সাহায্য করে থাকে।
+
+-   **কোড রিডেবিলিটিঃ** `useState` ব্যবহার করলে যখন প্রজেক্ট ছোট থাকে তখন কোডের রিডেবিলিটি ভালো থাকে কিন্তু যখনি প্রজেক্ট বড় হতে থাকে সেই সাথে কোডের রিডেবিলিটিও নষ্ট হতে থাকে, এক্ষেত্রে `reducer` কোডের বিজনেস লজিকগুলোকে আলাদা করে ফেলে বলে কোডের রিডেবিলিটি ঠিক থাকে।
+
+-   **ডীবাগীংঃ** `useState` ব্যাবহার করলে কোড ডীবাগ করাটা কঠিন হয়ে যায়, কেননা কোথায় কোথায় `setter function` কল হয়েছে তা খুঁজে বের করে ডীবাগ করাটা বেশ কঠিন, কিন্তু `useReducer` এর ক্ষেত্রে সমস্ত বিজনেস লজিকগুলো একটা জায়গায় ম্যানেজ হয় বলে এক্ষেত্রে ডীবাগ করা সহজ হয়ে যায়।
+
+-   **টেস্টিংঃ** `reducer` ফাংশনগুলোকে পিওর ফাংশন হতে হয়, তাই পিওর ফাংশন হউয়ার কারনে চাইলেই যেকোন সময় ফাংশন গুলোকে নিয়ে আলাদা এনভাইরনমেন্টেও সহজে টেস্টিং করা যায়।
+
+-   **ব্যাক্তিগত পছন্দঃ** অনেকেই `useReducer` খুব পছন্দ করে,আবার কেউ কেউ `useReducer` ব্যাভার-ই করেনা। এটা একটা ব্যাক্তিগত পছন্দের ব্যাপার, তবে আমাদের শুধু `useState` বা শুধু `useReducer`ই ব্যাবহার না করে আমরা দুইটাকে মিলিয়ে ব্যবাহার করবো, আমাদের যখন যে জায়গায় যেটার প্রয়োজন মনে হবে,আমরা সেটাই ব্যাবহার করবো
+
+### When should use `useReducer`?
+
+আমরা আমাদের প্রয়োজন অনুযায়ী যখন যেটা প্রয়োজন হবে তখন সেটাই ব্যাবহার করবো, যখন আমাদের স্টেট লজিকগুলো কমপ্লেক্স হবে তখন আমরা `useReducer` ব্যাবহার করবো, আবার যখন আমাদের সিম্পল লোকাল স্টেট ম্যানেজ করা লাগবে তখন আমরা `useState` ব্যাবহার করতে পারি।
+
+চলুন একটু দেখে নেই কখন কোনটা ব্যাবহার করা উচিত।
+
+| যখন | useState | useReducer |
+| :-: | :-: | :-: |
+| State চেঞ্জ এর সংখ্যা | সর্বোচ্চ তিনটা হবে | অনেক হবে |
+| একাধিক state change যদি related হয় | না | হ্যাঁ |
+| state এর ডাটা টাইপ যদি | String,Number,Boolean হয় | Object,Array হয় |
+| যদি কমপ্লেক্স লজিক থাকে | না | হ্যাঁ |
+| যদি state এর scope | Local হয় | Global হয় |
+
