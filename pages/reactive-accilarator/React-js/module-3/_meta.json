@@ -6,6 +6,7 @@
     "preserving-and-reseting-state": "3.5 - Preserving and Reseting State : Default Behaviour",
     "reseting-state-at-same-position": "3.6 - Resetting State at Same Position : Changing Default Behaviour",
     "extracting-state-logic-into-reducer": "3.7 - Extracting State Logic into Reducers",
-    "passing-data-deeply-with-context": "3.8 - Passing Data Deeply With Context - Introduction to Context API"
+    "passing-data-deeply-with-context": "3.8 - Passing Data Deeply With Context - Introduction to Context API",
+    "scaling-up-with-reducer-and-context": "3.9 - Scaling Up with Reducers and Context"
 }
 
