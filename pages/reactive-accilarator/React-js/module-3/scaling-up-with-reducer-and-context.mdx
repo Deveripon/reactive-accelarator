@@ -262,7 +262,7 @@ export const counterReducer = (state, action) => {
         import CounterContext from "./CounterContext.js"
 
         export default function useCounterContext(){
-            return const {state,dispatch} = useContext(CounterContext)
+            return  useContext(CounterContext)
         }
         ```
     </Tabs.Tab>
