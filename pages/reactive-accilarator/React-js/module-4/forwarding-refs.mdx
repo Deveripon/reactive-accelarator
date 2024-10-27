@@ -70,7 +70,7 @@ export default function MyForm() {
 
         import { forwordRef } from "react";
 
-        const MyInput = forwardRef((props,ref)=> { return <input {...props} />});// or
+        const MyInput = forwardRef((props,ref)=> { return <input {...props} ref={ref} />});
 
         export default MyInput;
 
