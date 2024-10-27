@@ -1,0 +1,47 @@
+import { Steps } from "nextra/components";
+
+**`forwardRef` ব্যাবহার করলে আমরা আমদের কম্পোনেন্ট এর সকল এক্সেস প্যারেন্ট কম্পোনেন্ট কে দিয়ে দেই ফরোয়ার্ড করে, কিন্তু আমরা যদি চাই যে না, আমরা `forwardRef` করে রেফারেন্স টা ফরোয়ার্ড করবো ঠিকই কিন্তু সেই সাথে আমরা এটাও বলে দিবো যে সেই রেফারেন্স নিয়ে প্যারেন্ট কম্পোনেন্ট ঠিক কি কি করতে পারবে, মানে হলো আমরা চাইল্ড থেকে প্যারেন্ট কম্পোনেন্ট এর এক্সেস টা লিমিটেড করে দিতে চাচ্ছি, যদি এমনটা করতে চাই তাহলে আমাদেরকে `useImperativeHandle` নামে রিয়াক্টের একটা বিল্ট-ইন হুক ব্যাবহার করতে হবে। আমরা নিচের স্টেপগুলো ফলো করে এটা করতে পারি।**
+
+<Steps>
+### চাইল্ড কম্পোনেন্টের ভিতর একটা `ref` নেয়া লাগবে সেই কম্পোনেন্টের NODE এ চাইল্ড কম্পোনেন্টের `ref` ব্যাবহার করা লাগবে।
+
+```jsx {4,8}
+import { forwardRef, useRef } from "react";
+
+const MyInput = forwardRef((props, ref) => {
+    const realInputRef = useRef(null);
+    return (
+        <input
+            {...props}
+            ref={realInputRef}
+        />
+    );
+});
+```
+
+### `useImperativeHandle` হুক এর মাধ্যমে বলে দিতে হবে আমরা কোন কোন বিষয়ের এক্সেস দিতে চাই।
+
+```jsx {7-11}
+import { forwardRef, useRef, useImperativeHandle } from "react";
+
+const MyInput = forwardRef((props, ref) => {
+    const realInputRef = useRef(null);
+
+    // Only expose focus and nothing else
+    useImperativeHandle(ref, () => ({
+        focus() {
+            realInputRef.current.focus();
+        },
+    }));
+
+    return (
+        <input
+            {...props}
+            ref={realInputRef}
+        />
+    );
+});
+```
+
+</Steps>
+

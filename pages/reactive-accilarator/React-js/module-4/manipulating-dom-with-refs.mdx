@@ -27,11 +27,18 @@ const myRef = useRef(null);
 
 ```jsx
 <div ref={myRef}></div>
+<button onClick={handleChangeText}>Change Text</button>
 ```
 
 ### modify the dom node in event handler
 
 এবারে আমদের ওই DOM NODE যেসব মেনিপুলেশন করা দরকার তা করতে পারবো event handler এর মধ্যমে।
+
+```jsx
+function handleChangeText() {
+    myRef.innerText = "This is a text passed by the ref";
+}
+```
 
 </Steps>
 
