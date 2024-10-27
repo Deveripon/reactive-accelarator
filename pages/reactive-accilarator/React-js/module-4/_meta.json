@@ -4,6 +4,6 @@
     "forwarding-refs": "4.3 - Forwarding Refs : Accessing another component’s DOM nodes ",
     "useImperativeHandle": "4.4 - UseImperativeHandle : Exposing the subset of the API with an Imperative Handle",
     "flushing-state-updates-synchronously": "4.5 - Flushing State Updates Synchronously with flushSync",
-    "syncronising-with-effets-overview": "4.6 - Synchronising with Effects"
+    "syncronising-with-effets-overview": "4.6 - Synchronising with Effects: Overview and How To Write Effects"
 }
 
