@@ -1,0 +1,28 @@
+### Fetching data with effects
+
+যখন আমরা রিয়াক্টে ইফেক্টের মাধ্যমে কোন ডাটা `fetch` করবো তখন অবশ্যই আমাদেরকে ইফেক্টের ক্লিন-আপ ফাংশন ইমপ্লিমেন্ট করতে হবে এবং ডেভেলপমেন্ড মুডে আমরা যখনি ডাটা `fetch` করে স্টেট এ সেট করবো তখন যাতে দুইবার সেট না হয় সেজন্য ইফেক্টের ক্লিন-আপে প্রথমবার `setState` কে ইগনোর করতে হবে।
+
+```jsx
+const [data, setData] = useState([]);
+useEffect(() => {
+    let ignore = false;
+
+    async function startFatching() {
+        const fetched = await fetch(`apiurl/${id}`);
+        const json = await fetched.json();
+
+        if (!ignore) {
+            setData(json);
+        }
+    }
+
+    startFatching();
+
+    return () => {
+        ignore = true;
+    };
+}, [id]);
+```
+
+যদিও ইফেক্টের মাধ্যমে এভাবে ডাটা ফেচ করাটা বেস্ট এপ্রোচ না, আমরা রিয়াক্ট এপ্লিকেশনে ডাটা ফেচিং এর জন্য [React Query](https://tanstack.com/query/latest), [useSWR](https://swr.vercel.app/), [rtkQuery](https://redux-toolkit.js.org/rtk-query/overview) ইত্যাদি চাইলে ব্যবাহার করতে পারি। অথবা আমরা যদি কোন ফ্রেমওয়ার্ক ব্যবাহার করি তাহলে সেখানে বিল্ট-ইন ডাটা ফেচিং মেকানিজম পেয়ে যাবো।
+
