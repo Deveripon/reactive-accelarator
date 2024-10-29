@@ -1,0 +1,320 @@
+### You Might Not Need an Effect
+
+ইফেক্টকে রিয়াক্ট বলে `escape hatch`, মানে হলো শুধুমাত্র যখন আপনি রিয়াক্ট প্যারাডাইমের বাইরে গিয়ে কোন কিছু করবেন,তখনি একমাত্র ইফেক্ট ব্যাবহার করা উচিত না, অপ্রয়োজনীয় ইফেক্ট এপ্লিকশনের কোডবেজের মেইন্টেনেবিলিটি নষ্ট করে এবং অনেক বাগ এর সৃষ্টি করে,
+
+যদি আমরা শুধুমাত্র কোন প্রপ বা স্টেট চেঞ্জ এর ভিত্তিতে কোন কিছু করতে চাই তাহলে আমদের ইফেক্টের কোন দরকার নেই, কোন কোন ক্ষেত্রে আমাদের ইফেক্টের প্রয়োজন নেই সেগুলোই আমরা পরপর কয়েকটা উদাহরণে দেখবো। তার আগে কয়েকটা রুল অফ থাম্ব আমরা জেনে নেই, যেই যেই রুলস অনুযায়ী আমাদের ইফেক্টের কোন প্রয়োজন নেই।
+
+#### You don't need an Effect to transform data for rendaring:
+
+যদি আমরা শুধুমাত্র কোন ডাটা ট্রান্সফর্ম করে UI তে দেখাতে চাই, সেই কাজে কখনই আমাদের Effect ব্যাবহার করা উচিত না। এক্ষেত্রে আমদের [Deriver State](https://reactive-accelarator.vercel.app/reactive-accilarator/React-js/module-3/choosing-the-state-structure#avoid-redundant-state-%E0%A6%85%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A7%9F%E0%A7%8B%E0%A6%9C%E0%A6%A8%E0%A7%80%E0%A7%9F-%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87%E0%A6%9F-%E0%A6%A8%E0%A6%BE-%E0%A6%A8%E0%A7%87%E0%A7%9F%E0%A6%BE-%E0%A6%AC%E0%A6%BE-%E0%A6%AA%E0%A6%B0%E0%A6%BF%E0%A6%B9%E0%A6%BE%E0%A6%B0-%E0%A6%95%E0%A6%B0%E0%A6%BE) প্যাটার্ন ব্যবহার করে কাজ করা উচিত।
+
+#### You don't need an Effect to do something when state or prop changes:
+
+যদি কোন প্রপ বা কোন স্টেট চেঞ্জ হলে আমরা কোন কিছু করতে চাই, তাহলে কখনই আমদের Effect ব্যাবহার করা উচিত না।
+
+#### You don't need an Effect to do something on user events specific actions:
+
+ইউজারের ঘটানো কোন এভেন্টে যেই কাজটা করা উচিত সেটা শুধুমাত্র ইভেন্ট হেন্ডেলার দিয়েই করা উচিত। ইভেন্ট স্পেসিফিক কোন একশনে কখনই আমাদের ইফেক্ট ব্যাবহার করা উচিত না।
+
+### When You don't need Effects
+
+#### Updating state based on props or state (যখন কোন প্রপ বা স্টেটের উপর বেইজ করে অন্য স্টেট আপডেট করা লাগবে)
+
+ধরুন আমাদের একটা কম্পোনেন্ট আমরা ইউজারের `firstname` এবং `lastname` ইনপুট হিসেবে নিচ্চি,এবং আমরা সেটা থেকে ইউজারের `Fullname` টা জেনারেট করে UI তে দেখাচ্ছি। এরকম কেসে অনেকেই যেটা করে তা হলো তারা `Fullname` নামে একটা আলাদা স্টেট নেয়, এবং একটা ইফক্টের মধ্যে `firstname` এবং `lastname` কে `Fullname` এর স্টেটে আপডেট করে। এভাবে,
+
+```jsx
+function Form() {
+    const [firstName, setFirstName] = useState("Taylor");
+    const [lastName, setLastName] = useState("Swift");
+
+    // ❌ Avoid: redundant state and unnecessary Effect
+    const [fullName, setFullName] = useState("");
+    useEffect(() => {
+        setFullName(firstName + " " + lastName);
+    }, [firstName, lastName]);
+    // ...
+}
+```
+
+অথচ এই কাজটা খুব সহজেই করা যেত,Derived State এর মাধ্যমে অতিরিক্ত কোন স্টেট এবং কোন ইফেক্ট ছাড়াই। আমরা একটা আলাদা লোকাল ভ্যারিয়েবল এর মধ্যে `firstname` এবং `lastname` কে কেলকুলেট করে রেন্ডারিং এর সময়ই UI তে দেখিয়ে দিতে পারতাম। যেমনঃ
+
+```jsx
+function Form() {
+    const [firstName, setFirstName] = useState("Taylor");
+    const [lastName, setLastName] = useState("Swift");
+    // ✅ Good: calculated during rendering
+    const fullName = firstName + " " + lastName;
+    // ...
+}
+```
+
+### Resetting all state when a prop changes (যখন কম্পোনেন্টের প্রপ চেঞ্জ হলে তার লোকাল স্টেটগুলোকে রিসেট করা লাগবে)
+
+যদি এমন হয় যে আমরা একই কম্পোনেন্ট বার বার রি-ইউজ করেছি এবং সেগুলোকে প্রপ দিয়ে কনট্রোল করেছি। এবং সেই কম্পোনেন্টের আবার নিজস্ব লোকাল স্টেট আছে, এখন আমরা চাচ্ছি যে যদি প্রপ চেঞ্জ হয় তাহলে যেন সেই কম্পনেন্টের লোকাল স্টেটও চেঞ্জ হয়ে যায়।
+
+উদাহরণস্বরূপ, ধরুন একটা ব্লগ পোস্ট এর জন্য পোস্ট নামে কম্পোনেন্ট আছে এবং সেই পোস্টের কমেন্টগুলো ম্যানেজ করার জন্য সেই কম্পোনেটের কিছু লোকাল স্টেট আছে, এখন হয়তো এমন একটা সমস্যা দেখা দিলো যে, আমরা প্রপ্স এর মাধ্যমে পোস্ট এর আইডি চেঞ্জ করে ডিফারেন্ট ডিফারেন্ট পোস্ট দেখাচ্ছি, কিন্তু পোস্টের ভিতরের স্টেটগুলো চেঞ্জ না হউয়ার কারনে সকল পোস্ট এ একই কমেন্ট শো করছে, এমন সিচুয়েশনে অনেকেই যেটা করে তা হলো, কম্পোনেন্টের ভিতরে একটা ইফেক্ট নেয় এবং যখনি প্রপ চেঞ্জ হয় তখনি ইফেক্ট দিয়ে লোকালস্টেটগুলোকে রিসেট করে দেয়। যেমন এভাবেঃ
+
+```jsx
+export default function ProfilePage({ postId }) {
+    const [comment, setComment] = useState("");
+
+    // ❌ Avoid: Resetting state on prop change in an Effect
+    useEffect(() => {
+        setComment("");
+    }, [postId]);
+    // ...
+}
+```
+
+এভাবে করলে হয়তো ঠিকঠাক কাজ করবে, কিন্তু এতে কিন্তু এপ্লিকেশনের পার্ফর্মেন্স খারাপ হবে। কারণ, আমরা জানি যে এফেক্ট রান হয় কম্পোনেন্ট লোড হয়ে স্ক্রিনে চলে আসার পর। এখন দেখেন প্রথমবার যখন কম্পোনেন্ট লোড হলো তখন সেই পোস্টের কমেন্টগুলো সহ UI তে লোড হলো, এর পর যখনি প্রপ চেঞ্জ হয়ে অন্য আরেকটা পোস্ট দেখানো হলো, তখন কিন্তু সবার প্রথমে আগের কমেন্টগুলো সহই আগে UI তে আসবে, তারপর ইফেক্ট রান হবে এবং ` setComment("")` করে কমেন্টের স্টেট রিসেট করবে, এবং ` setComment("")` করার সাথে সাথে কম্পোনেন্ট আবার রি-রেন্ডার হবে। এবং আগের কমেন্টগুলো মুছে যাবে।
+
+তাহলে চিন্তা করেন এটুকু কাজ করতে কম্পোনেন্ট কতবার রি-রেন্ডার হচ্ছে, তাই এই অতিরিক্ত রি-রেন্ডারের কারনে এপ্লিকেশন স্লো হয়ে যাবে।
+
+অথচ এই কাজটাই কোন এফেক্ট ছাড়াই খুব সহজেই করা যেতো `key` প্রপ্স ব্যাবহার করে।
+
+কম্পোনেন্ট রেন্ডার করানোর সময় postId দিয়ে ডায়নামিক ভাবে `key` প্রপ্স দিয়ে রেন্ডার করালে রিয়াক্ট প্রতিবার প্রপ চেঞ্জে অটোমেটিক এর ভিতরের লোকাল স্টেট গুলোকে রিসেট করে দিতো। যেমনঃ
+
+```jsx
+export default function BlogPage({ postId }) {
+    return (
+        <Post
+            postId={postId}
+            key={postId}
+        />
+    );
+}
+
+function Posts({ postId }) {
+    // ✅ This and any other state below will reset on key change automatically
+    const [comment, setComment] = useState("");
+    // ...
+}
+```
+
+#### Sharing logic between event handlers (যখন কোন ইভেন্ট-স্পেসিফিক লজিক শেয়ার করা লাগবে)
+
+ধরুন একটা প্রোডাক্টপেজ আছে,এবং প্রতিটা প্রডাক্ট কার্ডে দুইটা বাটন আছে, একটা `Buy Product` আরেকটা হলো `Checkout`। এখন লজিক হলো দুটো বাটনেই ক্লিক করলে একটা নটিফিকেশন মেসেজ দেখাবে যে `Product added to cart` এবং `Checkout` বাটনে ক্লিক করলে `/checkout` পেজে নিয়ে যাবে।
+
+এখন অনেকেই যেটা করে সেটা হলো যে যেহেতু দুইটা বাটনে চাপ দিলে একই কাজ হচ্ছে, (নটিফিকেশন দেখানো) তাই `useEffect` এর মধ্যে লজিকটাকে শেয়ার করে এবং একটা নোটিফিকেশন শো করে।
+
+এভাবে,
+
+```jsx
+function ProductPage({ product, addToCart }) {
+    // ❌ Avoid: Event-specific logic inside an Effect
+    useEffect(() => {
+        if (product.isInCart) {
+            showNotification(`Added ${product.name} to the shopping cart!`);
+        }
+    }, [product]);
+
+    function handleBuyClick() {
+        addToCart(product);
+    }
+
+    function handleCheckoutClick() {
+        addToCart(product);
+        navigateTo("/checkout");
+    }
+    // ...
+}
+```
+
+এতে কিন্তু এপ্লিকেশনে একটা বাগ এর সৃষ্টি হয়, কেননা ইফেক্ট রান হয় কম্পোনেন্ট লোড হয় যাওয়ার পর, এখন যদি কোন ইউজার কোন প্রডাক্টের `Buy Product`বাটনে চাপ দিয়ে প্রোডাক্টটি কার্টে এড করলো, এসব রিয়েল লাইফ এপ্লিকেশনে ডাটা ডাটাবেসে সেভ হবে, তাই ইউজার যখন কোন প্রোডাক্ট কার্টে এড করে অন্য পেজে যাবে ,এবং আবার যখন প্রোডাক্ট পেজে ফিরে আসবে,তখন আসার সাথে সাথেই ইফেক্ট রান হবে, এবং আবার নোটিফিকেশন মেসেজ দেখাবে।
+
+অথচ এই কাজটা যেহেতু ইউজারের ইভেন্ট স্পেসিফিক কাজ, কেননা শুধুমাত্র যখন ইউজার `Buy Product` অথবা `Checkout` বাটনে চাপ দিবে তখনি একমাত্র নোটিফিকেশনটা দেখাবে,তাই এই কাজটা ইভেন্ট হ্যন্ডেলারের মধ্যেই করা উচিত। আমরা এভাবে এটা করতে পারি,
+
+```jsx
+function ProductPage({ product, addToCart }) {
+    // ✅ Good: Event-specific logic is called from event handlers
+
+    function buyProduct() {
+        addToCart(product);
+        `Added ${product.name} to the shopping cart!`;
+    }
+
+    function handleBuyClick() {
+        buyProduct();
+    }
+
+    function handleCheckoutClick() {
+        buyProduct();
+        navigateTo("/checkout");
+    }
+    // ...
+}
+```
+
+#### Sending a POST request (সার্ভারে পোস্ট রিকুয়েস্ট সেন্ট করা)
+
+ধরুন আমাদের এপ্লিকেশনে কোন একটা কম্পোনেন্টে কেই ভিসিট করলেই অটোমেটিক একটা এনালাইটিক লগ সার্ভারে পোস্ট হবে, আবার ধরুন আরেকটি ফর্ম আছে যেখানে ইউজারের ইনফরমেশন ইনপুট করবে এবং সাবমিট করবে, সাবমিট বাটনে ক্লিক করলে সার্ভারে একটা পোস্ট রিকুয়েস্ট যাবে,
+
+তাহলে এই ক্ষত্রে দুইটা কেস, একটাতে আমাদের অটোমেটিক করতে হবে আরেকটাতে ইউজার সাবমিট বাটনে ক্লিক করার পর, তাই আমরা এখানে এভাবে করতে পারি,
+
+```jsx
+function Form() {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+
+    // ✅ Good: This logic should run because the component was displayed
+    useEffect(() => {
+        post("/analytics/event", { eventName: "visit_form" });
+    }, []);
+
+    //  ✅ Good: Event-specific logic inside an event handler
+    function handleSubmit(e) {
+        e.preventDefault();
+        post("api/register", { firstName, lastName });
+    }
+    // ...
+}
+```
+
+ইনালাইটিক্স এর জন্য পোস্ট রিকুয়েস্ট যেহেতু অটোমেটিক পাঠাতে হবে তাই এটাকে ইফেক্টের মাঝে রাখতে হবে এবং ইউজার ফর্ম সাবমিট করলে যেই পোস্ট রিকুয়েস্ট sent হবে সেটা ইভেন্ট হ্যান্ডেলারের ভিতর রাখতে হবে।
+
+#### Initializing the application (এপ্লিকেশন লোড হওয়ার পর শুধুমাত্র একবার কোন লজিক রান করতে চাইলে)
+
+ধরুন কোন একটা লজিক আমরা চাইযে পুরো এপ্লিকেশনটা লোড হলে শুধুমাত্র একবার রান হবে, এক্ষত্রে কিন্তু কোন স্পেসিফিক কম্পোনেন্টের কথা বলছি না, পুরো এপ্লিকেশনে শুধুমাত্র একবার রান হবে এমন কোন লজিক যদি ইমপ্লিমেন্ট করতে হয় তাহলে অনেকে এভাবে করতে চায়,
+
+```jsx
+function App() {
+    // ❌ Avoid: Effects with logic that should only ever run once
+    useEffect(() => {
+        loadDataFromLocalStorage();
+        checkAuthToken();
+    }, []);
+    // ...
+}
+```
+
+এপ্লিকেশনের টপ লেবেলে কোন ইফেক্ট লিখে কোন ডিপেন্ডেন্সি ছাড়া কল করে, কিন্তু এটা ভেভেলপমেন্ট মুডে দুইবার কম্পোনেন্ট মাউণ্ট হওয়ার কারনে এপ্লিকেশনের লজিক ব্রেক করতে পারে, তাই এমন সিচুয়েশনে আমরা নিচের দুটি পদ্ধতি অনুসরণ করতে পারি,
+
+-   1.
+
+```jsx
+let didInit = false;
+
+function App() {
+    useEffect(() => {
+        if (!didInit) {
+            didInit = true;
+            // ✅ Only runs once per app load
+            loadDataFromLocalStorage();
+            checkAuthToken();
+        }
+    }, []);
+    // ...
+}
+```
+
+-   2.
+
+```jsx
+if (typeof window !== "undefined") {
+    // Check if we're running in the browser.
+    // ✅ Only runs once per app load
+    checkAuthToken();
+    loadDataFromLocalStorage();
+}
+
+function App() {
+    // ...
+}
+```
+
+#### Notifying parent components about state changes (যদি চাইল্ড কম্পোনেন্টে ইউজারের কোন একশনে স্টেট চেঞ্জ হলে সেটা প্যারেন্ট কম্পোনেন্টকে জানাতে হয়)
+
+মনে করুন আমাদের এমন একটা কম্পোনেন্ট আছে যেটা প্যারেন্ট কম্পোনেন্ট এ একটা স্টেট ম্যানেজ করছে এবং চাইল্ড কম্পোনেন্টে ইউজারের কোন একশনে সেই চাইল্ড কম্পোনেন্টের লোকাল স্টেট চেঞ্জ হলে সেটা প্যারেন্ট কম্পোনেন্টকে জানাতে হবে, এক্ষেত্রে অনেকেই যেটা করতে পারেন,সেটা হলো প্যারেন্ট কম্পোনেন্ট থেকে একটা setter function প্রপ্স দিয়ে চাইল্ড কম্পোনেন্টে পাস করে চাইল্ড কম্পোনেন্টে একটা ইফেক্ট দিয়ে চাইল্ড কম্পোনেন্ট এর স্টেট চেঞ্জ হলে প্যারেন্ট এর setter function কে কল করে দিতে পারেন। যেমনটা নিচে করা হয়েছে,
+
+```jsx
+function Toggle({ onChange }) {
+    const [isOn, setIsOn] = useState(false);
+
+    // ❌ Avoid: The onChange handler runs too late
+    useEffect(() => {
+        onChange(isOn);
+    }, [isOn, onChange]);
+
+    function handleClick() {
+        setIsOn(!isOn);
+    }
+
+    function handleDragEnd(e) {
+        if (isCloserToRightEdge(e)) {
+            setIsOn(true);
+        } else {
+            setIsOn(false);
+        }
+    }
+
+    // ...
+}
+```
+
+কিন্তু এভাবে করাটা কোনভাবেই এফিসিয়েন্ট উপায় না, কেননা আমরা জানি ইফেক্ট রান হয় কম্পোনেন্ট লোড হয়ে যাওয়ার পার, তাই এখানে প্যারেন্টের স্টেটের সাথে প্রথমে `Sync` থাকবেনা, পরে সেটা এফেক্টের মাধ্যমে আরেকটা রি-রেন্ডার হয়ে `Sync` হবে। এতে অহেতুক রি-রেন্ডার হচ্চে,এতে এপ্লিকেশন স্লো হয়ে যাবে।
+
+তার চাইতে বরং আমরা চাইল্ড কম্পোনেন্টে যেই ইভেন্ট হ্যান্ডেলারের মাধ্যমে চাইল্ড কম্পোনেন্টের লোকাল স্টেট চেঞ্জ হবে সেই হ্যান্ডেলারের মধ্যেই প্যারেন্ট কম্পোনেন্ট থেকে পাওয়া setter function কল করে দিয়ে একটা রেন্ডার পাসেই চাইল্ড এবং প্যারেন্ট এর স্টেটকে `Sync` রাখতে পারি। এতে আমাদের কোডটা হবে এমনঃ
+
+```jsx
+function Toggle({ onChange }) {
+    const [isOn, setIsOn] = useState(false);
+
+    function updateToggle(nextIsOn) {
+        // ✅ Good: Perform all updates during the event that caused them
+        setIsOn(nextIsOn);
+        onChange(nextIsOn);
+    }
+
+    function handleClick() {
+        updateToggle(!isOn);
+    }
+
+    function handleDragEnd(e) {
+        if (isCloserToRightEdge(e)) {
+            updateToggle(true);
+        } else {
+            updateToggle(false);
+        }
+    }
+
+    // ...
+}
+```
+
+#### Passing data to the parent (চাইল্ড কম্পোনেন্ট থেকে ডাটা প্যারেন্টে পাস করার জন্য)
+
+যখন কোন ডাটা আমদের চাইল্ড কম্পোনেন্টে প্রয়োজন হয় এবং একই সাথে সেম ডাটা প্যারেন্ট কম্পোনেন্টেও প্রয়োজন হয়, তখন অনেকেই যেটা করে চাইল্ড কম্পনেন্টে ডাটা `fetch` করে সেটা ইফেক্টের মাধ্যমে প্যারেন্টে পাস করার চেষ্টা করে। সেক্ষেত্রে তারা এভাবে করে,
+
+```jsx
+function Parent() {
+    const [data, setData] = useState(null);
+    // ...
+    return <Child onFetched={setData} />;
+}
+
+function Child({ onFetched }) {
+    const data = useSomeAPI();
+    // ❌ Avoid: Passing data to the parent in an Effect
+    useEffect(() => {
+        if (data) {
+            onFetched(data);
+        }
+    }, [onFetched, data]);
+    // ...
+}
+```
+
+এভাবে করলে রিয়াক্টেড় ইউনি-ডিরেকশনাল ডাটা ফ্লো টা নষ্ট হচ্ছে, সেটা না করে যদি একই ডাটা চাইল্ড এবং প্যারেন্ট দুই জায়গাতেই প্রয়োজন হয় তাহলে ডাটা চাইল্ডে `fetch` না করে সরাসরি প্যারেন্টে `fetch` করে প্রপ্স আকারে চাইল্ডে পাঠালেই হয়। সেক্ষেত্রে এভাবে করা যায়।
+
+```jsx
+function Parent() {
+    const data = useSomeAPI();
+    // ...
+    // ✅ Good: Passing data down to the child
+    return <Child data={data} />;
+}
+
+function Child({ data }) {
+    // ...
+}
+```
