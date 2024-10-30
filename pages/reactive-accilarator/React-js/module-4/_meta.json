@@ -7,6 +7,8 @@
     "syncronising-with-effets-overview": "4.6 - Synchronising with Effects: Overview and How To Write Effects",
     "handling-effects-firing-twice": "4.7 - Handling Effects Firing Twice in Development",
     "fatching-data": "4.8 - Synchronising with Effects: Fatching Data",
-    "you-might-not-need-an-effect":"4.9 - You Might Not Need an Effect"
+    "you-might-not-need-an-effect": "4.9 - You Might Not Need an Effect",
+    "the-lifecycle-of-an-effect": "4.10 - The Lifecycle of an Effect",
+    "effect-react-to-reactive-values": "4.11 - Effect React To Reactive Values"
 }
 
