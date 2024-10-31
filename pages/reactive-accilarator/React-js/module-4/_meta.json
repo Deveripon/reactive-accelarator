@@ -9,6 +9,8 @@
     "fatching-data": "4.8 - Synchronising with Effects: Fatching Data",
     "you-might-not-need-an-effect": "4.9 - You Might Not Need an Effect",
     "the-lifecycle-of-an-effect": "4.10 - The Lifecycle of an Effect",
-    "effect-react-to-reactive-values": "4.11 - Effect React To Reactive Values"
+    "effect-react-to-reactive-values": "4.11 - Effect React To Reactive Values",
+    "seperating-events-from-effects": "4.12 - Separating Events from Effects",
+    "removing-effect-dependecies": "4.13 - Removing Effect Dependencies"
 }
 
