@@ -11,6 +11,7 @@
     "the-lifecycle-of-an-effect": "4.10 - The Lifecycle of an Effect",
     "effect-react-to-reactive-values": "4.11 - Effect React To Reactive Values",
     "seperating-events-from-effects": "4.12 - Separating Events from Effects",
-    "removing-effect-dependecies": "4.13 - Removing Effect Dependencies"
+    "removing-effect-dependecies": "4.13 - Removing Effect Dependencies",
+    "reusing-logic-with-custom-hook": "4.14 - Reusing Logic with Custom Hook"
 }
 
