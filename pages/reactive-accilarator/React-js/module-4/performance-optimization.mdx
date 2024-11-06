@@ -140,6 +140,27 @@ export default App;
 
 কোন ফাংশনের রেজাল্টটাকে cached করার জন্য ব্যাবহার করা হয় `useMemo` হুক।
 
+-   Reference
+
+    -   ```jsx
+        const cachedResuld = useMemo(calculateValue, dependencies);
+        ```
+
+### References:
+
+`**useMemo(calculateValue, dependencies)**`
+
+`useMemo` হলো রিয়াক্টের একটা হুক, অন্য সকল হুকের মতো `useMemo` কেও কম্পোনেন্ট অথবা অন্য কাস্টম হুকের একদম টপ লেভেলে কল করতে হবে। কখনও কম্পোনেন্টের রিটার্নের ভিতর বা অন্য কোন কলব্যাক ফাংশনের ভিতর এমনকি কোন কন্ডিশনাল কোডব্লকের ভিতরেও কল করা যাবেনা।
+
+```jsx
+import { useMemo } from "react";
+
+function TodoList({ todos, tab }) {
+    const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
+    // ...
+}
+```
+
 **Usage**
 
 ```jsx
