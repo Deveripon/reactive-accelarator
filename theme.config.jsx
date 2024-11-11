@@ -60,7 +60,7 @@ export default {
     },
     sidebar: {
         defaultMenuCollapseLevel: 0,
-        autoCollapse: true,
+       /*  autoCollapse: true, */
     },
     footer: {
         text: (
