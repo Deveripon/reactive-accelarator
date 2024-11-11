@@ -6,7 +6,9 @@
     "frontend-focus-topic": "Frontend Focus Topic",
     "javascript-refresher": "Javascript Refresher",
     "React-js": "React Js",
-    "React-router-dom": "React Router Dom",
-    "Firebase": "Firebase"
+    "React-Router-Dom": "React Router Dom",
+    "Firebase": "Firebase",
+    "Tanstack-query": "Tanstack Query / React Query",
+    "react-hook-form": "React Hook Form"
 }
 

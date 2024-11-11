@@ -59,7 +59,8 @@ export default {
         backToTop: true,
     },
     sidebar: {
-        defaultMenuCollapseLevel: 2,
+        defaultMenuCollapseLevel: 0,
+        autoCollapse: true,
     },
     footer: {
         text: (
