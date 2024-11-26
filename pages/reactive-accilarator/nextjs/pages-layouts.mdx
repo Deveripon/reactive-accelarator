@@ -1,0 +1,102 @@
+
+### পেজ এবং লেআউটস (Pages and Layouts)  
+
+এই লেসনে আমরা **layout.js**, **page.js**, এবং **template.js** ফাইলগুলোর ব্যবহার সম্পর্কে জানবো। এই পেজে কীভাবে এবং কখন এই বিশেষ ফাইলগুলো ব্যবহার করতে হয়, তা ব্যাখ্যা করা হয়েছে।  
+
+### পেজস (Pages) 
+একটি **পেজ** হলো এমন UI যা একটি নির্দিষ্ট রাউটের জন্য তৈরি হয়। আপনি একটি **page.js** ফাইল থেকে একটি কম্পোনেন্ট ডিফল্ট এক্সপোর্ট করে একটি পেজ ডিফাইন করতে পারেন।  
+
+উদাহরণস্বরূপ, আপনার ইন্ডেক্স পেজ তৈরি করতে, **app** ডিরেক্টরির ভেতর **page.js** ফাইল যোগ করুন:  
+
+```jsx
+// `app/page.tsx` হলো `/` URL-এর জন্য UI
+export default function Page() {
+  return <h1>Hello, Home page!</h1>;
+}
+```
+
+এরপর, নতুন পেজ তৈরি করতে, একটি নতুন ফোল্ডার তৈরি করুন এবং তার ভেতর **page.js** ফাইল যোগ করুন। উদাহরণস্বরূপ, **/dashboard** রাউটের জন্য একটি পেজ তৈরি করতে, **dashboard** নামে একটি নতুন ফোল্ডার তৈরি করুন এবং তার মধ্যে **page.js** ফাইল যোগ করুন:  
+
+```jsx
+// `app/dashboard/page.tsx` হলো `/dashboard` URL-এর জন্য UI
+export default function Page() {
+  return <h1>Hello, Dashboard Page!</h1>;
+}
+```
+
+**গুরুত্বপূর্ণ তথ্য:**  
+- **.js**, **.jsx**, বা **.tsx** যেকোন ফাইল এক্সটেনশন ব্যবহার করা যেতে পারে।  
+- **page.js** ফাইল ছাড়া কোনো রাউট পাবলিকলি অ্যাক্সেসযোগ্য হবে না।  
+- পেজগুলো ডিফল্টভাবে **Server Component**, তবে আপনি এটিকে **Client Component** হিসেবেও সেট করতে পারেন।  
+- **Client Component** হিসেবেও সেট করতে পেজের টপ লেভেলে "use client" লিখে দিতে হবে।
+- Next.js এ পেজগুলো ডেটা ফেচ করতে পারে।   
+
+---
+
+### লেআউটস (Layouts) 
+**লেআউটস** মুলত এপ্লিকেশনের লেআউটসকে রিপ্রেজেন্ট করে। একি লেআউট বিভিন্ন পেজ শেয়ার করতে পারে।
+- এক পেজ থেকে অন্য পেজে নেভিগেশনের সময় লেআউট পুনরায় রেন্ডার হয় না বিধায় এর ভিতরের সমস্ত স্টেট অপরিবর্তিত থাকে। 
+- লেআউটগুলো **nested** হতে পারে।  
+
+---
+
+#### Root Layout (required*): 
+Root Layout অ্যাপ্লিকেশনের জন্য প্রাইমারি লেআউট।  সমস্ত রাউট এই লেআউট ব্যাবহার করে। এপ্লিকেশনের **html** এবং **body** ট্যাগ এই লেআউটের ভিতরে ডিফাইন করা থাকে। 
+
+```jsx
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <main>{children}</main>
+      </body>
+    </html>
+  );
+}
+```
+
+#### Nested Layout:  
+যেকোন রাউট সেগমেন্টে কোন লেআউট প্রয়োজন হলে সেখানে Layout নেয়া যেতে পারে। যেমন আমাদের যদি Root Layout ছাড়াও অ্যাপের ডেসবোর্ডের জন্য কোন আলাদা লে-আউট প্রয়োজন হয় তাহলে আমরা
+`app/dashboard/layout.js` ফাইল তৈরি করে Nested Layout ডিফাইন করতে পারি।  
+```jsx
+export default function DashboardLayout({ children }) {
+  return (
+    <section>
+      <nav>Dashboard Navigation</nav>
+      {children}
+    </section>
+  );
+}
+```
+
+**গুরুত্বপূর্ণ তথ্য:**  
+- **Layouts Server Component** ডিফল্টভাবে।  
+- Root Layout-এ শুধুমাত্র **html** এবং **body** ট্যাগ থাকতে পারে।  
+- লেআউট একটি **page.js** ফাইলকে মোড়ানো অবস্থায় রাখে।  
+
+
+### টেমপ্লেটস (Templates)  
+**Templates** হলো হুবুহু লেআউটের মতো, তবে এটি প্রতিটি পেজের জন্য নতুন instance তৈরি করে এবং প্রতিটি নেভিগেশনের সময় DOM পুনরায় রেন্ডার হয়ে নতুন করে তৈরি হয়।  
+যদি আমদের রিকোয়ারমেন্ট এমন হয় যে, প্রতিবার নেভিগেশনে লেআউটসকে রি-রেন্ডার হতে হবে, তাহলে আমরা সেক্ষেত্রে `layout.js ` ব্যাবহার না করে `template.js` ব্যাবহার করতে পারি।
+
+```jsx
+export default function Template({ children }) {
+  return <div>{children}</div>;
+}
+```
+
+### Metadata:  
+Next.js-এ **Metadata API** ব্যবহার করে `<head>` ট্যাগে **title** এবং **meta** কনফিগার করা যায়। সুধু টাইটেল এবং ডেস্ক্রিপশন ই নয়,আমারা প্রয়োজনীয় সকল মেটা ডাটা এখানে ব্যাবহার করতে পারি। এক্ষেত্রে page.js থেকে আমাদের একটা Metadata অব্জেক্ট রিটার্ন করে দিতে হয়। 
+
+```jsx
+import { Metadata } from 'next';
+
+export const Metadata = {
+  title: 'Next.js',
+};
+
+export default function Page() {
+  return <h1>Welcome to Next.js!</h1>;
+}
+```
+

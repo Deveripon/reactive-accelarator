@@ -10,6 +10,7 @@
     "Firebase": "Firebase",
     "tanstack-query": "Tanstack Query / React Query",
     "react-hook-form": "React Hook Form",
-    "framer-motion": "Framer Motion"
+    "framer-motion": "Framer Motion",
+    "nextjs": "Next Js"
 }
 

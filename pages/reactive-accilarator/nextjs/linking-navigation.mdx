@@ -1,0 +1,161 @@
+### **লিঙ্কিং এবং ন্যাভিগেটিং**  
+Next.js-এ রাউটের মধ্যে ন্যাভিগেট করার চারটি পদ্ধতি রয়েছে:  
+
+1. `<Link>` কম্পোনেন্ট ব্যবহার করা।  
+2. `useRouter` হুক (Client Components) ব্যবহার করা।  
+3. `redirect` ফাংশন (Server Components) ব্যবহার করা।  
+4. নেটিভ History API ব্যবহার করা।  
+
+এই পেজে প্রতিটি পদ্ধতি কীভাবে কাজ করে তা বিস্তারিত ব্যাখ্যা করা হয়েছে 
+
+---
+
+### **১. `<Link>` কম্পোনেন্ট**  
+`<Link>` একটি বিল্ট-ইন কম্পোনেন্ট, যা HTML `<a>` ট্যাগকে এক্সটেন্ড করে বানানো হয়েছে। `<Link>` প্রিফেচিং এবং ক্লায়েন্ট-সাইড ন্যাভিগেশনের সুবিধা দেয়। এটি Next.js-এ ন্যাভিগেশনের জন্য সবচেয়ে রিকমেন্ডেড পদ্ধতি।  
+
+#### **ব্যবহার:**  
+`next/link` থেকে ইমপোর্ট করে `href` প্রপ পাস করতে হবে।  
+```jsx {1,4}
+import Link from 'next/link';
+ 
+export default function Page() {
+  return <Link href="/dashboard">Dashboard</Link>;
+}
+```
+
+#### **ডাইনামিক সেগমেন্টে লিঙ্ক:**  
+```jsx
+import Link from 'next/link';
+ 
+export default function PostList({ posts }) {
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+#### **অ্যাকটিভ লিঙ্ক চেক করা:**  
+অ্যাকটিভ লিঙ্ক চেক করতে হলে অবশ্যই কম্পোনেন্টকে ক্লাইন্ট সাইড কম্পোনেন্ট হতে হবে। কেননা, ্যাকটিভ লিঙ্ক  কেবল মাত্র ব্রাউজারে লোড হউয়ার পরেই জানা যাবে। এক্ষত্রে `next/navigation` থেকে `usePathname` ফাংশন্টিকে ইমপোর্ট করে নিতে হবে। `usePathname` এর ভিতরে আমরা রাউট পাথ পাবো, তারপর আমরা সেই রাউট পাথের সাথে কন্ডিশনালি চেকিং করে অ্যাকটিভ লিঙ্ক ডিফাইন করতে পারবো।
+
+**উদাহরন**
+```jsx
+'use client';
+ 
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+ 
+export function Links() {
+  const pathname = usePathname();
+ 
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link className={`link ${pathname === '/' ? 'active' : ''}`} href="/">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link
+            className={`link ${pathname === '/about' ? 'active' : ''}`}
+            href="/about"
+          >
+            About
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+```
+
+#### **আইডি-তে স্ক্রল করা (Scrolling to an ID):**  
+Next.js এর ডিফল্ট বিহেবিয়ার হলো নেভিগেশনের পর নতুন পেজে সবসময় টপ পজিশনে নিয়ে যায়, এবং ব্রাউজারে ব্যাক এবং ফরওয়ার্ড করলে তখন আবার স্ক্রল পজিশন ধরে রাখে। তবে আমরা যদি চাইযে নেভিগেশনে কোন একটা স্পেসিফিক পজিশনে স্ক্রল করে যাবো তাহলে আমরা #রাউটিং টেকনিক ব্যাবহার করতে পারি। 
+
+```jsx
+<Link href="/dashboard#settings">Settings</Link>
+```
+
+#### **স্ক্রল রিস্টোরেশন বন্ধ করা:**  
+Next.js এর ডিফল্ট বিহেবিয়ার হলো নেভিগেশনের পর নতুন পেজে সবসময় টপ পজিশনে নিয়ে যায়, এবং ব্রাউজারে ব্যাক এবং ফরওয়ার্ড করলে তখন আবার স্ক্রল পজিশন ধরে রাখে। তবে আমরা যদি চাই যে ব্রাউজারে ব্যাক এবং ফরওয়ার্ড করলে স্ক্রল রিস্টোরেশন বন্ধ করবো তাহলে `Link` কম্পোনেন্ট এর ভিতর `scroll={false}` এড করতে হয়।
+
+```jsx
+<Link href="/dashboard" scroll={false}>Dashboard</Link>;
+```
+
+---
+
+### **২. `useRouter` হুক**  
+`useRouter` হুক ক্লায়েন্ট কম্পোনেন্টে প্রোগ্রামেটিকভাবে রাউট পরিবর্তনের জন্য ব্যবহৃত হয়।  
+**উদাহরন**
+```jsx
+'use client';
+ 
+import { useRouter } from 'next/navigation';
+ 
+export default function Page() {
+  const router = useRouter();
+ 
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      Dashboard
+    </button>
+  );
+}
+```
+
+---
+
+### **৩. `redirect` ফাংশন**  
+Server Components-এ রাউট রিডাইরেক্ট করার জন্য ব্যবহৃত হয়।  
+```jsx
+import { redirect } from 'next/navigation';
+ 
+async function fetchTeam(id) {
+  const res = await fetch('https://...');
+  if (!res.ok) return undefined;
+  return res.json();
+}
+ 
+export default async function Profile({ params }) {
+  const team = await fetchTeam(params.id);
+  if (!team) {
+    redirect('/login');
+  }
+}
+```
+
+---
+
+### **৪. নেটিভ History API**  
+`pushState` এবং `replaceState` ব্যবহার করে ব্রাউজারের History পরিবর্তন করা যায়।  
+
+#### **`pushState` উদাহরণ:**  
+```jsx
+'use client';
+ 
+import { useSearchParams } from 'next/navigation';
+ 
+export default function SortProducts() {
+  const searchParams = useSearchParams();
+ 
+  function updateSorting(sortOrder) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('sort', sortOrder);
+    window.history.pushState(null, '', `?${params.toString()}`);
+  }
+ 
+  return (
+    <>
+      <button onClick={() => updateSorting('asc')}>Sort Ascending</button>
+      <button onClick={() => updateSorting('desc')}>Sort Descending</button>
+    </>
+  );
+}
+```
