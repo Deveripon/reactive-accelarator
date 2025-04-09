@@ -1,0 +1,96 @@
+## Install Typescript
+ প্রথমে আমাদেরকে Typescript ইন্সটল করতে হবে। Typescript ইন্সটল করার জন্য নিচের কমান্ডটি রান করতে হবে।
+```bash
+npm install -g typescript
+```
+> -g ফ্ল্যাগটি ব্যবহার করার মানে হলো Typescript কে গ্লোবালি ইন্সটল করা। এর ফলে Typescript কে যেকোনো প্রজেক্টে ব্যবহার করা যাবে।
+>
+> Typescript ইন্সটল হয়ে গেলে নিচের কমান্ডটি রান করে Typescript এর ভার্সন চেক করা যাবে,
+```bash
+tsc -v
+```
+> যদি Typescript সঠিকভাবে ইন্সটল হয়ে থাকে তাহলে নিচের মত আউটপুট আসবে।
+```bash
+Version 4.9.5
+```
+> Typescript এর ভার্সন ভিন্ন হতে পারে। তবে ৪.৯.৫ এর উপরে হলে হবে।
+
+## Project Setup
+> Typescript ইন্সটল হয়ে গেলে Typescript এর জন্য একটি ফোল্ডার তৈরি করুনঃ
+```bash
+mkdir typescript
+cd typescript
+```
+> এরপর Typescript এর জন্য একটি নতুন প্রজেক্ট তৈরি করতে নিচের কমান্ডটি রান করুনঃ
+```bash
+npm init -y
+```
+> এই কমান্ডটি রান করার ফলে package.json ফাইল তৈরি হবে। এই ফাইলটি Typescript এর প্রজেক্টের জন্য কনফিগারেশন ফাইল হিসেবে কাজ করবে।
+> এরপর Typescript এর জন্য একটি tsconfig.json ফাইল তৈরি করতে নিচের কমান্ডটি রান করুনঃ
+```bash
+npx tsc --init
+```
+> এই কমান্ডটি রান করার ফলে tsconfig.json ফাইল তৈরি হবে। এই ফাইলটি Typescript এর কনফিগারেশন ফাইল হিসেবে কাজ করবে।
+> tsconfig.json ফাইলটি Typescript এর কনফিগারেশন ফাইল হিসেবে কাজ করবে। এই ফাইলটিতে Typescript এর বিভিন্ন কনফিগারেশন সেট করা যাবে। যেমনঃ
+> - target: Typescript কে কোন ভার্সনে কম্পাইল করতে হবে।
+> - module: Typescript কে কোন মডিউল সিস্টেমে কম্পাইল করতে হবে।
+> - outDir: Typescript এর আউটপুট ফোল্ডার।
+> - rootDir: Typescript এর সোর্স ফোল্ডার।
+> - strict: Typescript এর স্ট্রিক্ট মোড।
+> - esModuleInterop: ES মডিউল ইন্টারঅপেরেবিলিটি।
+> - skipLibCheck: লাইব্রেরি চেক করা হবে না।
+> - forceConsistentCasingInFileNames: ফাইল নামের কেসিং কনসিস্টেন্ট থাকতে হবে।
+> - noImplicitAny: ইমপ্লিসিটলি any টাইপ ব্যবহার করা যাবে না।
+> - noImplicitThis: ইমপ্লিসিটলি this টাইপ ব্যবহার করা যাবে না।
+> - noUnusedLocals: আনইউজড লোকাল ভেরিয়েবল ব্যবহার করা যাবে না।
+> - noUnusedParameters: আনইউজড প্যারামিটার ব্যবহার করা যাবে না।
+> - noFallthroughCasesInSwitch: সুইচ কেসে ফোলথ্রো হবে না।
+> - noImplicitReturns: ইমপ্লিসিটলি রিটার্ন টাইপ ব্যবহার করা যাবে না।
+> - noUncheckedIndexedAccess: আনচেকড ইনডেক্সড অ্যাক্সেস ব্যবহার করা যাবে না।
+> - noPropertyAccessFromIndexSignature: ইনডেক্স সিগনেচার থেকে প্রপার্টি অ্যাক্সেস করা যাবে না। 
+
+## Create a Typescript File
+> Typescript ফাইলের এক্সটেনশন .ts হতে হবে। Typescript ফাইল তৈরি করতে নিচের কমান্ডটি রান করুনঃ
+```bash
+touch index.ts
+```
+> এরপর index.ts ফাইলটি ওপেন করুন এবং নিচের কোডটি লিখুনঃ
+```typescript
+const greeting: string = "Hello, World!";
+console.log(greeting);
+```
+> এই কোডটি একটি স্ট্রিং ভেরিয়েবল তৈরি করে এবং সেটি কনসোল এ প্রিন্ট করে। Typescript এ টাইপ ডিফিনিশন ব্যবহার করা হয়েছে। এখানে greeting ভেরিয়েবলের টাইপ string।
+> Typescript এ টাইপ ডিফিনিশন ব্যবহার করা হলে টাইপ চেকিং হয়। অর্থাৎ যদি টাইপ ভুল হয় তাহলে কম্পাইলার এরর দেখাবে। যেমনঃ
+```typescript
+const greeting: string = 123;   
+```
+> এই কোডটি রান করলে টাইপ এরর দেখাবে। কারণ greeting ভেরিয়েবলের টাইপ string কিন্তু এখানে 123 একটি নাম্বার। তাই এটি টাইপ এরর।
+
+## Compile Typescript File
+> Typescript ফাইল কম্পাইল করতে নিচের কমান্ডটি রান করুনঃ
+```bash
+tsc index.ts
+```
+> এই কমান্ডটি রান করার ফলে index.ts ফাইলটি কম্পাইল হয়ে index.js ফাইল তৈরি হবে। এই ফাইলটি জাভাস্ক্রিপ্ট ফাইল।
+> Typescript ফাইল কম্পাইল করার পর জাভাস্ক্রিপ্ট ফাইলটি রান করতে নিচের কমান্ডটি রান করুনঃ
+```bash
+node index.js
+```
+> এই কমান্ডটি রান করার ফলে কনসোলে Hello, World! প্রিন্ট হবে। অর্থাৎ Typescript ফাইলটি সঠিকভাবে কম্পাইল হয়েছে এবং জাভাস্ক্রিপ্ট ফাইলটি সঠিকভাবে রান হয়েছে।
+> Typescript ফাইল কম্পাইল করার সময় যদি কোনো এরর হয় তাহলে Typescript কম্পাইলার এরর দেখাবে। যেমনঃ
+```bash
+tsc index.ts
+```
+> এই কমান্ডটি রান করার ফলে Typescript ফাইলটি কম্পাইল হবে এবং যদি কোনো এরর হয় তাহলে Typescript কম্পাইলার এরর দেখাবে। যেমনঃ
+```bash
+error TS2322: Type 'number' is not assignable to type 'string'.
+```
+> এই এররটি দেখাচ্ছে যে greeting ভেরিয়েবলের টাইপ string কিন্তু এখানে 123 একটি নাম্বার। তাই এটি টাইপ এরর।
+
+
+## Watch Mode
+> Typescript ফাইল কম্পাইল করার সময় যদি আমরা চাই যে Typescript ফাইলটি অটোমেটিক্যালি কম্পাইল হোক তাহলে আমরা watch মোড ব্যবহার করতে পারি। watch মোড ব্যবহার করতে নিচের কমান্ডটি রান করুনঃ
+```bash
+tsc index.ts --watch
+```
+> এই কমান্ডটি রান করার ফলে Typescript ফাইলটি অটোমেটিক্যালি কম্পাইল হবে। অর্থাৎ যদি আমরা index.ts ফাইলটি পরিবর্তন করি তাহলে Typescript ফাইলটি অটোমেটিক্যালি কম্পাইল হবে এবং জাভাস্ক্রিপ্ট ফাইলটি আপডেট হবে।
