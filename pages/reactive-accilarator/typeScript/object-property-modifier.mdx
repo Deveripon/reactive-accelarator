@@ -1,0 +1,204 @@
+
+## TypeScript প্রপার্টি মডিফায়ার এবং অ্যাডভান্সড টাইপস
+
+## 1. প্রপার্টি মডিফায়ার
+
+### Optional Properties:
+Optional প্রপার্টি হলো এমন একটি প্রপার্টি যা অবজেক্টে না প্রভাইড করা হলেও কোন সমস্যা নেই। 
+অবজেক্ট এর কোন প্রপার্টি কে অপশনাল হিসেবে ডিফাইন করতে হলে `Optional` প্রপার্টি ব্যাবহার করা হয় । `?` চিহ্ন দিয়ে একটি প্রপার্টি অপশনাল হিসেবে চিহ্নিত করা হয়। 
+
+ উদাহরণ:
+```typescript
+interface Person {
+  name: string;
+  age?: number;  // Optional property
+}
+
+const person1: Person = { name: "John" };  // Valid, age is optional
+const person2: Person = { name: "Jane", age: 25 };  // Valid, age is provided
+```
+
+### readonly Properties:
+`readonly` প্রপার্টি হলো এমন একটি প্রপার্টি যেটি একবার সেট করা হলে পরবর্তীতে পরিবর্তন করা যাবে না।
+
+ উদাহরণ:
+```typescript
+interface Car {
+  readonly licensePlate: string;
+}
+
+const car: Car = { licensePlate: "ABC123" };
+car.licensePlate = "XYZ456";  // Error: Cannot assign to 'licensePlate' because it is a read-only property.
+```
+
+---
+
+## 2. Index Signatures
+
+Index signature এর মাধ্যমে এমন প্রপার্টি তৈরি করা হয় যেখানে প্রপার্টির নাম ডাইনামিক হতে পারে, কিন্তু মানের ভ্যালু  নির্দিষ্ট থাকবে।
+
+ উদাহরণ:
+```typescript
+interface NumberDict {
+  [key:string]:string  // Any string key will have a value of type 'number'
+}
+
+const myDict: NumberDict = {
+  age: 30,
+  height: 175
+};
+
+myDict.name = "John";  // Error: Type 'string' is not assignable to type 'number'.
+``` 
+---
+মানে হলো এখন আমরা যেই প্রপার্টি ই সেট করিনা কেন তার ভ্যালু অবশ্যই `string` হতে হবে ।
+
+## 3. Excess Property Checks
+TypeScript অতিরিক্ত প্রপার্টি পরীক্ষা করে, যাতে আপনি অবজেক্টে এমন কোনো প্রপার্টি না যোগ করেন যা টাইপ বা ইন্টারফেসে নির্দিষ্ট নয়।
+
+ উদাহরণ:
+```typescript
+interface Person {
+  name: string;
+}
+
+const person: Person = { name: "John", age: 30 };  // Error: 'age' does not exist in type 'Person'.
+```
+
+---
+
+## 4. Extending Types
+`extends` ব্যবহার করে আপনি একটি নতুন ইন্টারফেস তৈরি করতে পারেন যা অন্য ইন্টারফেসের সমস্ত প্রপার্টি এবং মেথড ধারণ করে।
+
+ উদাহরণ:
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+
+interface Employee extends Person {
+  employeeId: string;
+}
+
+const emp: Employee = {
+  name: "Alice",
+  age: 30,
+  employeeId: "E123"
+};
+```
+
+---
+
+## 5. Intersection Types
+Intersection types ব্যবহার করে আপনি একাধিক টাইপ একত্রিত করতে পারেন, ফলে নতুন টাইপটি সমস্ত বৈশিষ্ট্য ধারণ করবে।
+
+ উদাহরণ:
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+
+interface Address {
+  city: string;
+  country: string;
+}
+
+type PersonWithAddress = Person & Address;
+
+const personWithAddress: PersonWithAddress = {
+  name: "John",
+  age: 30,
+  city: "Dhaka",
+  country: "Bangladesh"
+};
+```
+
+---
+
+## 6. Interface Extension vs. Intersection
+
+### Interface Extension:
+একটি ইন্টারফেস অন্য একটি ইন্টারফেসের সমস্ত প্রপার্টি এবং মেথড ইনহেরিট করতে পারে।
+
+### Intersection:
+Intersection টাইপ দুটি বা তার বেশি টাইপকে একত্রিত করে, ফলে নতুন টাইপটি তাদের সকল বৈশিষ্ট্য ধারণ করে।
+
+ উদাহরণ:
+```typescript
+interface A {
+  a: string;
+}
+
+interface B {
+  b: number;
+}
+
+// Interface Extension
+interface C extends A {
+  c: boolean;
+}
+
+// Intersection
+type D = A & B;  // D combines both A and B
+```
+
+---
+
+## 7. Generic Object Types
+Generics ব্যবহার করে আপনি এমন টাইপ তৈরি করতে পারেন যা কাস্টমাইজড এবং রিইউজেবল হয়। আপনি টাইপটি ডাইনামিকভাবে নির্ধারণ করতে পারেন।
+অর্থাৎ জেনেরিক হলো একটি প্লেছহোল্ডার টাইপ,যাতে ভ্যালু এসাইন করার সময় বলা যায় যে আমরা কি ভ্যালু এসাইন করতে চাচ্ছি। েটা আমাদের কে টাইপ এসাইন করার ফ্লেক্সিবিলিটি দেয়। 
+
+ উদাহরণ:
+```typescript
+interface Box<T> {
+  value: T;
+}
+
+const numberBox: Box<number> = { value: 123 };
+const stringBox: Box<string> = { value: "Hello" };
+```
+
+---
+
+## 8. The Array Type
+`Array` টাইপ ব্যবহার করে আপনি এমন অ্যারে তৈরি করতে পারেন যা নির্দিষ্ট টাইপের মান ধারণ করে।
+
+ উদাহরণ:
+```typescript
+let numbers: number[] = [1, 2, 3];  // Array of numbers
+let strings: string[] = ["a", "b", "c"];  // Array of strings
+```
+
+---
+
+## 9. The ReadonlyArray Type
+`ReadonlyArray` একটি অ্যারে টাইপ যা শুধুমাত্র পড়া যাবে, কিন্তু এর উপাদান পরিবর্তন করা যাবে না।
+
+ উদাহরণ:
+```typescript
+let arr: ReadonlyArray<number> = [1, 2, 3];
+arr[0] = 4;  // Error: Index signature in type 'ReadonlyArray<number>' only permits reading.
+```
+
+---
+
+## 10. Tuple Types
+`Tuple` একটি অ্যারে যেটি নির্দিষ্ট সংখ্যা এবং টাইপের উপাদান ধারণ করে।
+
+ উদাহরণ:
+```typescript
+let tuple: [string, number] = ["Alice", 25];  // Tuple of two elements: a string and a number
+```
+
+---
+
+## 11. Readonly Tuple Types
+`ReadonlyTuple` টাইপ হলো এমন একটি টিউপল যা একবার তৈরি হওয়ার পর পরিবর্তন করা যাবে না।
+
+ উদাহরণ:
+```typescript
+let tuple: readonly [string, number] = ["Alice", 25];
+tuple[0] = "Bob";  // Error: Index signature in type 'readonly [string, number]' only permits reading.
+```
