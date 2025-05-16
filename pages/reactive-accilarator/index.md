@@ -25,7 +25,7 @@
 
 ---
 
-##   2. Standard Library & Built - [ ]  in APIs
+##   2. Standard Library & Built-in APIs
 
   **Core Modules/APIs:**
    - [ ]   `Array`, `Object`, `Math`, `Date`, `JSON`
