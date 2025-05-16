@@ -5,12 +5,13 @@
 
 ##  ১. Syntax ও Semantics
 
-- [ ] ভ্যারিয়েবল ঘোষণা: `var`, `let`, `const`
-- [ ] ডাটা টাইপ: string, number, boolean, null, undefined, symbol, bigint
-- [ ] কন্ডিশনাল: `if`, `else`, `switch`
-- [ ] লুপ: `for`, `while`, `do-while`, `for...in`, `for...of`
-- [ ] ফাংশন: declaration, expression, arrow, IIFE
+- [ ] Variable Declaration: `var`, `let`, `const`
+- [ ] Data Types: string, number, boolean, null, undefined, symbol, bigint
+- [ ] Conditionals: `if`, `else`, `switch`
+- [ ] Loop: `for`, `while`, `do-while`, `for...in`, `for...of`
+- [ ] Function: declaration, expression, arrow, IIFE
 - [ ] Scope ও Hoisting
+- [ ] DOM Manipulation
 
 #### Advancd Things
 - [ ] Closures
