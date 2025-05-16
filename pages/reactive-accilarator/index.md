@@ -9,7 +9,7 @@
    - [ ]   Variables (var, let, const)
    - [ ]   Data Types (string, number, boolean, null, undefined, symbol, bigint)
    - [ ]   Conditionals (if/else, switch)
-   - [ ]   Loops (for, while, do - [ ]  while, for...in, for...of)
+   - [ ]   Loops (for, while, do-while, for...in, for...of)
    - [ ]   Functions (declaration, expression, arrow functions, IIFE)
    - [ ]   Scope & Hoisting
 
@@ -35,7 +35,7 @@
    - [ ]   `fetch`, `AbortController`
    - [ ]   `setTimeout`, `setInterval`, `clearTimeout`, `clearInterval`
 
-   **Node.js Built - [ ]  ins (if using Node):**
+   **Node.js Built-ins (if using Node):**
    - [ ]   `fs`, `path`, `http`, `os`, `events`, `crypto`, `stream`, `util`
    - [ ]   `process`, `child_process`
 
@@ -70,7 +70,7 @@
    **Optimization Techniques:**
    - [ ]   Debouncing & Throttling
    - [ ]   Lazy loading (code splitting, image defer)
-   - [ ]   Avoiding unnecessary re - [ ]  renders (React)
+   - [ ]   Avoiding unnecessary re-renders (React)
    - [ ]   Efficient DOM manipulation (virtual DOM, document fragments)
 
  **Tools:**
@@ -133,12 +133,12 @@
 
 **Code Quality:**
    - [ ]   ESLint, Prettier
-   - [ ]   Husky + lint - [ ]  staged
+   - [ ]   Husky + lint-staged
    - [ ]   Commitizen + conventional commits
 
   **Environment:**
    - [ ]   .env files & dotenv
-   - [ ]   Cross - [ ]  env for environment variables
+   - [ ]   Cross-env for environment variables
 
 --- 
 
@@ -200,12 +200,12 @@
 ##   11. Software Architecture & System Design
 
   **Frontend Architecture:**
-   - [ ]   Component - [ ]  driven development
+   - [ ]   Component-driven development
    - [ ]   Atomic design principles
    - [ ]   Micro Frontends
 
    **Backend/System Architecture:**
-   - [ ]   Monolith vs Microservices (Node.js - [ ]  based)
+   - [ ]   Monolith vs Microservices (Node.js-based)
    - [ ]   RESTful design, GraphQL schemas
    - [ ]   Caching (Redis), Rate limiting
 
@@ -216,7 +216,7 @@
   **System Design Patterns:**
    - [ ]   Load balancer, CDN, reverse proxy
    - [ ]   Pub/Sub architecture
-   - [ ]   WebSockets & real - [ ]  time systems
+   - [ ]   WebSockets & real-time systems
 
 ---
 
@@ -228,7 +228,7 @@
   **Branching Strategies:**
    - [ ]   Feature branches
    - [ ]   GitFlow
-   - [ ]   Trunk - [ ]  based development
+   - [ ]   Trunk-based development
 
   **Code Reviews & PRs:**
    - [ ]   Writing meaningful commit messages
