@@ -10,7 +10,7 @@ import { Steps } from "nextra/components";
 সর্বপ্রথম আমদেরকে রিয়াক্ট থেকে `useRef`কে ইম্পোর্ট করতে হবে।
 
 ```jsx
-import { useState } from "react";
+import { useRef } from "react";
 ```
 
 ### declare a ref inside your component:
@@ -36,7 +36,7 @@ const myRef = useRef(null);
 
 ```jsx
 function handleChangeText() {
-    myRef.innerText = "This is a text passed by the ref";
+    myRef.current.innerText = "This is a text passed by the ref";
 }
 ```
 
