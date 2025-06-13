@@ -6,7 +6,7 @@
 
 #### You don't need an Effect to transform data for rendaring:
 
-যদি আমরা শুধুমাত্র কোন ডাটা ট্রান্সফর্ম করে UI তে দেখাতে চাই, সেই কাজে কখনই আমাদের Effect ব্যাবহার করা উচিত না। এক্ষেত্রে আমদের [Deriver State](https://reactive-accelarator.vercel.app/reactive-accilarator/React-js/module-3/choosing-the-state-structure#avoid-redundant-state-%E0%A6%85%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A7%9F%E0%A7%8B%E0%A6%9C%E0%A6%A8%E0%A7%80%E0%A7%9F-%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87%E0%A6%9F-%E0%A6%A8%E0%A6%BE-%E0%A6%A8%E0%A7%87%E0%A7%9F%E0%A6%BE-%E0%A6%AC%E0%A6%BE-%E0%A6%AA%E0%A6%B0%E0%A6%BF%E0%A6%B9%E0%A6%BE%E0%A6%B0-%E0%A6%95%E0%A6%B0%E0%A6%BE) প্যাটার্ন ব্যবহার করে কাজ করা উচিত।
+যদি আমরা শুধুমাত্র কোন ডাটা ট্রান্সফর্ম করে UI তে দেখাতে চাই, সেই কাজে কখনই আমাদের Effect ব্যাবহার করা উচিত না। এক্ষেত্রে আমদের [Deriver State](https://reactive-accelarator.vercel.app/reactive-accelarator/React-js/module-3/choosing-the-state-structure#avoid-redundant-state-%E0%A6%85%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A7%9F%E0%A7%8B%E0%A6%9C%E0%A6%A8%E0%A7%80%E0%A7%9F-%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87%E0%A6%9F-%E0%A6%A8%E0%A6%BE-%E0%A6%A8%E0%A7%87%E0%A7%9F%E0%A6%BE-%E0%A6%AC%E0%A6%BE-%E0%A6%AA%E0%A6%B0%E0%A6%BF%E0%A6%B9%E0%A6%BE%E0%A6%B0-%E0%A6%95%E0%A6%B0%E0%A6%BE) প্যাটার্ন ব্যবহার করে কাজ করা উচিত।
 
 #### You don't need an Effect to do something when state or prop changes:
 
@@ -76,12 +76,7 @@ export default function ProfilePage({ postId }) {
 
 ```jsx
 export default function BlogPage({ postId }) {
-    return (
-        <Post
-            postId={postId}
-            key={postId}
-        />
-    );
+    return <Post postId={postId} key={postId} />;
 }
 
 function Posts({ postId }) {
@@ -318,4 +313,3 @@ function Child({ data }) {
     // ...
 }
 ```
-

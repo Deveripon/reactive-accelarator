@@ -14,7 +14,7 @@ import { Steps, Tabs } from "nextra/components";
 
 <Steps>
     ### Create the context (একটি কনটেক্সট তৈরি করা)
-     
+
     একটা আলাদা ফাইলে একটি কনটেক্সট তৈরি করে নিতে হবে এবং তা এক্সপোর্ট করে দিতে হবে যাতে অন্যান্য ফাইল থেকে তা ইম্পোর্ট করে কাজ করা যায়।
 
     ```jsx filename="CounterContext.js"
@@ -25,7 +25,7 @@ import { Steps, Tabs } from "nextra/components";
     ### Create a Reducer and Provide the state and dispatch via Provider (একটি রিডিওসার তৈরি করতে হবে এবং রিডিওসারের state এবং dispatch ফাংশন প্রভাইডারে মাধ্যমে প্রভাইড করা)
     আমাদেরকে একটি রিডিউসার বানাতে হবে সেই রিডিওসারের `state` এবং `dispatch` ফাংশন যেগুলো আমাদের কম্পোনেন্টের দরকার পরবে সেগুলো আমরা যেই কম্পোনেন্ট ট্রি তে ডাটা পাস করবো তাদের মেইন প্যারেন্টে পাস করবো, এতে সকল নেস্টেড চাইল্ড কম্পোনেন্ট সেই ডাটা এক্সেস করতে পারবে।
 
-    কিভাবে Reducer বানাতে হয় তা না জানলে [এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accilarator/React-js/module-3/extracting-state-logic-into-reducer)
+    কিভাবে Reducer বানাতে হয় তা না জানলে [এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accelarator/React-js/module-3/extracting-state-logic-into-reducer)
 
 <Tabs items={["App.jsx", "Counter.jsx", "CounterContext.js","counterReducer.js"]}>
     <Tabs.Tab>
@@ -70,7 +70,7 @@ import { Steps, Tabs } from "nextra/components";
         export default CounterContext
     ```
 
-</Tabs.Tab>    
+</Tabs.Tab>
 <Tabs.Tab>
     ```jsx
 
@@ -96,7 +96,7 @@ export const counterReducer = (state, action) => {
 এই স্টেপে আমাদের যেসকল কম্পোনেন্টে ডাটা প্রয়োজন হবে সেখানে সেখানে আমরা `useContext` এর মাধ্যমে ডাটা রিসিভ করতে পারবো। এই উদাহরণের সাপেক্ষে আমাদের শুধুমাত্র `Counter` কম্পোনেন্টে ডাটা প্রয়োজন, তাই আমরা এখন `Counter` কম্পোনেন্ট থেকে ডাটা রিসিভ করে ব্যাবহার করবো।
 
 <Tabs items={["Counter.jsx","App.jsx","CounterContext.js","counterReducer.js"]}>
-   
+
        <Tabs.Tab>
      ```jsx
         import {useContext} from "react"
@@ -142,7 +142,7 @@ export const counterReducer = (state, action) => {
         export default CounterContext
     ```
 
-</Tabs.Tab>    
+</Tabs.Tab>
 <Tabs.Tab>
     ```jsx
 
@@ -212,7 +212,7 @@ export const counterReducer = (state, action) => {
 
     ```
 
-</Tabs.Tab>  
+</Tabs.Tab>
 <Tabs.Tab>
     ```jsx
 
@@ -247,7 +247,7 @@ export const counterReducer = (state, action) => {
     </Tabs.Tab>
 </Tabs>
 এভাবে আমাদের মেইন প্যারেন্ট কম্পোনেন্ট থেকে সমস্ত কিছু সরিয়ে নিয়ে আমরা একটা আলদা ফাইলে ম্যানেজ করতে পারি।
-এছাড়াও আমরা 
+এছাড়াও আমরা
 ```jsx
    const {state,dispatch} = useContext(CounterContext)
 ```
@@ -283,4 +283,3 @@ export const counterReducer = (state, action) => {
     </Tabs.Tab>
 
 </Tabs>
-

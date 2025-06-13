@@ -6,12 +6,12 @@
 
 চলুন জেনে নেই রিয়াক্ট এর স্টেট আপডেট করা জন্য `Array` ডাটা আপডেট করতে কোন কোন মেথডগুলো ব্যাবহার করা যাবে আর কোনগুলো ব্যাবহার করা উচিত নয়।
 
-| ব্যাবহারের কারণ | ❌ - পুরাতন `Array` কে মিউটেড করে | ✅ যেগুলো নতুন `Arry` রিটার্ন করে |
-| --- | --- | --- |
-| এড করা (Adding in Array) | `push`, `unshift` | `concat`, `[...sprade,]`, `array.with()` |
-| বাদ দেয়া (Removing from Array) | `pop`, `shift`, `splice` | `filter`, `slice`, `toSpliced` |
-| রিপ্লেস করা (Replac in Array) | `splice`, `arr[0]="something"` | `map`, `toSpliced` |
-| সর্টিং করা (Sort in Array) | `sort`, `reverse` | প্রথমে পুরাতন `Array` কপি করে নিয়ে `sort` বা `reverse` করা, `toSorted`, `toReversed` |
+| ব্যাবহারের কারণ                | ❌ - পুরাতন `Array` কে মিউটেড করে | ✅ যেগুলো নতুন `Arry` রিটার্ন করে                                                    |
+| ------------------------------ | --------------------------------- | ------------------------------------------------------------------------------------ |
+| এড করা (Adding in Array)       | `push`, `unshift`                 | `concat`, `[...sprade,]`, `array.with()`                                             |
+| বাদ দেয়া (Removing from Array) | `pop`, `shift`, `splice`          | `filter`, `slice`, `toSpliced`                                                       |
+| রিপ্লেস করা (Replac in Array)  | `splice`, `arr[0]="something"`    | `map`, `toSpliced`                                                                   |
+| সর্টিং করা (Sort in Array)     | `sort`, `reverse`                 | প্রথমে পুরাতন `Array` কপি করে নিয়ে `sort` বা `reverse` করা, `toSorted`, `toReversed` |
 
 #### (Adding to an Array) `Array` তে এলিমেন্ট এড করা ।
 
@@ -88,10 +88,7 @@ export default function List() {
     return (
         <>
             <h1>Inspiring sculptors:</h1>
-            <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-            />
+            <input value={name} onChange={(e) => setName(e.target.value)} />
             <button onClick={handleClick}>Insert</button>
             <ul>
                 {artists.map((artist) => (
@@ -136,10 +133,7 @@ export default function List() {
     return (
         <>
             <h1>Inspiring sculptors:</h1>
-            <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-            />
+            <input value={name} onChange={(e) => setName(e.target.value)} />
             <button onClick={handleClick}>Insert</button>
             <ul>
                 {artists.map((artist) => (
@@ -240,15 +234,9 @@ export default function BucketList() {
         <>
             <h1>Art Bucket List</h1>
             <h2>My list of art to see:</h2>
-            <ItemList
-                artworks={myList}
-                onToggle={handleToggleMyList}
-            />
+            <ItemList artworks={myList} onToggle={handleToggleMyList} />
             <h2>Your list of art to see:</h2>
-            <ItemList
-                artworks={yourList}
-                onToggle={handleToggleYourList}
-            />
+            <ItemList artworks={yourList} onToggle={handleToggleYourList} />
         </>
     );
 }
@@ -260,7 +248,7 @@ function ItemList({ artworks, onToggle }) {
                 <li key={artwork.id}>
                     <label>
                         <input
-                            type='checkbox'
+                            type="checkbox"
                             checked={artwork.seen}
                             onChange={(e) => {
                                 onToggle(artwork.id, e.target.checked);
@@ -277,7 +265,7 @@ function ItemList({ artworks, onToggle }) {
 
 #### (Write concise update logic with Immer) - `Immer` এর সাহায্যে খুব সহজে `Array` অপারেশন চালানো।
 
-আমরা যদি মিউটেশন নিয়ে এতো টেনশন না করতে চাই,তাহলে আমরা [Immer](https://www.npmjs.com/package/immer) ব্যাবহার করে খুব সহজেই আমাদের সকল ধরনের `Array` অপারেশন করতে পারি। `Immer` কিভাবে ব্যাবহার করতে হয় তা স্টেপ বাই স্টেপ জানতে **[এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accilarator/React-js/module-2/updating-object-in-state#immer-%E0%A6%95%E0%A6%BF%E0%A6%AD%E0%A6%BE%E0%A6%AC%E0%A7%87-%E0%A6%AC%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%AC%E0%A6%B9%E0%A6%BE%E0%A6%B0-%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87-%E0%A6%B9%E0%A7%9F)**
+আমরা যদি মিউটেশন নিয়ে এতো টেনশন না করতে চাই,তাহলে আমরা [Immer](https://www.npmjs.com/package/immer) ব্যাবহার করে খুব সহজেই আমাদের সকল ধরনের `Array` অপারেশন করতে পারি। `Immer` কিভাবে ব্যাবহার করতে হয় তা স্টেপ বাই স্টেপ জানতে **[এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accelarator/React-js/module-2/updating-object-in-state#immer-%E0%A6%95%E0%A6%BF%E0%A6%AD%E0%A6%BE%E0%A6%AC%E0%A7%87-%E0%A6%AC%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%AC%E0%A6%B9%E0%A6%BE%E0%A6%B0-%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87-%E0%A6%B9%E0%A7%9F)**
 
 ### ECMA SCRIPT 2023 (ES-2023) এর চারটি স্পেশাল `Array` মেথডঃ
 
@@ -395,4 +383,3 @@ console.log(arr2);
 ["a", "d", "c", "f", "e"]; // মেইন Array অপরিবর্তিত রয়েছে।
 ["a", "b", "c", "f", "e"]; // নতুন Array রিটার্ন হয়েছে
 ```
-

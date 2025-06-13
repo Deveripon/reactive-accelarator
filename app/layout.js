@@ -1,4 +1,4 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "@/components/theme-provider-home";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -52,12 +52,19 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang='en'>
+        <html lang="en" suppressHydrationWarning>
+            <head></head>
             <body className={inter.className}>
-                {children}
-                <SpeedInsights />
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                    suppressHydrationWarning
+                >
+                    {children}
+                </ThemeProvider>
             </body>
         </html>
     );
 }
-

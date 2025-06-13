@@ -10,7 +10,7 @@ import { Callout, Steps } from "nextra/components";
 
 অন্যদিকে `Array` ,`Object` হলো রেফারেন্স ভ্যালু। যা টেকনিক্যালি পরিবর্তন করা গেলেও রিয়াক্ট স্টেট-এর ভ্যালুতে সরাসরি রেফারেন্স ভ্যালুকে পরিবর্তন করতে নিষেধ করে। রিয়াক্টে স্টেট আপডেটের ক্ষেত্রে এসব ভ্যালুকেও `read-only` হিসেবে চিন্তা করতে বলে ।
 
-জাভাস্ক্রিপ্ট এর প্রিমিটিভ ও রেফারেন্স ভ্যালু সম্পর্কে আরও বিস্তারিত জানতে চাইলে [এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accilarator/javascript-refresher#primitive-and-reference-types-value)
+জাভাস্ক্রিপ্ট এর প্রিমিটিভ ও রেফারেন্স ভ্যালু সম্পর্কে আরও বিস্তারিত জানতে চাইলে [এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accelarator/javascript-refresher#primitive-and-reference-types-value)
 
 চলুন একটু উদাহরণের মাধ্যমে বিস্তারিত বুঝিঃ
 
@@ -56,7 +56,8 @@ export default function MovingDot() {
                 position: "relative",
                 width: "100vw",
                 height: "100vh",
-            }}>
+            }}
+        >
             <div
                 style={{
                     position: "absolute",
@@ -145,7 +146,7 @@ setPosition(nextPosition);
 
 এই কাজটা করতেই জাভাস্ক্রিপ্ট এর `... spread` অপারেটর আমাদের হেল্প করে থাকে। `... spread` অপারেটর ব্যাবহার করে আমরা আগের অবজেক্ট এর একটা `Shallow` কপি বানিয়ে নিতে পারি। তবে মনে রাখতে হবে `... spread` অপারেটর নেস্টেড অবজেক্ট এর ক্ষেত্রে শুধুমাত্র এক লেবেল কপি করে। যদি ডিপলি কপি করতে চাই তাহলে `... spread` অপারেটর একাধিকবার ব্যাবহার করতে হবে।
 
-`Shallow Copy` এবং `Deep Copy` সম্পর্কে আরও বিস্তারিত জানতে [এই লিঙ্ক এ ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accilarator/javascript-refresher#shallow-copy-vs-deep-copy)
+`Shallow Copy` এবং `Deep Copy` সম্পর্কে আরও বিস্তারিত জানতে [এই লিঙ্ক এ ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accelarator/javascript-refresher#shallow-copy-vs-deep-copy)
 
 ধরুন আমাদের এই অবজেক্ট স্টেট ভ্যারিয়বলের `firstName` প্রপার্টির ভ্যালু চেঞ্জ করা লাগবে।
 
@@ -330,4 +331,3 @@ updateImmer((draft) => {
 </Steps>
 
 এভাবে করলে হয়তো মনে হতে পারে আমরা রিয়াক্টের রুলস ব্রেক করছি,কিন্তু না আসলে আমরা এখানে `draft` কে মিউটেড করলেও, আন্ডার দ্যা হুড, `Immer` নিজে আমাদের স্টেট টা ইমিউটিভলি আপডেট করছে।
-
