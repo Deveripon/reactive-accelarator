@@ -6,9 +6,9 @@ import { Steps } from "nextra/components";
 
 1. **Identify Components differnet visual states**
 2. **Determine What trigger those state changes**
-3. **Represent the state in memory useing `useState`**
+3. **Represent the state in memory using `useState`**
 4. **Remove any not-essential state variables**
-5. **Connent the event handlers to set the state**
+5. **Connect the event handlers to set the state**
 
 <Steps>
 ### Identify Components differnet visual states (কম্পোনেন্টের কি কি পরিবর্তন বা অবস্থা হতে পারে,তা নির্ধারণ করা)
@@ -67,7 +67,7 @@ const [error, setError] = useState(null);
 আবার বাকি তিনটা অবস্থা `submitting` `success`অথবা `error` আমরা শুধু একটা স্টেট ভ্যারিয়েবল `status` নিয়েই আমরা মেনেজ করতে পারি।
 
 ```jsx
-const [status, setStatus] = useState("typing"); // 'submitting', or 'success / error'
+const [status, setStatus] = useState("typing"); // 'typing', 'submitting', 'success', or 'error'
 ```
 
 তাহলে এখানে আমাদের শুধু তিনটা স্টেট নিলেই সমস্ত কিছু পারফেক্টলি হয়ে যাচ্ছে,
@@ -75,7 +75,7 @@ const [status, setStatus] = useState("typing"); // 'submitting', or 'success / e
 ```jsx
 const [answer, setAnswer] = useState("");
 const [error, setError] = useState(null);
-const [status, setStatus] = useState("typing"); // 'submitting', or 'success / error'
+const [status, setStatus] = useState("typing"); // 'typing', 'submitting', 'success', or 'error'
 ```
 
 ### Connect the event handlers to set state(স্টেটগুলো চেঞ্জ করার জন্য ইভেন্ট হ্যন্ডেলারগুলো কানেক্ট করিয়ে দিতে হবে)
