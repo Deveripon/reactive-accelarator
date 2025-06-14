@@ -2,24 +2,28 @@ import {
     PHASE_DEVELOPMENT_SERVER,
     PHASE_PRODUCTION_BUILD,
 } from "next/constants.js";
-
 import nextra from "nextra";
-/** @type {import('next').NextConfig} */
-const baseConfig = {
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-    typescript: {
-        ignoreBuildErrors: true,
-    },
-    images: {
-        unoptimized: true,
-    },
-    theme: 'nextra-theme-docs',
-    themeConfig: './theme.config.jsx'
-};
+
+const withNextra = nextra({
+    theme: "nextra-theme-docs",
+    themeConfig: "./theme.config.jsx",
+});
 
 const nextConfigFunction = async (phase) => {
+    const baseConfig = {
+        reactStrictMode: true,
+        images: {
+            domains: [
+                "images.unsplash.com",
+                "avatars.githubusercontent.com",
+                "github.com",
+                "lh3.googleusercontent.com",
+                "www.gravatar.com",
+                "learnwithsumit.com",
+            ],
+        },
+    };
+
     if (
         phase === PHASE_DEVELOPMENT_SERVER ||
         phase === PHASE_PRODUCTION_BUILD
@@ -38,16 +42,10 @@ const nextConfigFunction = async (phase) => {
                 document: "/~offline",
             },
         });
-        return withPWA(nextra({
-            theme: 'nextra-theme-docs',
-            themeConfig: './theme.config.jsx'
-        })(baseConfig));
+        return withPWA(withNextra(baseConfig));
     }
 
-    return nextra({
-        theme: 'nextra-theme-docs',
-        themeConfig: './theme.config.jsx'
-    })(baseConfig);
+    return withNextra(baseConfig);
 };
 
 export default nextConfigFunction;

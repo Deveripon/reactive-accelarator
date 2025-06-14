@@ -1,16 +1,5 @@
-import { getGitHubContributors, getGitHubStats } from "@/app/actions/github";
-import { ContributorsShowcase } from "@/components/contributors-showcase";
-import { PwaInstallButton } from "@/components/pwa-install-button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import Image from "next/image";
+
 import {
     ArrowRight,
     BookOpen,
@@ -35,6 +24,21 @@ import {
     Zap,
 } from "lucide-react";
 import Link from "next/link";
+import { ContributorsShowcase } from "../components/contributors-showcase";
+import { PwaInstallButton } from "../components/pwa-install-button";
+import { ThemeToggle } from "../components/theme-toggle";
+import { Badge } from "../components/ui/badge";
+// import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
+
+import {
+    Card,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "../components/ui/card";
+import { getGitHubContributors, getGitHubStats } from "./actions/github";
 
 export default async function HomePage() {
     // Fetch GitHub data
@@ -403,7 +407,7 @@ export default async function HomePage() {
                         </Button>
                         <Button size="lg" variant="outline" asChild>
                             <Link href="https://github.com/Deveripon/reactive-accelarator">
-                                <Github className="mr-2 h-5 w-5" />
+                                <Github className="mr-2 h-5 w-5 animate-pulse" />
                                 View on GitHub
                             </Link>
                         </Button>
@@ -626,12 +630,12 @@ export default async function HomePage() {
                                 </Button>
                                 <Button
                                     size="lg"
-                                    variant="outline"
-                                    className="border-white text-white hover:bg-white hover:text-blue-600"
+                                    variant="secondary"
+                                    className="border-white text-blue-800 hover:bg-white hover:text-blue-600"
                                     asChild
                                 >
                                     <Link href="https://github.com/Deveripon/reactive-accelarator">
-                                        <Github className="mr-2 h-5 w-5" />
+                                        <Github className="mr-2 h-5 w-5 animate-pulse " />
                                         Contribute on GitHub
                                     </Link>
                                 </Button>
@@ -645,69 +649,89 @@ export default async function HomePage() {
             <section className="py-20">
                 <div className="container">
                     {/* Course Details */}
-                    <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-blue-950/30 rounded-2xl p-8 mb-8 border border-blue-100 dark:border-blue-900/30 shadow-lg relative overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-blue-950/30 rounded-2xl p-32 mb-8 border border-blue-100 dark:border-blue-900/30 shadow-lg relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-500/10 to-purple-500/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
-                        <div className="text-center max-w-3xl mx-auto relative z-10">
-                            <div className="inline-flex items-center gap-2 bg-blue-100/50 dark:bg-blue-900/50 rounded-full px-4 py-1.5 mb-4">
-                                <img
-                                    src="https://avatars.githubusercontent.com/u/73503432?v=4"
-                                    alt="Learn with Sumit"
-                                    className="w-5 h-5 rounded-full"
-                                    crossOrigin="anonymous"
-                                />
-                                <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                                    Learn with Sumit
-                                </span>
-                            </div>
-
-                            <h3 className="font-bold text-2xl mb-2 text-gray-900 dark:text-white">
-                                বাংলা রিয়্যাক্ট-নেক্সট জেএস কোর্স
-                            </h3>
-                            <h4 className="text-xl font-semibold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                রিয়্যাক্টিভ এক্সিলারেটর
-                            </h4>
-                            <p className="text-muted-foreground mb-6">
-                                রিয়্যাক্ট জে.এস ভার্সন 18-19 & নেক্সট জে.এস
-                                ভার্সন 14-15
-                            </p>
-
-                            <div className="flex flex-wrap gap-4 justify-center mb-6">
-                                <div className="bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
-                                    <Code className="h-4 w-4 text-blue-500" />
-                                    <span className="text-sm font-medium">
-                                        React 18-19
+                        <div className="flex flex-col lg:flex-row items-center gap-8 max-w-5xl mx-auto relative z-10">
+                            {/* Left side - Course info */}
+                            <div className="flex-1 text-center lg:text-left">
+                                <div className="inline-flex items-center gap-2 bg-blue-100/50 dark:bg-blue-900/50 rounded-full px-4 py-1.5 mb-4">
+                                    <Image
+                                        src="https://avatars.githubusercontent.com/u/73503432?v=4"
+                                        alt="Learn with Sumit"
+                                        className="w-5 h-5 rounded-full"
+                                        crossOrigin="anonymous"
+                                        width={1200}
+                                        height={1200}
+                                    />
+                                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                                        Learn with Sumit
                                     </span>
                                 </div>
-                                <div className="bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-purple-500" />
-                                    <span className="text-sm font-medium">
-                                        Next.js 14-15
-                                    </span>
-                                </div>
-                                <div className="bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
-                                    <Globe className="h-4 w-4 text-green-500" />
-                                    <span className="text-sm font-medium">
-                                        বাংলা কোর্স
-                                    </span>
-                                </div>
-                            </div>
 
-                            <Button
-                                size="lg"
-                                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                                asChild
-                            >
-                                <Link
-                                    href="https://learnwithsumit.com/rnext"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <h3 className="font-bold text-2xl mb-2 text-gray-900 dark:text-white">
+                                    বাংলা রিয়্যাক্ট-নেক্সট জেএস কোর্স
+                                </h3>
+                                <h4 className="text-xl font-semibold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                    রিয়্যাক্টিভ এক্সিলারেটর
+                                </h4>
+                                <p className="text-muted-foreground mb-6">
+                                    রিয়্যাক্ট জে.এস ভার্সন 18-19 & নেক্সট জে.এস
+                                    ভার্সন 14-15
+                                </p>
+
+                                <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-6">
+                                    <div className="bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
+                                        <Code className="h-4 w-4 text-blue-500" />
+                                        <span className="text-sm font-medium">
+                                            React 18-19
+                                        </span>
+                                    </div>
+                                    <div className="bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
+                                        <Zap className="h-4 w-4 text-purple-500" />
+                                        <span className="text-sm font-medium">
+                                            Next.js 14-15
+                                        </span>
+                                    </div>
+                                    <div className="bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
+                                        <Globe className="h-4 w-4 text-green-500" />
+                                        <span className="text-sm font-medium">
+                                            বাংলা কোর্স
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <Button
+                                    size="lg"
+                                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                                    asChild
                                 >
-                                    কোর্স দেখুন
-                                    <ArrowRight className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
+                                    <Link
+                                        href="https://learnwithsumit.com/rnext"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        কোর্স দেখুন
+                                        <ArrowRight className="ml-2 h-5 w-5" />
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {/* Right side - Course image */}
+                            <div className="flex-1 lg:max-w-md">
+                                <div className="relative group">
+                                    <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+                                    <Image
+                                        src="https://learnwithsumit.com/_next/image?url=%2Fassets%2Fimages%2Frnext-thumb.png&w=1200&q=75"
+                                        alt="Reactive Accelerator Course"
+                                        className="relative w-full h-auto rounded-xl shadow-2xl border border-white/20 dark:border-gray-700/50 group-hover:scale-105 transition-transform duration-300"
+                                        crossOrigin="anonymous"
+                                        width={1200}
+                                        height={675}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -890,7 +914,7 @@ export default async function HomePage() {
                         <div className="flex items-center gap-4 mb-4 md:mb-0">
                             <p className="text-sm text-muted-foreground">
                                 © {new Date().getFullYear()} Reactive
-                                Accelerator. Created with ❤️ by{" "}
+                                Accelerator. Created with by{" "}
                                 <Link
                                     href="https://github.com/Deveripon"
                                     className="text-primary hover:underline font-medium"
@@ -901,18 +925,6 @@ export default async function HomePage() {
                         </div>
 
                         <div className="flex items-center gap-6 text-sm">
-                            <Link
-                                href="/reactive-accelarator"
-                                className="text-muted-foreground hover:text-primary transition-colors"
-                            >
-                                Privacy Policy
-                            </Link>
-                            <Link
-                                href="/reactive-accelarator"
-                                className="text-muted-foreground hover:text-primary transition-colors"
-                            >
-                                Terms of Service
-                            </Link>
                             <Link
                                 href="https://github.com/Deveripon/reactive-accelarator/blob/main/LICENSE"
                                 className="text-muted-foreground hover:text-primary transition-colors"
