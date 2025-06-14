@@ -4,7 +4,7 @@
 
 ## 🚀 Live Preview
 
-🔗 [Live Site](https://reactive-accelerator.vercel.app)
+🔗 [Live Site](https://reactive-accelarator.vercel.app)
 
 ## 🖥️ Preview
 

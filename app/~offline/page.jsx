@@ -221,7 +221,7 @@ export default async function HomePage() {
         {
             label: "GitHub Stars",
             value: githubStats.stargazers_count.toString(),
-            icon: <Star className="h-4 w-4 animate-pulse" />,
+            icon: <Star className="h-4 w-4" />,
         },
         {
             label: "Forks",
@@ -630,7 +630,7 @@ export default async function HomePage() {
                                 <Button
                                     size="lg"
                                     variant="secondary"
-                                    className="border-white text-blue-800 hover:bg-white hover:text-blue-600"
+                                    className="border-white text-blue-500 hover:bg-white hover:text-blue-600"
                                     asChild
                                 >
                                     <Link href="https://github.com/Deveripon/reactive-accelarator">
@@ -648,7 +648,7 @@ export default async function HomePage() {
             <section className="py-20">
                 <div className="container">
                     {/* Course Details */}
-                    <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-blue-950/30 rounded-2xl p-32 mb-8 border border-blue-100 dark:border-blue-900/30 shadow-lg relative overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-blue-950/30 rounded-2xl p-8 lg:p-32  mb-8 border border-blue-100 dark:border-blue-900/30 shadow-lg relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-500/10 to-purple-500/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 

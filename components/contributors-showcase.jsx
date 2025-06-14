@@ -71,7 +71,7 @@ export function ContributorsShowcase({ contributors }) {
                                         width={500}
                                         height={500}
                                         alt={`${contributor.login}'s avatar`}
-                                        className="w-16 h-16 rounded-full mx-auto border-2 border-white shadow-lg group-hover:border-primary transition-colors"
+                                        className="w-16 h-16 rounded-full mx-auto border-2 border-emerald-400 shadow-lg group-hover:border-primary transition-colors"
                                         crossOrigin="anonymous"
                                     />
                                     {index === 0 && (
