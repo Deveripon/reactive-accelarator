@@ -1,0 +1,138 @@
+import { Steps } from "nextra/components";
+
+### Passing Data Deeply with Context
+
+সাধারণত আমরা প্যারেন্ট কম্পোনেন্ট থেকে ডাটা চাইল্ড কম্পোনেন্টে `Props` এর মাধ্যমে পাস করে থাকি। কিন্তু যদি এমন এমন হয় যে আমরা যেই কম্পোনেন্টে ডাটা পাস করতে চাঁচছিসে কম্পোনেন্টটা কম্পোনেন্ট ট্রি এর অনেক ভিতরে নেস্টেড অবস্থায় রয়েছে, সেই ক্ষেত্রে আমাদের ডাটা কে সেই কাঙ্খিত কম্পোনেন্টে পাঠানোর জন্য আমাদের অনেকগুলো কম্পনেন্টকে শুধুমাত্র একটা কেরিয়ার হিসেবে ব্যাবহার করতে হচ্চে,এবং যেই কম্পোনেন্টের সেই ডাটা-টি দরকার নেই সেখানেও আমাদের ডাটা পাস করতে হচ্ছে। এইযে এভাবে এক কম্পোনেন্ট থেকে অন্য কম্পোনেন্টে ডাটা পাস করতে হচ্ছে শুধুমাত্র ডাটাকে কাঙ্খিত কম্পোনেন্টে পৌঁছানোর জন্য, এটাকে বলা হয় **Props Drilling**।
+
+তাহলে আমরা বুঝতে পারছি যে, এভাবে শুধুমাত্র কেরিয়ার হসেবে এতগুলো কম্পোনেন্টকে ব্যবহার করে ডাটাকে একটা নির্দিষ্ট কম্পোনেন্টে নিয়ে যাওয়া এটা খুবই ঝামেলার এমনকি অনেকসময় এটা বাগ তৈরি করতেও পারে। আর এই **Props Drilling** সমস্যার সমাধান করার জন্যই `useContext` এসেছে।
+
+### Context is an alternative to passing props
+
+Context হলো Props Drilling এর অল্টারনেটিভ। Context এর সাহায্যে আমরা যেসকল ডাটা কোন নেস্টেড কম্পোনেন্ট এ পাঠাতে চাই, সেগুলোকে আমরা একটা আলাদা জায়গায় মেনেজ করে Context এর Provider এর মাধ্যমে কমোনেন্টের কাছে পাঠিয়ে দিতে পারি।
+
+### How to use Context
+
+আমরা তিনটা স্টেপ ফলো করে `useContext` হুক ব্যাবহার করতে পারি।
+
+-   **কনটেক্সট তৈরি করা (Create a Context)**
+
+-   **প্রভাইডারের মাধ্যমে কনটেক্সট এর ডাটা প্রভাইড করা (Provide Context data by provider)**
+
+-   **কম্পোনেন্টের ভিতর কনটেক্সট ব্যাবহার করা (Use Context in Component)**
+
+<Steps>
+
+### কনটেক্সট তৈরি করা (Create a Context)
+
+    প্রথমে আমাদের এভাবে একটি কনটেক্সট তৈরি করতে হবে ।
+
+    ```jsx filename="counterContext.js"
+    import {createContext} from "react"
+    export const CounterContext = createContext(0)
+    ```
+
+আমরা এখানে একটা কাউন্টার এপ্লিকেশনের জন্য `Context` তৈরি করে নিয়েছি এবং `Context` এর ডিফল্ট ভ্যালু দিয়েছি `0`
+
+### প্রভাইডারের মাধ্যমে কনটেক্সট এর ডাটা প্রভাইড করা (Provide Context data by provider)
+
+তারপর যেই কম্পোনেন্টে আমরা `Context` এর ভ্যালু এক্সেস করতে চাই তার প্যারেন্ট কম্পোনেন্ট কে `Context.Provider` দিয়ে wrap করে দিতে হবে, এবং ভ্যালু হিসেবে যেসব ডাটা পাঠানো দরকার সেগুলো `value={}` Attribute এর মাধ্যমে পাস করে দিতে হবে।
+
+```jsx filename="App.jsx" {6-8}
+import { CounterContext } from "./counterContext.js";
+const countValue = 3;
+export default function App() {
+    return (
+        <section className='section'>
+            <CounterContext.Provider value={countValue}>
+                {children}
+            </CounterContext.Provider>
+        </section>
+    );
+}
+```
+
+### কম্পোনেন্টের ভিতর কনটেক্সট ব্যাবহার করা (Use Context in Component)
+
+এরপর আমরা যেই কম্পোনেন্ট এ আমাদের ডাটা প্রয়োজন হবে সেই কম্পোনেন্ট এ `useContext` কল করে ডাটা এক্সেস করতে পারি।
+
+```jsx filename="Counter.jsx" {6-8}
+import { useContext } from "react";
+const countValue = useContext();
+
+export default function App() {
+    return (
+        <div>
+            <h1> Count Value is : {countValue}</h1>
+        </div>
+    );
+}
+```
+
+এভাবে আমরা যেই পেরেন্টকে `Context.Provider` দিয়ে wrap করে দিব তার সকল চাইল্ড কম্পোনেন্ট থেকে আমরা `Context` এর ডাটা এক্সেস করতে পারবো।
+
+</Steps>
+
+### Using and providing context from the same component
+
+আগের উদাহরণে আমরা দেখেছিলাম যে আমরা প্যারেন্ট কম্পোনেন্টে `Context.Provider` দিয়ে ডাটা পাস করছিলাম এবং চাইল্ড কম্পোনেন্টে `useContext` ব্যাবহার করার মাধ্যমে ডাটা এক্সেস করতে পারছিলাম,
+
+আমরা কিন্তু চাইলে একই কম্পোনেন্টে `useContext` ব্যাবহার করে ডাটা ধরতেও পারি,আবার সেই কম্পোনেন্ট থেকেই আবার ডাটা চাইল্ড কম্পোনেন্ট এ পাঠাতেও পারি।
+
+```jsx filename="App.jsx" {6-8}
+import { CounterContext } from "./counterContext.js";
+import { useContext } from "react";
+export default function App() {
+    const count = useContext(CounterContext);
+    return (
+        <section className='section'>
+            <CounterContext.Provider value={count+1}>
+                {children}
+            </CounterContext.Provider>
+        </section>
+    );
+}
+```
+
+### Context passes through intermediate components or Nestating multiple Context
+
+আমাদের যদি একাধিক Context থাকে এবং তা যদি আমাদের একই কম্পোনেন্টে ব্যবাহার করতে হয় তাহলে আমরা তা এভাবে নেস্টেড করতে পারি।
+
+```jsx filename="App.jsx" {6-8}
+import { CounterContext } from "./counterContext.js";
+import { OtherContext } from "./otherContext.js";
+import { useContext } from "react";
+export default function App() {
+    const count = useContext(CounterContext);
+    return (
+        <section className='section'>
+            <CounterContext.Provider value={count+1}>
+                <OtherContext.Provider value={something}>
+                    {children}
+                </OtherContext.Provider>
+            </CounterContext.Provider>
+        </section>
+    );
+}
+```
+
+এখানে এইযে আমরা একটি Context কে অন্য আরেকটি দিয়ে Nested করেছি এতে কিন্তু একটার কারণে অন্যটায় কোন এফেক্ট পরবেনা।
+
+### Before you use context (কনটেক্সট ব্যাবহার করার আগে আমদের যে বিষয়গুলো অবশ্যই মাথায় রাখতে হবে)
+
+Context এর সহজ ব্যবাহার এবং বার বার Props পাস করার ঝামেলা থেকে বাচার জন্য ম্যক্সিমাম টাইম আমাদের `Context` ব্যাবহার করার ইচ্ছা করতে পারে। কিন্তু শুধুমাত্র কিছু কম্পোনেন্টে ডাটা পাস করার ঝমেলা থেকে বাচার জন্য কখনই `Context` ব্যাবহার করা উচিত না।
+
+আমাদের এপ্লিকেশনের শুরুতে আমরা নিচের এর দুইভাবে কনটেক্সট ব্যাবহার ছাড়া কাজ করতে পারি।
+
+-   **Start by passing props (প্রপ্স পাস করে শুরু করা)** যদি আমদের কম্পোনেন্ট মারাত্মক লেভেলের কমপ্লেক্স না হয় তাহলে আমাদের `Props` পাস করেই কাজ করা উচিত। এতে যতগুলো প্রপ্স পাস করা লাগে লাগুক,এটা মোটেও কোন সমস্যা না।
+
+-   **Extract components and pass JSX as children (চিলড্রেন প্রপ আকারে JSX পাস করে কম্পোনেন্টের নেস্টং কমিয়া আনা)** আমরা যদি চিলড্রেন প্রপ এর ব্যাবহার বাড়িয়ে খুব সুন্দর করে আমদের কম্পোনেন্টগুলোকে কম্পোস করতে পারি,তাহলে দেখা যাবে যে আমদের কম্পোনেন্টগুলোর নেস্টিং অনেক কমে এসেছে, এবং আমরা খুব সহজেই ডাটা পাস করতে পারছি।
+
+### Use cases for context (কখন কখন Context ব্যাবহার করা উচিত)
+
+Context কে যখন তখন যেকোন জায়গায় ব্যাবহার করা উচিত না। যদি এমন কোন ডাটা হয় যেটা আমদের পুরো এপ্লিকেশনের যেকোন জায়গায় যখন তখন লাগতে পারে, প্রায় সকল কম্পোনেন্টেই ডাটার প্রয়োজন হচ্ছে, সেক্ষেত্রে মরা `Context` ব্যাবহারের কথা ভাবতে পারি। তাছাড়াও,
+
+-   **Theming** আমদের এপ্লকেশনে কোন ব্যাবহার হবে,বা ইউজারের ইন্টারেকশনের কিভাবে থিম ম্যানেজ হবে এজন্য আমাদের থিম এর ডাটাটা কম্পোনেন্ট এর যেকোন জায়গায় ব্যাবহার হতে পারে, তাই **Theming** এর ক্ষেত্রে `Context` ব্যাবহার হতে পারে।
+-   **Authentication** এপ্লিকেশনের বিভিন্ন জায়গা থেকে আমদের ইউজারের ইনফরমেশন বা অথেনটিকেশন এর ডাটা প্রয়োজন হতে পারে,তাই **Authentication** ম্যানেজ করার জন্য `Context` ব্যাবহার করা যেতে পারে।
+-   **Routing** রাউটিং এর জন্য বেশিরভাগ লাইব্রেরিগুলোই বিহাইন্ড দ্যা সিন Context ব্যবাহার করে থাকে।
+-   **Complex State with Reducer** যখন আমদের এপ্লিকেশনের অনেক কমপ্লেক্স লজিক আমাদের ম্যানেজ করা লাগবে এবং তা কম্পোনেন্ট এর অনেক ডীপলি নেস্টেড কম্পোনেন্ট এ পাস করা লাগবে তখন `useREducer` হুক এর সাথে `useContext` ব্যাবহার করা যেতে পারে।
+

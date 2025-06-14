@@ -1,0 +1,201 @@
+import { Steps } from "nextra/components";
+
+## `Props` কি ?
+
+রিয়াক্টে `Parent Component` থেকে `Child Component` এ ডাটা প্রদানের জন্য `Props` ব্যাবহার করা হয়ে থাকে। `Props` অনেকটা ফাংশনের `Parameters` এর মতো।
+
+আমরা যেভাবে `HTML` এর `Attributes` লিখি সেভাবেই `Parent Component` থেকে `Child Component` এ `Props` পাঠাতে পারি।
+
+**উদাহরনঃ**
+
+```javascript filename="Profile.jsx" {4,5}
+export default function Profile() {
+    return (
+        <Avater //imgurl এবং size নামে দুটি props পাঠানো হয়েছে চাইল্ড কম্পোনেন্ট Avater এ।
+            imgurl='https://example.com/image/1.png'
+            size={100}
+        />
+    );
+}
+```
+
+```javascript filename="Avater.jsx" {5-7}
+export default function Avater(props) {
+    // parent  Avater কম্পোনেন্ট থেকে props নামে একটা Object হিসেবে props গুলো রিসিভ করা হয়েছে
+    return (
+        <img
+            src={props.imgurl}
+            alt='Avater Image'
+            size={props.size}
+        />
+    );
+}
+```
+
+`Props` এ আমরা যেকোন জাভাস্ক্রিপ্ট ভ্যালু পাঠাতে পারি,এমনকি ফাংশন ও পাঠাতে পারি।
+
+## কিভাবে `Props` পাঠাতে হয় এবং `Props` রিসিভ করতে হয় ?
+
+যেভাবে `Props` পাঠাতে হয় এবং `Props` রিসিভ করতে হয় নিচে তা বিস্তারিত ব্যাখ্যা করছি।
+
+<Steps>
+    ### Step 1 :  Pass props to the child component
+
+    ```javascript filename="Profile.jsx"
+        export default function Profile() {
+            return (
+              <Avatar
+                person={{ name: 'Lin Lanying', imageId: '1bX5QH6' }}
+                size={100}
+              />
+            );
+          }
+    ```
+    এখানে `Avatar`কম্পোনেন্ট থেকে তার চাইল্ড কম্পোনেন্টে
+    `person` = যা একটি অবজেক্ট,
+    `size` = যা একটি নাম্বার,
+    পাঠানো হয়েছে।
+
+### Step 2 : Read props inside the child component
+
+```javascript filename="Avater.jsx" {1,5-7}
+export default function Avater(props) {
+    return (
+        <img
+            src={props.imgurl}
+            alt='Avater Image'
+            size={props.size}
+        />
+    );
+}
+```
+
+`parent Avater` কম্পোনেন্ট থেকে `props` নামে একটা `Object` হিসেবে `props` গুলো রিসিভ করা হয়েছে
+
+</Steps>
+
+## `Distructuring` পদ্ধতিতে `Props` রিসিভ করা ।
+
+`Distructuring` পদ্ধতিতে `Props` রিসিভ করা যায়, সেক্ষেত্রে আমারা এভাবে করতে পারি।
+
+```javascript filename="Avater.jsx" {1}
+export default function Avater({ imgurl, size }) {
+    return (
+        <img
+            src={imgurl}
+            alt='Avater Image'
+            size={size}
+        />
+    );
+}
+```
+
+## `Props` এ ডিফল্ট ভ্যালু ব্যাবহার করা।
+
+কখনও কখনও `Props` এর ভ্যালু `Undefined` আসতে পারে,তখন আমাদের `Props` এর ডিফল্ট ভ্যালু সেট করা লাগতে পারে, সেক্ষেত্রে আমারা এভাবে `=` দিয়ে ডিফল্ট ভ্যালু সেট করতে পারি।
+
+```javascript showLineNumbers filename="Avater.jsx" {1}
+export default function Avater({ imgurl, size = 100 }) {
+    return (
+        <img
+            src={imgurl}
+            alt='Avater Image'
+            size={size}
+        />
+    );
+}
+```
+
+## Forwarding props with the JSX spread syntax
+
+কখনও কখনও এমন হতে পারে যে আমরা কোন কম্পোনেন্ট এ যেই `Props` গুলো রিসিভ করেছি, তার সবগুলো `Props` ওই কম্পোনেন্টের ভিতরেই অন্য আরেকটা কম্পোনেন্টের চাইল্ড কম্পোনেন্টে পাঠানো বা ফরওয়ার্ড করা লাগতে পারে। তখন আমরা ওই `Props` গুলো বার বার না লিখে `JSX spread syntax` `{...props} ` পাস করে দিতে পারি।
+
+এক্ষেত্রে আমরা মেইন যে কম্পোনেন্ট এ `Props` গুলো রিসিভ করবো সেখানে আমাদের `Distructuring Method` রিসিভ না করে `props` নামক অবজেক্ট হিসেবে ধরতে হবে।
+
+**উদাহরণঃ**
+
+<Steps>
+### Step 1:
+
+প্রথম `App` কম্পোনেন্ট থেকে `Profile` কম্পোনেন্টে `name`,`age`,`gender` নামে তিনটা `Props` পাস করা হয়েছে।
+
+```javascript filename="App.jsx" showLineNumbers
+export default function App() {
+    return (
+        <div>
+            <div>
+                <Profile
+                    name='Ripon'
+                    age={30}
+                    gender='male'
+                />
+            </div>
+        </div>
+    );
+}
+```
+
+### Step 2:
+
+এখানে `Profile` কম্পোনেন্ট এ সমস্ত `props`গুলো `props` নামক অবজেক্ট হিসেবে রিসিভ করা হয়েছে।
+
+```javascript filename="Profile.jsx" showLineNumbers {1}
+export default function Profile(props) {
+    return (
+        <div>
+            <Card {...props} />
+        </div>
+    );
+}
+```
+
+### Step 3:
+
+এখানে `Card` কম্পোনেন্ট এ সমস্ত `props`গুলো `{...props}` করে `Spread` করে পাঠানো হয়েছে ।
+
+```javascript filename="Profile.jsx" showLineNumbers {4}
+export default function Profile(props) {
+    return (
+        <div>
+            <Card {...props} />
+        </div>
+    );
+}
+```
+
+</Steps>
+
+## চিলড্রেন প্রপ্স হিসেবে `JSX`বা `Component` পাঠানো।
+
+আমরা একটা কম্পোনেন্ট দিয়ে `wrap` করে অন্য আরেকটা `Component` কে `Props` হিসেবে পাঠাতে পারি। এটাকে বলা হয় `children` `Props`। এবং রিসিভ করার সময়ও সেটাকে `children` নামেই রিসিভ করতে হয়।
+
+```javascript filename="Card.jsx" showLineNumbers {3-5}
+export default function Profile() {
+    return (
+        <Card>
+            <Profile />
+        </Card>
+    );
+}
+```
+
+```javascript filename="Card.jsx" showLineNumbers {1,5}
+export default function Card({ children }) {
+    // এখানে `Profile` কম্পোনেন্টকে `children` হিসেবে রিসিভ করা হয়েছে।
+    return (
+        <div className='card'>
+            <h1>This is Profile Card</h1>
+            {children}
+        </div>
+    );
+}
+```
+
+## Props are Immutable: why ?
+
+`Props` গুলো সরাসরি চেঞ্জ করা যায়না। কারণ `props` হলো `Immutable`. `props` কে শুধুমাত্র `Parent Component` থেকে `State` দ্বারা ম্যানেজ করতে হয়। কখনো কোন ইউজারের ইন্টারেকশনের কারনে যদি `props` এর ভ্যালু চেঞ্জ করা লাগে, তাহলে রিয়াক্ট তখন নতুন `Props` পাস করে `Child Component` এ। কিন্তু কখনই আগের পাঠানো `props` কে পরিবর্তন করেনা।
+
+নতুন `Props` পাঠানোর পর আগের `Props`টা কে জাভাস্ক্রিপ্ট মেমরি থেকে ফেলে দেয় বা গার্বেজ কালেক্টেড করে ফেলে।
+
+তাই কখনই `Child Component` এর ভিতর `Props` এর ভ্যালূ পরিবর্তন বা ওভাররাইড করা যাবেনা।
+

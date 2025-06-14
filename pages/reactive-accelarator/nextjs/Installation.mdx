@@ -1,0 +1,37 @@
+import { Callout } from "nextra/components"
+
+**Nextjs দুইভাবে ইন্সটল করা যায়, ১। অটোমেটিক ইন্সটল ২। ম্যানুয়াল ইন্সটল। আমরা এখানে অটোমেটিক ইন্সটল প্রসেস টা দেখবো, কেননা এটাই Nextjs রেকমেন্ড করে। যদি আপনি ম্যানুয়াল ইন্সটল সম্পর্কে জানতে চান,তাহলে [এখানে ক্লিক করুন](https://nextjs.org/docs/14/getting-started/installation#manual-installation)**
+
+## Installation
+
+**অটোমেটিক ইনস্টলেশন**  
+Next.js অ্যাপ তৈরি করার সহজ এবং অটোমেটিক পদ্ধতি হলো `create-next-app` ব্যবহার করা। এটি  সবকিছু অটোমেটিক সেটআপ করে দেয়। Nextjs দিয়ে একটি প্রজেক্ট তৈরি করতে নিচের প্রসেসগুলো ফলো করতে হয়। 
+
+
+**টার্মিনালে নিচের কমান্ডটি দিয়ে নতুন এপ্লিকেশন ইন্সটল শুরু করতে হয়**  
+```bash filename="Terminal" 
+npx create-next-app@latest  
+```
+<Callout type="info" emoji="ℹ️">
+`npx create-next-app` এরপরে `@latest` দিলে সবসময় লেটেস্ট ভার্সন ইন্সটল হবে। যেহেতু বর্তমানে Next Js এর 15 version রিলিজ হয়েছে, তাই এক্ষেত্রেও Next Js এর 15 version ইন্সটল হবে। কিন্তু যদি কোন স্পেসিফিক ভার্সন ইন্সটল করার প্রয়োজন হয় তাহলে `npx create-next-app` এরপরে `@versionNumber eg: @14` দিতে হয়
+</Callout>
+
+
+ইনস্টলেশন চলাকালীন, আপনাকে কিছু প্রশ্ন করা হবে:  
+
+```plaintext  filename="Terminal" 
+What is your project named? my-app  
+Would you like to use TypeScript? No / Yes  
+Would you like to use ESLint? No / Yes  
+Would you like to use Tailwind CSS? No / Yes  
+Would you like to use `src/` directory? No / Yes  
+Would you like to use App Router? (recommended) No / Yes  
+Would you like to customize the default import alias (@/*)? No / Yes  
+What import alias would you like configured? @/*  
+```  
+
+এই প্রশ্নগুলোর উত্তর দেওয়ার পর, `create-next-app` আপনার প্রজেক্ট নাম অনুযায়ী একটি ফোল্ডার তৈরি করবে এবং প্রয়োজনীয় সব ডিপেনডেন্সি ইনস্টল করবে।  
+
+### **গুরুত্বপূর্ণ তথ্য:**  
+- Next.js এখন ডিফল্টভাবে TypeScript, ESLint, এবং Tailwind CSS কনফিগারেশন নিয়ে আসে।  
+- আপনি চাইলে রুট ডিরেক্টরিতে `src` ডিরেক্টরি ব্যবহার করতে পারেন, যাতে আপনার অ্যাপ্লিকেশনের কোড এবং কনফিগারেশন ফাইল আলাদা থাকে।

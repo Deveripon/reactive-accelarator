@@ -1,0 +1,12 @@
+{
+    "declaretive-imperative": "3.1 - Declarative vs Imperative UI",
+    "thinking-about-ui": "3.2 - Thinking About UI Declaratively in React",
+    "choosing-the-state-structure": "3.3 - Choosing the state Structure in React",
+    "lifting-state-up": "3.4 - Share State Between Components: Lifting State Up",
+    "preserving-and-reseting-state": "3.5 - Preserving and Reseting State : Default Behaviour",
+    "reseting-state-at-same-position": "3.6 - Resetting State at Same Position : Changing Default Behaviour",
+    "extracting-state-logic-into-reducer": "3.7 - Extracting State Logic into Reducers",
+    "passing-data-deeply-with-context": "3.8 - Passing Data Deeply With Context - Introduction to Context API",
+    "scaling-up-with-reducer-and-context": "3.9 - Scaling Up with Reducers and Context"
+}
+

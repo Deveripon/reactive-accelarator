@@ -1,0 +1,291 @@
+import { Steps } from "nextra/components";
+
+### Installation
+
+#### Setup React Project
+
+প্রথমে একটা রিয়াক্ট প্রজেক্ট সেটআপ করতে হবে, রিয়াক্ট প্রজেক্ট Vite দিয়ে সেটআপ করার জন্য নিচের কমান্ড ব্যবাহার করতে হবে, এবং তারপর প্রম্পট গুলো ফলো করে প্রজেক্ট সেটআপ করা লাগবে।
+
+```bash
+    npx create-vite@latest
+```
+
+তারপর, স্ক্রিনে আসা প্রম্পট গুলো ফলো করতে হবে।
+
+অথবা আরও একটু সর্টকাট আছে সেটা হলো এই কমান্ড ব্যাবহার করা,
+
+```bash
+npm create vite@latest your-project-name -- --template react
+```
+
+তারপর, স্ক্রিনে আসা প্রম্পট গুলো ফলো করতে হবে।
+
+#### Add React Router Dom to Project
+
+রিয়াক্ট প্রজেক্টে `React Router Dom` সেটআপ করতে নিচের কমান্ড দিতে হবে।
+
+```bash
+npm install react-router-dom
+```
+
+#### Adding A Router
+
+প্রথমে একটি ব্রাউজার রাউটার তৈরি করতে হবে এবং আমাদের প্রথম রুট কনফিগার করতে হবে। এটি আমাদের ওয়েব অ্যাপের জন্য ক্লায়েন্ট সাইড রাউটিং এনাবল করবে। একটি `browser router` বানানো এবং তা কনফিগার করে আমাদের এপ্লিকেশনে রাউটিং এনাবল করতে হলে নিচের স্টেপ ফলো করতে হবে।
+
+<Steps>
+
+### একটি ব্রাউজার রাউটার তৈরি করা।
+
+এজন্য আমাদেরকে `Main.jsx` ফাইলে এসে `react-router-dom` থেকে `createBrowserRouter` নামে একটি হুক ইম্পোর্ট করতে হবে এবং সেখানে নিচের মতো করে `browser router` বানাতে হবে।
+
+```jsx filename="main.jsx" {3, 6-11}
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter } from "react-router-dom";
+import "./index.css";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <div>Home Page</div>,
+    },
+]);
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <App />
+    </StrictMode>
+);
+```
+
+### তৈরি করা ব্রাউজার রাউটার টাকে পুরো এপ্লিকেশনের প্রভাইড করে দেওয়া।
+
+এজন্য আমাদেরকে `react-router-dom` থেকে `RouterProvider` নামে একটি কনটেক্সট প্রভাইডার ইম্পোর্ট করতে হবে এবং সেখানে নিচের মতো করে `browser router` টাকে প্রভাইড করতে হবে।
+
+```jsx filename="main.jsx" {3, 6-11 , 15}
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <div>Home Page</div>,
+    },
+]);
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
+);
+```
+
+</Steps>
+
+তাহলেই আমাদের Router সেটআপ করা শেষ এবং আমরা ব্রাউজারে আমাদের প্রথম রাউট টা দেখতে পাবো এবং সেখানে শুধুমাত্র `Home Page` এই টেক্সটটা দেখতে পাবো।
+
+### The Root Route / Home Page Route
+
+আমরা আমাদের এপ্লিকেশনে একটা `/` রাউট দেখতে পাচ্ছি যেখানে শুধুমাত্র `Home Page` এই টেক্সটটা দেখতে পাচ্ছি। এবার আমরা একটা `Home Page` বা মেইন লে-আউট সেটআপ করবো।
+
+সেজন্য প্রথমে আমাদেরকে `Home Page` বা মেইন লে-আউট এর জন্য আমাদের নিজস্ব কম্পোনেন্ট বানাতে হবে। যেহেতু এইটা `/` রাউট, তাই আমরা এর নাম দিতে পারি `Root`
+
+তারপর আমরা আমদের সেই `Root` লে-আউট টাকে আমাদের `/` রাউটারে ব্যাবহার করবো।
+
+```jsx filename="main.jsx" {5,10}
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import Root from "./pages/Root";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Root />,
+    },
+]);
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
+);
+```
+
+তাহলেই আমরা এবার আমার `/` রাউটে আমাদের `Root` লে-আউট এর সবকিছু দেখতে পাবো।
+
+### Handling Not Found Errors
+
+এখন আমাদের এপ্লিকেশনে শুধুমাত্র একটাই রাউট আছে `/` রাউট। আমরা যদি এখন `URL` এ অন্য কোন রাউট দেই, তাহলে আমরা একটা ইরর পেজ দেখতে পাবো। কিন্তু সেটা `react-router-dom` এর নিজস্ব ডিজাইন, কিন্তু আমরা এই ইররটাকে আমাদের নিজস্ব ইরর পেজ দিয়ে ম্যানেজ করতে চাই,
+
+তারজন্য আমাদের প্রথমে একটা `ErrorPage` বানাতে হবে এবং সেটা রাউটারের `errorElement` হিসেবে সেট করতে হবে।
+
+```jsx filename="main.jsx" {5,12}
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import ErrorPage from "./pages/ErrorPage";
+import Root from "./pages/Root";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Root />,
+        errorElement: <ErrorPage />,
+    },
+]);
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
+);
+```
+
+তাহলেই এবার আমাদের UI তে আমাদের বানানো ইরর পেজ দেখতে পাবো
+
+ইরর পেজে আমরা `react-router-dom` থেকে `useRouterError` নামে একটা হুক ইম্পোর্ট করে ইররের ডিটেইলস দেখতে পারি।
+
+```jsx filename="ErrorPage.jsx" {1,4,11}
+import { useRouteError } from "react-router-dom";
+
+export default function ErrorPage() {
+    const { status, statusText } = useRouteError();
+
+    return (
+        <div id='error-page'>
+            <h1>Oops!</h1>
+            <p>Sorry, an unexpected error has occurred.</p>
+            <p>
+                {status} | {statusText}
+            </p>
+        </div>
+    );
+}
+```
+
+### Add More Route
+
+আমাদের এপ্লিকেশনে এখন একটাই রাউট আছে `/`। এবার আমরা চাইলে আমাদের যতগুলো রাউট প্রয়োজন হবে ততগুলা রাউট এড করতে পারি। এজন্য আমাদের যেই রাউট লাগবে সেই রাউটের জন্য প্রয়োজনীয় `JSX`টা বানিয়ে নিতে হবে । তারপর `browser router`এর অ্যারেতে অবজেক্ট আকারে সেই রাউটের `path` এবং তার `element` ডিফাইন করে দিতে হবে।
+
+```jsx filename="main.jsx" {5,15-18}
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import Contact from "./pages/Contact";
+import ErrorPage from "./pages/ErrorPage";
+import Root from "./pages/Root";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Root />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/contacts/:contactId",
+        element: <Contact />,
+    },
+]);
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
+);
+```
+
+খেয়াল করুন, আমরা এখানে `path: "/contacts/:contactId"` দিয়েছি। এখানে `/:contactId` মানে হলো ডাইনামিক রাউট। `/contacts` এর পর আমরা স্পেসিফিক কোন একটা আইডি এক্সেস করতে চাইলে এভবে ডাইনামিক রাউট সেগমেন্ট ব্যাবহার করতে পারি।
+
+### Nested Routes
+
+আমরা যখন চাই যে, আমাদের এপ্লিকেশনে একটা `Root` লে-আউট থাকবে এবং সেই লে-আউটের কোন একটা স্পেসিফিক জায়গায় আমাদের অন্যন্য রাউটের কন্টেন্টগুলো ভিসিবল হবে,মানে পুরো এপ্লিকেশনের একটাই লে-আউট থাকবে এবং যখনি রাউট চেঞ্জ হবে শুধুমাত্র সেই রাউট স্পেসিফিক কন্টেন্টগুলো সেই লে-আউট ব্যাবহার করে লে-আউটের কোন একটা অংশে ভিজিবল হবে, তাহলে আমরা নেস্টেড রাউটিং করতে পারি। ধরে নেই আমরা আমদের `/contacts` রাউটটাকে নেস্টেড রাউট করতে চাচ্ছি। তাহলে আমরা এভাবে করতে পারি।
+
+```jsx filename="main.jsx" {14-19}
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import Contact from "./pages/Contact";
+import ErrorPage from "./pages/ErrorPage";
+import Root from "./pages/Root";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Root />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                path: "/contacts/:contactId",
+                element: <Contact />,
+            },
+        ],
+    },
+]);
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
+);
+```
+
+এক্ষেত্রে আমাদের `Root` লে-আউটের `children` হিসেবে সেই রাউটটা ডিফাইন করতে হবে।
+
+এবং `Root` লে-আউটের যেই অংশে সেই লে-আউটের কন্টেন্টগুলো শো করাতে চাই তা ডিফাইন করার জন্য `react-router-dom` এর `<Outlet/>`নামক কম্পোনেন্ট ইম্পোর্ট করে সেইটা দিয়ে বুঝিয়ে দিতে হবে।
+
+```jsx filename="Root.jsx" {1,8}
+import { Outlet } from "react-router-dom";
+
+export default function Root() {
+    return (
+        <>
+            {/* all the other elements */}
+            <div id='detail'>
+                <Outlet />
+            </div>
+        </>
+    );
+}
+```
+
+### Client Side Routing
+
+এতক্ষণ আমদের সকল রাউট ঠিকঠাক কাজ করছিলো,কিন্তু খেয়াল করলে দেখা যাবে যে, যখনি আমরা রাউটিং করছি,তখন আমাদের এপ্লিকেশনের পেজগুলো রিলোড নিচ্ছে, এটা কিন্তু রিয়াক্ট এপ্লিকেশনের বিহেবিয়ার না। তাই আমরা এটাকে `Client Side Routing` করতে চাইলে আমাদের `<a/>` ট্যাগের পরিবর্তে `react-router-dom` এর `<Link to=""/>` কম্পোনেন্ট ব্যাবহার করতে হবে এর `href` এর পরিবর্তে `to` ব্যাবহার করতে হবে।
+
+```jsx filename="Root.jsx" {1,12,15}
+import { Outlet, Link } from "react-router-dom";
+
+export default function Root() {
+    return (
+        <>
+            <div id='sidebar'>
+                {/* other elements */}
+
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to={`contacts/1`}>Your Name</Link>
+                        </li>
+                        <li>
+                            <Link to={`contacts/2`}>Your Friend</Link>
+                        </li>
+                    </ul>
+                </nav>
+
+                {/* other elements */}
+            </div>
+        </>
+    );
+}
+```
+
+
+
+**আমরা চেষ্টা করছি খুব দ্রুত পুরো ডকুমেন্টটিকে আপডেট করতে**

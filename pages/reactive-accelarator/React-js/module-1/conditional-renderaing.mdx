@@ -1,0 +1,125 @@
+## কন্ডিশনাল রেন্ডারিং কি ?
+
+রিয়াক্টে আমরা কোন শর্তের উপর ডিপেন্ড করে কোন কিছু দেখাতে পারি। আমরা কি দেখাবো আর কি দেখাবোনা তা নির্দিষ্ট লজিকের উপর ভিত্তি করে করতে পারি। এটাকে রিয়াক্টে কন্ডিশনাল রেন্ডারিং বলা হয়।
+
+আমরা বেশ কিছু উপায়ে রিয়াক্টে কন্ডিশনাল রেন্ডারিং করতে পাড়িঃ
+
+1. `if else statements`
+
+2. `condition ? true : false - Ternery Operator`
+
+3. `&& - Logical AND Operator`
+
+4. `|| - Logical OR operator`
+
+5. `?? - Nullish Coalesing operator`
+
+### `if else statements`
+
+আমাদের যদি অনেক কমপ্লেক্স লজিক থাকে,এবং তার উপর ভিত্তি করে আমাদের কিছু রেন্ডার করা লাগে,তাহলে আমরা `if else statements` এর মাধ্যমে তা করতে পারি। সেক্ষেত্রে আমাদেরকে `JSX` এর বাহিরে `if else statements` ডিফাইন করতে হবে।
+
+** উদাহরণঃ**
+
+```javascript filename="PackingList.jsx" showLineNumbers
+function Item({ name, isPacked }) {
+    if (isPacked) {
+        return <li className='item'>{name} ✅</li>;
+    }
+    return <li className='item'>{name}</li>;
+}
+
+export default function PackingList() {
+    return (
+        <section>
+            <h1>Sally Ride's Packing List</h1>
+            <ul>
+                <Item
+                    isPacked={true}
+                    name='Space suit'
+                />
+                <Item
+                    isPacked={true}
+                    name='Helmet with a golden leaf'
+                />
+                <Item
+                    isPacked={false}
+                    name='Photo of Tam'
+                />
+            </ul>
+        </section>
+    );
+}
+```
+
+### `condition ? true : false - Ternery Operator`
+
+আমাদের কন্ডিশন যদি অনেক বেশি কমপ্লেক্স না হয় এবং ম্যক্সিমাম ২-৩ লেবেলের বেশি ডিপ না হয় তাহলে আমরা খুব সহজেই `JSX` এর ভিতরেই `Ternery Operator` ব্যাবহার করে কন্ডিশনাল রেন্ডারিং করতে পারি।
+
+** উদাহরণঃ**
+
+```javascript filename="Item.jsx" showLineNumbers
+function Item({ name, isPacked }) {
+    return <li className='item'>{isPacked ? name + " ✅" : name}</li>;
+}
+```
+
+### `&& - Logical AND Operator`
+
+যদি আমাদের কন্ডিশন এমন হয় যে, কন্ডিশন মিললে কিছু রেন্ডার করবো আর না মিললে কিছুই রেন্ডার করবোনা,তাহলে আমরা আরও শর্টকাটে `&& - Logical AND Operator` ব্যাবহার করে সেটা করতে পারি।
+
+```javascript filename="Item.jsx" showLineNumbers
+function Item({ name, isPacked }) {
+    return (
+        <li className='item'>
+            {name} {isPacked && "✅"}
+        </li>
+    );
+}
+```
+
+লজিকাল `&&` এর মানে হলো যে, `&&` এর বাম পাশে `truthy` ভ্যালু হয় তাহলে ডান পাশের ভ্যালু রিটার্ন করবে,আর `falsy` হলে কিছুই রিটার্ন করবেনা।
+
+```javascript showLineNumbers
+let logic = "true";
+logic && "Something to Render"; // এখানে লজিকের ভ্যালু `truthy` হলেই শুধ্যমাত্র `&&` এর ডান পাশে যা থাকবে তা রিটার্ন করবে,আর না হলে কিছুই রিটার্ন করবেনা।
+```
+
+তবে এক্ষেত্র মনে রাখতে হবে যে, `&&` এর বাম পাশের ডাটাটাইপ যেন নাম্বার না হয়,কেননা যদি নাম্বার হয় তাহলে নাম্বারের `falsy` ভ্যালু হিসেবে `0`রিটার্ন করে দিবে।
+
+### `|| - Logical OR operator`
+
+লজিকাল `&&` এর মতো `|| - Logical OR operator` ব্যাবহার করেও সেম কাজ করতে পারি।
+
+```javascript filename="Item.jsx" showLineNumbers
+function Item({ name, isPacked }) {
+    return (
+        <li className='item'>
+            {name} {isPacked || "✅"}
+        </li>
+    );
+}
+```
+
+তবে লজিকাল `||` এর মানে হলো যে, `||` এর বাম পাশে `falsy` (`0`,`null`,`undefined`,`""`,`false`,`NaN`) ভ্যালু হয় তাহলেই শুধুমাত্র ডান পাশের ভ্যালু রিটার্ন করবে,আর না হলে কিছুই রিটার্ন করবেনা।
+
+```javascript showLineNumbers
+let logic = "false";
+logic || "Something to Render"; // এখানে লজিকের ভ্যালু `falsy` হলেই শুধ্যমাত্র `||` এর ডান পাশে যা থাকবে তা রিটার্ন করবে,আর না হলে কিছুই রিটার্ন করবেনা।
+```
+
+### `?? - Nullish Coalesing operator`
+
+যদি কোন ডাইনামিক ভ্যালু `null` অথবা `undefined` হয় তাহলে যদি আমরা কোন কিছু করতে চাই, তাহলে আমরা `?? - Nullish Coalesing operator` ব্যাবহার করে তা করতে পারি।
+
+```javascript filename="Item.jsx" showLineNumbers
+function Item({ name, isPacked, data }) {
+    return (
+        data ?? (
+            <li className='item'>
+                {name} {isPacked || "✅"}
+            </li>
+        )
+    );
+}
+```
+

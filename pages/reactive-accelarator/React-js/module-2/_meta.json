@@ -1,0 +1,11 @@
+{
+    "responding-to-event": "2.1 - Responding to Events - Adding Event Handlers",
+    "event-propagation": "2.2 - Responding to Events - Event Propagation",
+    "understanding-state": "2.3 - Understanding State - A Component's Memory",
+    "how-rendering-works": "2.4 - How Rendering Works",
+    "state-as-a-snapshot": "2.5 - State as a Snapshot",
+    "queueing-state": "2.6 - Queueing a Series of State Updates",
+    "updating-object-in-state": "2.7 - Updating Objects in a State",
+    "updateing-array-in-state": "2.8 - Updating Arrays in a State"
+}
+

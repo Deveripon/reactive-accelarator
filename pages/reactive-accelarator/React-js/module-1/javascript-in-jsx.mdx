@@ -1,0 +1,55 @@
+**`JSX`এ আমরা জাভাস্ক্রিপ্ট এবং `HTML` মার্কাপ একসাথে লিখতে পারি। যখনি মার্কাপে কোন ডাইয়ামিক ভ্যালু ব্যাবহার করতে হয়,অথবা কোন লজিকাল অপারেসন চালাতে হয় এমনকি যদি কোন ভ্যারিয়াবল বা অবজেক্টের ভ্যালু এক্সেস করার প্রয়োজন হয়,তখন তা `{ }` ডাবল কার্লি ব্রেসেস এর ভিতরে লিখতে হয়।**
+
+উদাহরনঃ
+
+```javascript filename="Profile.jsx" showLineNumbers {5-6,8}
+export default function Profile(name) {
+    let age = 30;
+    return (
+        <div className='profile-card'>
+            <h1>Hello Mr {name}</h1> // name হলো একটা ডাইনামিক ভ্যালূ যা {} দিয়ে
+            জাভাস্ক্রিপ্টের মাধ্যমে লেখা হয়েছে।
+            <p>Your age is {age}</p> // age একটা ভ্যারিয়েবল থেকে পাওয়া ডাইনামিক ভ্যালু
+            যা {} দিয়ে লেখা হয়েছে।
+            <p>
+                You are {age >= 21 ? "Eligable" : "Not Eligable"} for Marraige
+                // এই লাইনে জাভাস্ক্রিপ্টের মাধ্যমে লজিকাল অপারেশন করা হয়েছে
+            </p>
+        </div>
+    );
+}
+```
+
+অর্থাৎ `{ }` দিয়ে এর ভিতরে আমরা জাভাস্ক্রিপ্টের এক্সপ্রেশন লিখতে পারি।
+
+## Using “double curlies”: CSS and other objects in JSX
+
+উদাহরনঃ
+
+```javascript filename="Profile.jsx" showLineNumbers {6,8-11}
+export default function Profile(name) {
+    let age = 30;
+    return (
+        <div
+            className='profile-card'
+            style={{
+                // এই লাইনে অবজেক্ট লেখা হয়েছে
+                backgroundColor: "gray",
+                color: "black",
+                fontWeight: "bold",
+            }}>
+            <h1>Hello Mr {name}</h1> // name হলো একটা ডাইনামিক ভ্যালূ যা {} দিয়ে
+            জাভাস্ক্রিপ্টের মাধ্যমে লেখা হয়েছে।
+            <p>Your age is {age}</p> // age একটা ভ্যারিয়েবল থেকে পাওয়া ডাইনামিক ভ্যালু
+            যা {} দিয়ে লেখা হয়েছে।
+            <p>
+                You are {age >= 21 ? "Eligable" : "Not Eligable"} for Marraige
+                // এই লাইনে জাভাস্ক্রিপ্টের মাধ্যমে লজিকাল অপারেশন করা হয়েছে
+            </p>
+        </div>
+    );
+}
+```
+
+যখন `JSX` এ `{ }` এর ভিতরে কোন অবজেক্ট লিখা লাগবে তখনও একই স্টেপ ফলো করতে হবে, এতে হয়তো মনে হতে পারে যে আমরা দুইবার `{ }` ব্যাবহার করছি, কিন্তু না, প্রথম `{ }` টা হলো জাভাস্ক্রিপ্টের জন্য জায়গা বানানো এবং দ্বিতীয় `{ }` টা হলো অবজেক্ট এর জন্য।
+

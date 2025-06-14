@@ -1,6 +1,22 @@
-# Reactive Accilarator
+# Reactive accelarator
 
-**This is documantation project to make document my learing from Reactive Accilarator Course from [LWS-Learn With Sumt](https://learnwithsumt.com) Created with [NextJS](http://nextjs.org)**
+**This is documantation project to make document my learing from Reactive accelarator Course from [LWS-Learn With Sumt](https://learnwithsumt.com) Created with [NextJS](http://nextjs.org)**
+
+## 🚀 Live Preview
+
+🔗 [Live Site](https://reactive-accelerator.vercel.app)
+
+## 🖥️ Preview
+
+**Dark Theme:**
+
+![Dark Theme](./public/dark-theme.png)
+
+**Light Theme:**
+
+![Light Theme](./public/light-theme.png)
+
+---
 
 ## Getting Started
 
@@ -38,4 +54,3 @@ Example:
 ## Commiting
 
 Try to use conversational Commit when you commiting. like, `Doc Update : I am updated the Lesson XX documentation Commiting `
-

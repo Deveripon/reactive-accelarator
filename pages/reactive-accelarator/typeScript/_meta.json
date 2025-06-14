@@ -1,0 +1,10 @@
+{
+    "installing-typescript": "Installation and Setup",
+    "basic-types": "Introduction of  Basic Types",
+    "type-inferance-annotation": "Understanding of Type Inferance and Type Annotaion",
+    "interface-alias": "Introduction to Type Interfaces and Type Aliases",
+    "object-property-modifier": "Objects Property Modifier and Advanced Types",
+    "classes-objects": "Introduction of Class in TypeScript"
+
+
+}

@@ -1,0 +1,169 @@
+## `JSX` কি ?
+
+`JSX` হলো জাভাস্ক্রিপ্টের একটি সিনট্যাক্স এক্সটেনশন যা আমাদেরকে `HTML` এর মতো মার্কাপ লিখতে সাহায্য করে । `JSX` এর বড় সুবিধা হলো এখানে একই জায়গায়(কম্পোনেন্টের ভিতর) জাভাস্ক্রিপ্টের লজিক ও `HTML` এর মার্কাপ লিখা যায়। যা পরবর্তিতে কোথাও কিছু চেঞ্জ করতে হলে আমাদের এক্সট্রা ফ্লেক্সিবিলিটি দেয়।
+
+`JSX` দেখতে একদম `HTML` এর মতো হলেও এটা কিন্তু `HTML` নয়,বরং `HTML` এর চাইতে অনেক বেশি `Strict`। `JSX` এ কোথাও কোন ভুল করলে তা সাথে সাথে `Error` দিয়ে দেয়।
+
+`HTML` এ আমরা শুধুমাত্র স্ট্যাটিক কন্টেন্ট লিখতে পারি,কিন্তু `JSX` এ আমারা ডাইনামিক ভ্যালু ব্যাবহার করতে পারি।
+
+## `JSX` লিখার রুলসগুলো কি কি ?
+
+`JSX` এ বেশ কিছু রুলস ফলো করতে হয় তা হলোঃ
+
+### 1. Return a Single root element:
+
+`JSX` এক্টিমাত্র সিঙ্গেল রুট এলিমেন্ট রিটার্ন করতে হবে, যদি মাল্টিপল এলিমেন্ট রিটার্ন করতে হয় তাহলে অবশ্যই একটি প্যারেন্ট এলিমেন্ট দিয়ে `wrap` করে দিতে হবে। এক্ষেত্র চাইলে `<div> </div>` এলিমেন্ট ব্যাবহার করা যায়। তবে `<div> </div>` ব্যাবহার করলে `HTML` এর `Eliment Tree` তে একটা অতিরিক্ত `<div> </div>` এলিমেন্ট রেন্ডার হয়।
+
+❌ ভুল
+
+```javascript filename= "Profile.jsx  "
+export default function Profile() {
+    return (
+            <h1>Hello Mr XX</h1>
+            <p>Your age is 30</p>
+        // এই কোডটা কাজ করবেনা,কারণ দুইটা এলিমেন্টকে রিটার্ন করা হয়েছে
+    );
+}
+```
+
+✅ সঠিক
+
+```javascript filename= "Profile.jsx  "
+export default function Profile() {
+    return (
+        <div>
+            <h1>Hello Mr XX</h1>
+            <p>Your age is 30</p>
+        </div>
+        // এই কোডটা কাজ করবে,কারণ দুইটা এলিমেন্টকে একটা প্যারেন্ট `<div> </div>` দিয়ে wrap করা হয়েছে
+    );
+}
+```
+
+তবে আপানর ইচ্ছা যদি হয় যে আপনি কোন অতিরিক্ত `<div> </div>` এলিমেন্ট রেন্ডার করবেন না তাহলে, `<></>` এভাবে ব্যাবহার করতে পারেন। এটাকে বলা হয় `Fragment` ট্যাগ। আবার যদি কখনও `Fragment` এর ভিতরে `key` পাস করা লাগে,তাহলে ফ্রাগমেন্ট `<></>` এভাবে না লিখে `<Fragment></Fragment>` এভাবে লিখতে হবে।
+
+#### কেন আমাদের একটি মূল JSX রিটার্ন করতে হয়?
+
+    <small>**Credit to : Saffaullah Shuvo**</small>
+
+Well, যে কোন প্রোগ্রামিং এই function থেকে কেবল একটি data type/structure এর ডেটা রিটার্ন করা যায়। যেমন একটি সিম্পল নাম্বার অথবা কোন কমপ্লেক্স ডেটা স্ট্রাকচার,
+
+```javascript
+function returnOne() { return 1; } // দুইটা নাম্বার রিটার্ন করা কি সম্ভব?
+function returnTwo() { return (100 500) } // এটা একটা syntax error // তারমানে Compiler এইরকম syntax সাপোর্ট করেনা
+
+```
+
+তাহলে দুইটা নাম্বার কি রিটার্ন করা যাবে না? যাবে-
+
+```javascript
+function returnTwo() { return [100, 500]; // আরো অনেকভাবেই করা যায় }
+```
+
+JSX গুলা যেহেতু javascript Object তাই
+
+```javascript
+function returnTwoJSX() {
+return (<h1>Hi</h1> <h2>Hello</h2>)
+ }
+  // Behind the scene
+  function returnTwoJSX() {
+   return (
+    {type: 'h1', props: { children: 'Hi'}} // object1
+    {type: 'h2', props: { children: 'Hello'}} // object2
+    )
+    }
+     // তাই এটাও syntax error
+
+```
+
+কিন্তু আমরা একটা Array এর ভিতরে রেখে কিংবা একটা প্যারেন্ট এলিমেন্টের ভিতরে রেখে একটা ডেটা হিসেবেই return করতে পারি।
+
+-   সল্যুশন ১ - প্যারেন্ট এলিমেন্ট দিয়ে Wrap করে দেয়া
+
+```javascript
+function returnParentJSX() {
+    return (
+        <div>
+            <h1>Hi</h1>
+            <h2>Hello</h2>
+        </div>
+    );
+}
+// Behind the scene
+function returnParentJSX() {
+    return {
+        type: "div",
+        props: { children: [object1, object2] },
+        // ...additional properties
+    };
+}
+```
+
+-   সল্যুশন ২ - প্যারেন্ট হিসেবে Fragment ব্যবহার করা।
+
+```javascript
+function returnFragmentJSX() {
+    return (
+        <Fragment>
+            {" "}
+            // short form <></>
+            <h1>Hi</h1>
+            <h2>Hello</h2>
+        </Fragment>
+    );
+}
+// Behind the scene
+function returnFragmentJSX() {
+    return {
+        type: Symbol(react.fragment),
+        props: { children: [object1, object2] }, // ...additional property
+    };
+}
+```
+
+JSX এর বদলে ডিরেক্ট Object Return করলে কি কাজ করবে? যেমনঃ
+
+```javascript
+function returnDirectObject() {
+    return {
+        type: "div",
+        props: {
+            className: "bg-white",
+            children: [
+                {
+                    type: "h1",
+                    props: { className: "text-2xl", children: "Hi" },
+                },
+                { type: "p", props: { children: "Hello World" } },
+            ],
+        },
+    };
+}
+```
+
+না, কারন এই Object টা React এর ওয়েতে বানানো হয়নি। রিয়েক্ট আরও Additional Property রাখে Object er ভিতর। রিয়েক্ট যেভাবে বানায় -
+
+```javascript
+import { createElement } from "react";
+
+function returnDirectObject() {
+    return createElement(
+        "div",
+        { className: "bg-white" },
+        createElement("h1", { className: "text-2xl" }, "Hi"),
+        createElement("p", null, "Hello World")
+    );
+}
+```
+
+### 2. Close all the tags:
+
+`JSX` এ ব্যাবহার করা প্রতিটা ট্যাগ অবশ্যই ক্লোজ করা লাগবে। সেলফ ক্লোজিং ট্যাগ যেগুলো আছে যেমনঃ `<img>`,`<hr>`,সেগুলোও অবশ্যই এভাবে `<img />`,`<hr />` ক্লোজ করা লাগবে ।
+
+### 3. camelCase ~all~ most of the things!:
+
+`JSX` এ যেহেতু আমারা `JavaScript` লিখছি,সেহেতু আমাদের জাভাস্ক্রিপ্ট এর রুলস অনুযায়ী `multiple-word` এর `Attribute` গুলোকে `camelCase` এ লিখতে হবে।
+
+**`class` Attribute টা যেহেতু জাভাস্ক্রিপ্টের রিজার্ভ কিওয়ার্ড,তাই আমরা `class` ব্যাবহার করতে পারবোনা। `class` এর পরিবর্তে আমদের `className` ব্যাবহার করতে হবে ।**
+

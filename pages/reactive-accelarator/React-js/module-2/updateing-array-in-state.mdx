@@ -1,0 +1,385 @@
+**জাভাস্ক্রিপ্টে `Array` মিউটেড করা যায়, কিন্তু যখন আপনি `Array` কে রিয়াক্টের কোন স্টেট ভ্যারিয়েবল এর ভ্যালু হিসেবে স্টোর করবেন তখন অবশ্যই আপনাকে ভাবতে হবে যে - `Array` কেও মিউটেড করা যায়না। যখনি কোন স্টেট ভ্যারিয়েবলের ভ্যালু `Array` থাকবে,তখন তা আপডেট করতে হলে অবশ্যই সম্পুর্ন নতুন `Array` অথবা আগের `Array` এর কপি বানিয়ে সেখানে ভ্যালু আপডেট করে তারপর স্টেট এর আপডেটেড ভ্যালু হিসেবে সেট করতে হবে।**
+
+### (Updating arrays without mutation) - কিভাবে মিউটেশন ছাড়া `Array` আপডেট করতে পারি।
+
+জাভাস্ক্রিপ্টে `Array` হলো একধরনের অবজেক্ট। রিয়াক্টের স্টেট হিসেবে `Array` কেও সবসময় `read-only` মনে করতে হবে। তাই আপনি কখনওই `arr[0]= "something"` এভাবে সরাসরি রি-এসাইন করতে পারবেন না। এবং এছাড়াও বেশ কিছু `Array` মেথড আছে যা পুরাতন `Array` কে মিউটেড করে যেমন: `push` ,`pop`,`shift`,`unshift`,`splice`,`sort`,`reverse`,`arr[i]` এইগুলো রিয়াক্টের স্টেট আপডেট করার জন্য ব্যাবহার করা উচিত নয়।
+
+চলুন জেনে নেই রিয়াক্ট এর স্টেট আপডেট করা জন্য `Array` ডাটা আপডেট করতে কোন কোন মেথডগুলো ব্যাবহার করা যাবে আর কোনগুলো ব্যাবহার করা উচিত নয়।
+
+| ব্যাবহারের কারণ                | ❌ - পুরাতন `Array` কে মিউটেড করে | ✅ যেগুলো নতুন `Arry` রিটার্ন করে                                                    |
+| ------------------------------ | --------------------------------- | ------------------------------------------------------------------------------------ |
+| এড করা (Adding in Array)       | `push`, `unshift`                 | `concat`, `[...sprade,]`, `array.with()`                                             |
+| বাদ দেয়া (Removing from Array) | `pop`, `shift`, `splice`          | `filter`, `slice`, `toSpliced`                                                       |
+| রিপ্লেস করা (Replac in Array)  | `splice`, `arr[0]="something"`    | `map`, `toSpliced`                                                                   |
+| সর্টিং করা (Sort in Array)     | `sort`, `reverse`                 | প্রথমে পুরাতন `Array` কপি করে নিয়ে `sort` বা `reverse` করা, `toSorted`, `toReversed` |
+
+#### (Adding to an Array) `Array` তে এলিমেন্ট এড করা ।
+
+**avoid `push()` , use `concat` or `[...spread]`**
+
+`Array` তে কোনকিছু এড করতে হলে স্বাভাবিকভাবে `push()` মেথড ব্যাবহার করা যায়,কিন্তু `push()` মেথড মেইন `Array` কে মিউটেড করে ফেলে। তাই রিয়াক্টের স্টেট আপডেট করার সময় `push()` মেথড ব্যাবহার না করে `concat` অথবা `[...spread]` ব্যাবহার করে `Array` তে আইটেম এড করা উচিত।
+
+```jsx filename="App.jsx" showLineNumbers
+let nextId = 0
+const [artists, setArtists] = useState([{..}, {..}, {..}]);
+setArtists([
+    ...artists, // that contains all the old items
+    { id: nextId++, name: "Something" }, // and one new item at the end
+]);
+```
+
+#### (Removing from an array) `Array` থেকে এলিমেন্ট রিমুভ করা।
+
+**avoid `pop`,`unshift` use `filter` or `slice` or `toSpliced`** `Array` থেকে কোন কিছু বাদ দিতে হলে সবচেয়ে সহজ উপায় হলো `filter` ব্যাবহার করা। `filter` মেথড মেইন `Array` তে হাত দেয়না, বরং একটা নতুন `Array` রিটার্ন করে।
+
+```jsx filename="App.jsx" showLineNumbers
+let nextId = 0
+const [artists, setArtists] = useState([{..}, {..}, {..}]);
+const filteredData = artists.filter((item)=> item.id !== 2)
+setArtists(filteredData)
+```
+
+#### (Transforming an array) `Array` কে পরিবর্তন করা।
+
+যদি `Array`এর কোন আইটেমের মদ্ধ্যে কোনকিছু পরিবর্তন করতে হয় তাহলে `map()` ব্যাবহার করে করা উচিত। `map()` মেইন `Array` কে পরিবর্তন করেনা বরং একটি নতুন `Array` রিটার্ন করে।
+
+`map()` দিয়ে একটা `Array` এর প্রতিটা আইটেমের ভিতর দিয়ে `itareate` করে কন্ডিশনলি যেখানে পরিবর্তন করা প্রয়োজন,সেখানে পরিবর্তন করা যায়।
+
+#### (Replacing items in an array ) `Array` এর মধ্য থেকে কোন আইটেমকে রিপ্লেস করা ।
+
+যদি `Array`এর কোন আইটেমের মদ্ধ্যে থেকে কোন আইটেম কে রিপ্লেস করতে হয় তাহলে `map()` ব্যাবহার করে করা উচিত।
+
+`map()` দিয়ে একটা `Array` এর প্রতিটা আইটেমের ভিতর দিয়ে `itareate` করে কন্ডিশনলি যেই আইটেম টি রিপ্লেস করা প্রয়োজন,সেটি রিপ্লেস করা যায়।
+
+#### (Inserting into an array) `Array` এর কোন পজিশনে আইটেম ইনসার্ট করা।
+
+`Array` এর কোন নির্দিষ্ট পজিশনে কোন আইটেম এড করতে চাইলে `slice` অথবা `toSpliced` ব্যাবহার করা যেতে পারে। `toSpliced` ECMA SCRIPT 2023 এর নতুন ফিচার। এটি মেইন `Array` কে পরিবর্তন করেনা এবং নতুন `Array` রিটার্ন করে।
+
+**`slice()` মেথড ব্যাবহার করে ইনসার্টঃ**
+
+```jsx filename="App.jsx" showLineNumbers
+import { useState } from "react";
+
+let nextId = 3;
+const initialArtists = [
+    { id: 0, name: "Marta Colvin Andrade" },
+    { id: 1, name: "Lamidi Olonade Fakeye" },
+    { id: 2, name: "Louise Nevelson" },
+];
+
+export default function List() {
+    const [name, setName] = useState("");
+    const [artists, setArtists] = useState(initialArtists);
+
+    function handleClick() {
+        const insertAt = 1; // কোন পজিশনে ইনসার্ট হবে সেই নাম্বার
+        const nextArtists = [
+            // ইনসার্ট পজিশনের আগের আইটেমগুলো
+            ...artists.slice(0, insertAt),
+            // নতুন আইটেম
+            { id: nextId++, name: name },
+            // বাকি আইটেমগুলো ইনসার্ট পজিশনের পর
+            ...artists.slice(insertAt),
+        ];
+        setArtists(nextArtists);
+        setName("");
+    }
+
+    return (
+        <>
+            <h1>Inspiring sculptors:</h1>
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+            <button onClick={handleClick}>Insert</button>
+            <ul>
+                {artists.map((artist) => (
+                    <li key={artist.id}>{artist.name}</li>
+                ))}
+            </ul>
+        </>
+    );
+}
+```
+
+---
+
+**`toSpliced()` মেথড ব্যাবহার করে ইনসার্টঃ**
+
+```jsx filename="App.jsx" showLineNumbers
+import { useState } from "react";
+
+let nextId = 3;
+const initialArtists = [
+    { id: 0, name: "Marta Colvin Andrade" },
+    { id: 1, name: "Lamidi Olonade Fakeye" },
+    { id: 2, name: "Louise Nevelson" },
+];
+
+export default function List() {
+    const [name, setName] = useState("");
+    const [artists, setArtists] = useState(initialArtists);
+
+    function handleClick() {
+        const insertAt = 1; // কোন পজিশনে ইনসার্ট হবে সেই নাম্বার
+
+        const nextArtists = artists.toSpliced(insertAt, {
+            // নতুন আইটেম এড করে নতুন অ্যারে রিটার্ন করবে
+            id: nextId++,
+            name: "Something",
+        });
+        setArtists(nextArtists);
+        setName("");
+    }
+
+    return (
+        <>
+            <h1>Inspiring sculptors:</h1>
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+            <button onClick={handleClick}>Insert</button>
+            <ul>
+                {artists.map((artist) => (
+                    <li key={artist.id}>{artist.name}</li>
+                ))}
+            </ul>
+        </>
+    );
+}
+```
+
+#### (sort or reverse in array) - সর্ট অথবা রিভার্স করা ।
+
+`Array` কে সরাসরি `sort` অথবা `reverse` মেথড ব্যাবহার সর্ট অথবা রিভার্স করতে গেলে তা মেইন `Array` পরিবর্তন করে দেয়। তাই সরাসরি `sort` অথবা `reverse` ব্যাবহার না করে প্রথমে `[...spread]` সিনট্যাক্স ব্যাবহার করে `spread` করে নিতে হয়।
+
+```jsx filename="App.jsx" showLineNumbers
+import { useState } from "react";
+
+const initialList = [
+    { id: 0, title: "Big Bellies" },
+    { id: 1, title: "Lunar Landscape" },
+    { id: 2, title: "Terracotta Army" },
+];
+
+export default function List() {
+    const [list, setList] = useState(initialList);
+
+    function handleClick() {
+        const nextList = [...list];
+        nextList.reverse();
+        setList(nextList);
+    }
+
+    return (
+        <>
+            <button onClick={handleClick}>Reverse</button>
+            <ul>
+                {list.map((artwork) => (
+                    <li key={artwork.id}>{artwork.title}</li>
+                ))}
+            </ul>
+        </>
+    );
+}
+```
+
+এখানে একটা বিষয় মাথায় রাখতে হবে তা হলো,`[...spread]` সিনট্যাক্স শুধুমাত্র প্রথম লেবেলের কপি বানায়, উপরের উদাহরণ অনুযায়ী যদি শুধুমাত্র অবজেক্টগুলোর অর্ডার টা সর্ট বা রিভার্স করা হয়,তাহলে এই পদ্ধতি ঠিক আছে, কিন্তু যদি `Array` এর ভিতরের অবজেক্টগুলোকে কোনকিছু করা লাগতো,তাহলে কিন্তু এইভাবে শুধু একবার `[...spread]` করলে চলবেনা।
+
+#### (Updating objects inside an Array) - `Array` ভিতরের অবজেক্টকে আপডেট করা ।
+
+যখনি আমদের Array`ভিতরের অবজেক্টকে আপডেট করতে হবে তখন আমরা`map()` ব্যাবহার করে সেটা করতে পারি।
+
+যেহেতু `map()` `Array`র প্রতিটা আইটেমের ভিতর দিয়ে `itarate` করে এবং প্রতি `itaration` এ একেকটা আইটেম রিটার্ন করে, তাহলে `map()` ব্যাবহার করে কন্ডিশনালি যেকোন আইটেমকে পরিবর্তন করা যেতে পারে।
+
+```jsx filename="App.jsx" showLineNumbers
+import { useState } from "react";
+
+let nextId = 3;
+const initialList = [
+    { id: 0, title: "Big Bellies", seen: false },
+    { id: 1, title: "Lunar Landscape", seen: false },
+    { id: 2, title: "Terracotta Army", seen: true },
+];
+
+export default function BucketList() {
+    const [myList, setMyList] = useState(initialList);
+    const [yourList, setYourList] = useState(initialList);
+
+    function handleToggleMyList(artworkId, nextSeen) {
+        setMyList(
+            myList.map((artwork) => {
+                if (artwork.id === artworkId) {
+                    // Create a *new* object with changes
+                    return { ...artwork, seen: nextSeen };
+                } else {
+                    // No changes
+                    return artwork;
+                }
+            })
+        );
+    }
+
+    function handleToggleYourList(artworkId, nextSeen) {
+        setYourList(
+            yourList.map((artwork) => {
+                if (artwork.id === artworkId) {
+                    // Create a *new* object with changes
+                    return { ...artwork, seen: nextSeen };
+                } else {
+                    // No changes
+                    return artwork;
+                }
+            })
+        );
+    }
+
+    return (
+        <>
+            <h1>Art Bucket List</h1>
+            <h2>My list of art to see:</h2>
+            <ItemList artworks={myList} onToggle={handleToggleMyList} />
+            <h2>Your list of art to see:</h2>
+            <ItemList artworks={yourList} onToggle={handleToggleYourList} />
+        </>
+    );
+}
+
+function ItemList({ artworks, onToggle }) {
+    return (
+        <ul>
+            {artworks.map((artwork) => (
+                <li key={artwork.id}>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={artwork.seen}
+                            onChange={(e) => {
+                                onToggle(artwork.id, e.target.checked);
+                            }}
+                        />
+                        {artwork.title}
+                    </label>
+                </li>
+            ))}
+        </ul>
+    );
+}
+```
+
+#### (Write concise update logic with Immer) - `Immer` এর সাহায্যে খুব সহজে `Array` অপারেশন চালানো।
+
+আমরা যদি মিউটেশন নিয়ে এতো টেনশন না করতে চাই,তাহলে আমরা [Immer](https://www.npmjs.com/package/immer) ব্যাবহার করে খুব সহজেই আমাদের সকল ধরনের `Array` অপারেশন করতে পারি। `Immer` কিভাবে ব্যাবহার করতে হয় তা স্টেপ বাই স্টেপ জানতে **[এখানে ক্লিক করুন](https://reactive-accelarator.vercel.app/reactive-accelarator/React-js/module-2/updating-object-in-state#immer-%E0%A6%95%E0%A6%BF%E0%A6%AD%E0%A6%BE%E0%A6%AC%E0%A7%87-%E0%A6%AC%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%AC%E0%A6%B9%E0%A6%BE%E0%A6%B0-%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87-%E0%A6%B9%E0%A7%9F)**
+
+### ECMA SCRIPT 2023 (ES-2023) এর চারটি স্পেশাল `Array` মেথডঃ
+
+ECMA SCRIPT 2023 (ES-2023) এর চারটি স্পেশাল `Array` মেথড দিয়ে আমরা খুব সহজেই মেইন `Array`কে `Mutatate`না করেই বিভিন্ন `Array`অপারেশন চালাতে পারি।
+
+1. toSpliced()
+2. toReversed()
+3. toSorted()
+4. with()
+
+#### toSpliced() মেথডঃ
+
+`Array.prototype.toSpliced()` মেথডের মাধ্যমে `Array` এর যেকোন পজিশনে যেকোন আইটেম এড করতে পারি বা ডিলিট করতে পারি। এবং এটা মেইন `Array`তে হাত দেয়না। উদাহরনঃ
+
+**`splice()` ব্যাবহার করে উদাহরণ যা মেইন Array কে পরিবর্তন করে।**
+
+```javascript
+const arr = ["a", "b", "c", "d", "e"];
+const arr2 = arr.splice(2, 3, "x", "y");
+console.log(arr);
+console.log(arr2);
+
+//Output:
+["a", "b", "x", "y"]; // মেইন Array পরিবর্তন হয়ে গেছে
+["c", "d", "e"];
+```
+
+**`toSpliced()` ব্যাবহার করে উদাহরণ যা মেইন Array কে পরিবর্তন করেনা।**
+
+```javascript
+const arr = ["a", "b", "c", "d", "e"];
+const arr2 = arr.toSpliced(2, 3, "x", "y");
+console.log(arr);
+console.log(arr2);
+
+//Output:
+["a", "b", "c", "d", "e"]; // মেইন Array অপরিবর্তিত রয়েছে।
+["a", "b", "x", "y"]; // নতুন Array রিটার্ন হয়েছে
+```
+
+#### toReversed() মেথডঃ
+
+`Array.prototype.toReversed()` মেথডের মাধ্যমে `Array`কে রিভার্স করা যায়, এতে মেইন `Array` অপরিবর্তিত থাকে।
+
+**`reverse()` ব্যাবহার করে উদাহরণ যা মেইন Array কে পরিবর্তন করে।**
+
+```javascript
+const arr = ["a", "b", "c", "d", "e"];
+const arr2 = arr.reverse();
+console.log(arr);
+console.log(arr2);
+
+//Output:
+["e", "d", "c", "b", "a"]; // মেইন Array পরিবর্তন হয়ে গেছে
+["e", "d", "c", "b", "a"];
+```
+
+**`toReversed()` ব্যাবহার করে উদাহরণ যা মেইন Array কে পরিবর্তন করেনা।**
+
+```javascript
+const arr = ["a", "b", "c", "d", "e"];
+const arr2 = arr.toReversed();
+console.log(arr);
+console.log(arr2);
+
+//Output:
+
+["a", "b", "c", "d", "e"]; // মেইন Array অপরিবর্তিত রয়েছে।
+["e", "d", "c", "b", "a"]; // নতুন Array রিটার্ন হয়েছে
+```
+
+#### toSorted() মেথডঃ
+
+`Array.prototype.toSorted()` মেইন `Array` কে পরিবর্তন না করে `Array` কে `sort` করার জন্য ব্যাবহার করা যায়।
+
+**`sort()` ব্যাবহার করে উদাহরণ যা মেইন Array কে পরিবর্তন করে।**
+
+```javascript
+const arr = ["a", "d", "c", "f", "e"];
+const arr2 = arr.sort();
+console.log(arr);
+console.log(arr2);
+
+//Output:
+["a", "c", "d", "e", "f"]; // মেইন Array পরিবর্তন হয়ে গেছে
+["a", "c", "d", "e", "f"];
+```
+
+**`toSorted()` ব্যাবহার করে উদাহরণ যা মেইন Array কে পরিবর্তন করেনা।**
+
+```javascript
+const arr = ["a", "d", "c", "f", "e"];
+const arr2 = arr.toSorted();
+console.log(arr);
+console.log(arr2);
+
+//Output:
+["a", "d", "c", "f", "e"]; // মেইন Array অপরিবর্তিত রয়েছে।
+["a", "c", "d", "e", "f"]; // নতুন Array রিটার্ন হয়েছে
+```
+
+#### with() মেথডঃ
+
+`Array.prototype.with()` মেথডের মাধ্যমে `Array`র নির্দিষ্ট পজিশনে কোন ভ্যালুকে অন্য একটি ভ্যালু দিয়ে পরিবর্তন করে নতুন `Array` রিটার্ন করে।
+
+**উদাহরণঃ**
+
+```javascript
+const arr = ["a", "d", "c", "f", "e"];
+const arr2 = arr.with(1, "b");
+console.log(arr);
+console.log(arr2);
+
+//Output:
+["a", "d", "c", "f", "e"]; // মেইন Array অপরিবর্তিত রয়েছে।
+["a", "b", "c", "f", "e"]; // নতুন Array রিটার্ন হয়েছে
+```

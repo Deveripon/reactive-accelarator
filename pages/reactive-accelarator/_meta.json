@@ -1,0 +1,18 @@
+{
+    "index": {
+        "title": "Getting Started"
+    },
+    "javascript": "Vanilla Javascript",
+    "git": "Git and Github Refresher",
+    "frontend-focus-topic": "Frontend Focus Topic",
+    "javascript-refresher": "Javascript Refresher",
+    "React-js": "React Js",
+    "react-router-dom": "React Router Dom",
+    "Firebase": "Firebase",
+    "tanstack-query": "Tanstack Query / React Query",
+    "react-hook-form": "React Hook Form",
+    "framer-motion": "Framer Motion",
+    "nextjs": "Next Js",
+    "tips-tricks": "Tips and Tricks"
+}
+

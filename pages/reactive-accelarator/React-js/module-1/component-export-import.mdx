@@ -1,0 +1,78 @@
+## রিয়াক্টে কিভাবে `import & export` করতে হয়?
+
+**রিয়াক্টে দুইভাবে কম্পোনেন্ট `import & export` করা যায়ঃ **
+
+1. `default export and import`
+2. `named export and import`
+
+## `default export and import`
+
+**উদাহরনঃ**
+
+### `default export`
+
+```javascript showLineNumbers filename="Gallery.js"
+export default function Gallery() {
+    return; //Jsx will return
+}
+```
+
+তাছাড়া আরেকভাবে `default export` করা যায়,
+
+```javascript showLineNumbers filename="Gallery.js"
+function Gallery() {
+    return; //Jsx will return
+}
+export default Gallery;
+```
+
+### `default import`
+
+```javascript showLineNumbers filename="App.js"
+import Gallery from "Gallery"; // এখানে .js বা .jsx না লিখলেও কোন সমস্যা নেই
+```
+
+**`default import` এর ক্ষেত্রে আমরা যেকোন নামে কম্পোনেন্ট `import` করতে পারি। তবে, যেই নামে কম্পোনেন্ট `import` করা হবে সেই নামেই ব্যাবহার করতে হবে।**
+
+## `named export and import`
+
+**উদাহরনঃ**
+
+### `named export`
+
+```javascript showLineNumbers filename="Gallery.js" {1}
+export function Gallery() {
+    return; //Jsx will return
+}
+```
+
+**`named export` এর মাধ্যমে আমরা চাইলে একটা ফাইল থেকে একাধিক কম্পোনেন্ট এক্সপোর্ট করতে পারি, যেমনঃ**
+
+```javascript showLineNumbers filename="Gallery.js"
+export function Card() {
+    return; //Jsx will return
+}
+
+export function Image() {
+    return; //Jsx will return
+}
+
+export function Profile() {
+    return; //Jsx will return
+}
+```
+
+### `named import`
+
+```javascript showLineNumbers filename="App.js"
+import { Card, Image, Profile } from "Gallery"; // এভাবে আমরা এক্লাইনেই একাধিক কম্পোনেন্ট ইম্পোর্ট করতে পারি।
+```
+
+#### Alias Named Import
+
+`named import` এর ক্ষেত্রে আমরা চাইলে `Alias` দিয়ে রিনেম করেও কম্পোনেন্ট ইম্পোর্ট করতে পারি।
+
+```javascript showLineNumbers filename="App.js"
+import { Card as ImageCard } from "Gallery";
+```
+

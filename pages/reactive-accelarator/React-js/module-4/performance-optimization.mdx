@@ -1,0 +1,221 @@
+### Performance Optimization
+
+এই লেসনে আমরা রিয়াক্টের দুইটা গুরুত্বপূর্ন পার্ফরমেন্স অপটিমাইজেশন হুক এবং একটি API নিয়ে কথা বলবো।
+
+#### API
+
+-   `memo` - কম্পোনেন্টকে মেমোয়াইজ করার জন্য।
+
+#### Hooks
+
+-   `useCallback` - কলব্যাক ফাংশনের ডেফিনেশনকে মেমোয়াইজ করার জন্য। (যখন প্রপ্স আকারে কোন ফাংশনকে পাঠানো হয়,সেই ফাংশনকে মেমোয়াইজ করার জন্য।)
+-   `useMemo` - ফাংশনের রেজাল্টকে মেমোয়াইজ করার জন্য।
+
+#### `memo`
+
+**আমরা জানি যে,আমাদের কম্পোনেন্ট তিনটি কাড়নে রি-রেন্ডার নেয়**
+
+1. **Props Change হলে,**
+2. **State Change হলে এবং**
+3. **Parent Components Re-Render হলে**
+
+**প্রথম দুইটি ক্ষেত্রে আমাদের কম্পোনেন্ট রি-রেন্ডার হলে আমাদের কিছুই করার নাই, কিন্তু যদি তৃতীয় কারনে বা প্যারেন্ট কম্পোনেন্ট এর রি-রেন্ডার হওয়ার কারনে যখন চাইল্ড কম্পোনেন্ট গুলো রি-রেন্ডার হয় তখন যদি আমাদের প্রয়োজন হয় তাহলে আমরা সেটা চাইলে ফিক্স করতে পারি।**
+
+**যদি এমন হয় যে আমাদের কম্পোনেন্টের কোন কোডব্লক অপ্রয়োজনীয় রেন্ডার নিচ্ছে এবং এতে পার্ফমরমেন্সের খুব বেশি লক্ষণীয় প্রভাব ফেলছে, এবং যদি সেটা একান্তই ফিক্স করতে হয় তাহলে আমরা Component এর রি-রেন্ডার আটকানো বা Component কে মেমোয়াইজ করার জন্য ব্যাবহার করতে পারি `memo` API**
+
+**Usage**
+
+```jsx
+import React from "react";
+const MyComponent = () => {
+    return (
+        <div>
+            <h1>
+                Something that is re-rendering everytime due to its parents
+                state change
+            </h1>
+        </div>
+    );
+};
+
+export default MyComponent;
+```
+
+আমদের এই কম্পোনেন্ট টা শুধুমাত্র একটা টেক্সট স্ক্রিনে প্রিন্ট করছে, আর কিছুই করেনা। কিন্তু এর প্যারেন্ট কম্পোনেন্ট এ হয়তো কোন স্টেট চেঞ্জের কারনে বার বার রি-রেন্ডার হচ্ছে। আমরা জানি প্যেরেন্ট কম্পোনেন্ট এ কোন স্টেট চেঞ্জ হলে তার নিচের পুরো ট্রি টাই রি-রেন্ডার হয়।
+
+ধরেন `MyComponent` টা একটা অনেক বড় কম্পোনেন্ট এবং এটা অনেক হেভি কাজ করছে, আর তাই প্রতিবার প্যারেন্ট এর স্টেট চেঞ্জ এর কারনে আপনি এই কম্পোনেন্ট কে রি-রেন্ডার করাতে চান না। এসব ক্ষেত্রে কোন কম্পোনেন্ট এর রি-রেন্ডার আটকানোর জন্য আমরা নিচের উপায়ে `memo` ব্যাবহার করতে পারি।
+
+```jsx
+import { memo } from "react";
+const MyComponent = () => {
+    return (
+        <div>
+            <h1>
+                Something that is re-rendering everytime due to its parents
+                state change
+            </h1>
+        </div>
+    );
+};
+
+export default memo(MyComponent);
+```
+
+// or
+
+```jsx
+import { memo } from "react";
+const MyComponent = () => {
+    return (
+        <div>
+            <h1>
+                Something that is re-rendering everytime due to its parents
+                state change
+            </h1>
+        </div>
+    );
+};
+
+const memoizedMyComponent = memo(MyComponent);
+export default memoizedMyComponent;
+```
+
+#### `useCallback`
+
+ধরুন আপনার কোন একটা প্যারেন্ট কম্পোনেন্ট থেকে আপনি কোন একটা চাইল্ড কম্পোনেন্টে প্রপ্স হিসেবে কোন একটা ফাংশন পাঠিয়েছেন। এবং সেই চাইল্ড কম্পোনেন্ট কে আপনি হয়তো `memo` দিয়ে রি-রেন্ডারিং আটকাতে চাচ্ছেন। কিন্তু আপনি দেখবেন যে `memo` ব্যাবহার করার পরও সেই কম্পোনেন্ট টা রি-রেন্ডার হচ্ছে।
+
+এর কারণ হলো সেই চাইল্ড কম্পোনেন্টটা তার প্যারামিটারে একটা ফাংশন রিসিভ করছে।
+
+**জাভাস্ক্রিপ্টে প্রতিটা ফাংশন এক একেকটা অবজেক্ট। তাই প্রতিবার রি-রেন্ডারে সেই ফাংশনগুলো সেম নামে হওয়া সত্ত্বেও প্রতিটা রেন্ডারে নতুন নতুন অবজেক্ট রেফারেন্স হিসেবে আসবে। তাই প্যারামিটারে প্রতিবার নতুন নতুন প্রপ্স ভ্যালু আসার কারনে কম্পোনেন্ট `memo` দিয়ে wrap করে দেওয়ার পরও রি-রেন্ডার হবে।**
+
+এটার সমাধান করার জন্য প্রপ্স আকারে পাঠানোর আগে কলব্যাক ফাংশনগুলোকে `useCallback` দিয়ে মেমোয়াইজড করতে হবে, যাতে প্রতিটা রেন্ডারে ফাংশনগুলো cached হয় থাকে।
+
+অর্থাৎ কোন ফাংশনের বডি কে cached বা মেমোয়াইজড করার জন্য `useCallback` ব্যবহার করা হয়
+
+**Usage**
+
+```jsx
+import React from "react";
+
+const App = () => {
+    const somethingFunction = () => {
+        return; //something
+    };
+
+    return (
+        <div>
+            <MyComponent onChange={somethingFunction} />
+        </div>
+    );
+};
+
+export default App;
+```
+
+উপরের কোডের উদাহরণে `somethingFunction` কে প্রপ্স হিসেবে `MyComponent` এ পাঠানো হয়েছে তাই আমরা যদি `MyComponent` কে `memo` wrap করেও দেই,তবুও এটা রি-রেন্ডার নিবে। এটা কে আমরা ফিক্স করার জন্য `somethingFunction` কে `useCallback` হুক দিয়ে cached করবো।
+
+```jsx
+import React, { useCallback } from "react";
+
+const App = () => {
+    const somethingFunction = useCallback(() => {
+        return; //something
+    }, []);
+
+    return (
+        <div>
+            <MyComponent onChange={somethingFunction} />
+        </div>
+    );
+};
+
+export default App;
+```
+
+`useCallback` হুক তার প্রথম প্যারামিটার হিসেবে সেই ফাংশনটাকে নিবে যেটাকে মেমোয়াইজ করতে চান আরে `useEffect` এর মতো দ্বিতীয় প্যারেমিটারে একটা ডিপেন্ডেন্সি অ্যারে নেয়, এবং ডিপেন্ডেন্সি চেঞ্জ হলেই নতুন করে রান হয় বা রিয়াক্ট করে।
+
+#### `useMemo`
+
+আমাদের কোম্পনেন্টে যদি এমন কোন ফাংশন থাকে যাতে অনেক কমপ্লেক্স কেলকুলেশন থাকে যা অনেক কস্টলি এবং আমরা চাই কম্পোনেন্ট রি-রেন্ডার হলেই যেন সেই কস্টলি কেলকুলেশন টা বার বার না হয়। যদি নতুন করে কেলকুলেশন করার প্রয়োজন না পরে তাহলে যেন প্রতিবার রি-রেন্ডারে আগেরবার করা কেলকুলেটেট রেজাল্ট টাকেই রিটার্ন করে, তাহলে এক্ষেত্রে আমাদের সেই রেজাল্টটাকে cached করতে হবে।
+
+কোন ফাংশনের রেজাল্টটাকে cached করার জন্য ব্যাবহার করা হয় `useMemo` হুক।
+
+-   Reference
+
+    -   ```jsx
+        const cachedResuld = useMemo(calculateValue, dependencies);
+        ```
+
+### References:
+
+`**useMemo(calculateValue, dependencies)**`
+
+`useMemo` হলো রিয়াক্টের একটা হুক, অন্য সকল হুকের মতো `useMemo` কেও কম্পোনেন্ট অথবা অন্য কাস্টম হুকের একদম টপ লেভেলে কল করতে হবে। কখনও কম্পোনেন্টের রিটার্নের ভিতর বা অন্য কোন কলব্যাক ফাংশনের ভিতর এমনকি কোন কন্ডিশনাল কোডব্লকের ভিতরেও কল করা যাবেনা।
+
+```jsx
+import { useMemo } from "react";
+
+function TodoList({ todos, tab }) {
+    const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
+    // ...
+}
+```
+
+**Usage**
+
+```jsx
+import React, { useCallback } from "react";
+
+const App = () => {
+    //complex calculation
+    const complexCalculation = () => {
+        let i = 0;
+        while (i < 10000000) {
+            i++;
+        }
+        return i % 2 === 0;
+    };
+
+    const somethingFunction = useCallback(() => {
+        return; //something
+    }, []);
+
+    return (
+        <div>
+            <MyComponent onChange={somethingFunction} />
+        </div>
+    );
+};
+
+export default App;
+```
+
+উপরের কোডে একটা কমপ্লেক্স কেলকুলেশন আছে `complexCalculation` ফাংশনের ভিতর, আমরা ওই কেলকুলেশন এর রেজাল্টটাকে cached করবো।
+
+```jsx
+import React, { useCallback, useMemo } from "react";
+
+const App = () => {
+    //complex calculation
+    const complexCalculation = useMemo(() => {
+        let i = 0;
+        while (i < 10000000) {
+            i++;
+        }
+        return i % 2 === 0;
+    }, []);
+
+    return (
+        <div>
+            <MyComponent />
+        </div>
+    );
+};
+
+export default App;
+```
+
+`useMemo` হুক তার ভিতরে কল হওয়া ফাংশনটার আউটপুট কে রিটার্ন করবে,এমন নয় যে সে ফাংশনটা রিটার্ন করবে। তার মানে হলো `useMemo`কে যেই ভ্যারিয়েবলে এসাইন করা হবে,তার কাছে `useMemo` হুক এর ভিতরের ফাংশন যেই ভ্যালূটা রিটার্ন করবে, ভ্যারিয়েবলের কাছে সেই আউটপুটটা থাকবে।
+
+`useMemo` হুক `useCallback` এবং `useEffect` এর মতো দ্বিতীয় প্যারেমিটারে একটা ডিপেন্ডেন্সি অ্যারে নেয়, এবং ডিপেন্ডেন্সি চেঞ্জ হলেই শুধুমাত্র ভিতরের ফাংশনটা নতুন করে রান হয় এবং নতুন আউটপুট রিটার্ন করে।
+
