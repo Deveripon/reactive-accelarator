@@ -1,14 +1,14 @@
-import ThemeProvider from "../providers/theme-provider";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { Inter } from 'next/font/google';
+import ThemeProvider from '../providers/theme-provider';
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
-const APP_NAME = "রিয়াক্টিভ এক্সিলারেটর";
-const APP_DEFAULT_TITLE = "রিয়াক্টিভ এক্সিলারেটর ডকুমেন্টেশন";
-const APP_TITLE_TEMPLATE = "%s – রিয়াক্টিভ এক্সিলারেটর";
+const APP_NAME = 'রিয়াক্টিভ এক্সিলারেটর';
+const APP_DEFAULT_TITLE = 'রিয়াক্টিভ এক্সিলারেটর ডকুমেন্টেশন';
+const APP_TITLE_TEMPLATE = '%s – রিয়াক্টিভ এক্সিলারেটর';
 const APP_DESCRIPTION =
-    "রিয়াক্ট ও নেক্সট জে এস এর বাংলায় লিখা ডকুমেন্টেশন যা একজন ডেভেলপারকে রিয়াক্ট ও নেক্সট জে এস নিজের ভাষায় আরও সহজ করে বুঝতে সাহায্য করবে।";
+    'রিয়াক্ট ও নেক্সট জে এস এর বাংলায় লিখা ডকুমেন্টেশন যা একজন ডেভেলপারকে রিয়াক্ট ও নেক্সট জে এস নিজের ভাষায় আরও সহজ করে বুঝতে সাহায্য করবে।';
 
 export const metadata = {
     applicationName: APP_NAME,
@@ -17,10 +17,10 @@ export const metadata = {
         template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    manifest: "/manifest.json",
+    manifest: '/manifest.json',
     appleWebApp: {
         capable: true,
-        statusBarStyle: "default",
+        statusBarStyle: 'default',
         title: APP_DEFAULT_TITLE,
         // startUpImage: [],
     },
@@ -28,7 +28,7 @@ export const metadata = {
         telephone: false,
     },
     openGraph: {
-        type: "website",
+        type: 'website',
         siteName: APP_NAME,
         title: {
             default: APP_DEFAULT_TITLE,
@@ -37,7 +37,7 @@ export const metadata = {
         description: APP_DESCRIPTION,
     },
     twitter: {
-        card: "summary",
+        card: 'summary',
         title: {
             default: APP_DEFAULT_TITLE,
             template: APP_TITLE_TEMPLATE,
@@ -47,24 +47,24 @@ export const metadata = {
 };
 
 export const viewport = {
-    themeColor: "#000000",
+    themeColor: '#000000',
 };
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang='en' suppressHydrationWarning>
             <head></head>
             <body className={inter.className}>
                 <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
+                    attribute='class'
+                    defaultTheme='system'
                     enableSystem
                     disableTransitionOnChange
-                    suppressHydrationWarning
-                >
+                    suppressHydrationWarning>
                     {children}
                 </ThemeProvider>
             </body>
         </html>
     );
 }
+
