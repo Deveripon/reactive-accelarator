@@ -2,5 +2,9 @@
     "reactive-accelarator": {
         "title": "Reactive Accelerator",
         "type": "page"
+    },
+    "networking": {
+        "title": "Networking",
+        "type": "page"
     }
 }
