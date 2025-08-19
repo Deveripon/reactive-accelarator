@@ -4,5 +4,7 @@
     },
     "tcp": "TCP",
     "ip-dns": "IP & DNS",
-    "types-of-network": "Types of Network"
+    "types-of-network": "Types of Network",
+    "topology": "Topology",
+    "osi-model": "OSI Model"
 }
