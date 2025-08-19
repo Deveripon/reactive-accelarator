@@ -6,5 +6,9 @@
     "networking": {
         "title": "Networking",
         "type": "page"
+    },
+    "backend": {
+        "title": "Backend",
+        "type": "page"
     }
 }

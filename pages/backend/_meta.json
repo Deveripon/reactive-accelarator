@@ -1,0 +1,8 @@
+{
+    "index": "Overview",
+    "webserver": "Web Server",
+    "restapi": "REST API",
+    "database": "Database",
+    "security": "Security",
+    "deployment": "Deployment"
+}
