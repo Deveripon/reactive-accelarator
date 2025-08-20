@@ -6,16 +6,6 @@
 
 🔗 [Live Site](https://reactive-accelarator.vercel.app)
 
-## 🖥️ Preview
-
-**Dark Theme:**
-
-![Dark Theme](./public/dark-theme.png)
-
-**Light Theme:**
-
-![Light Theme](./public/light-theme.png)
-
 ---
 
 ## Getting Started
