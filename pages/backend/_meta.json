@@ -4,5 +4,17 @@
     "restapi": "REST API",
     "database": "Database",
     "security": "Security",
+    "sheduler-cron-jobs": "Scheduler & Cron Jobs",
+    "caching": "Caching",
+    "logging": "Logging",
+    "monitoring": "Monitoring",
+    "testing": "Testing",
+    "ci-cd": "CI/CD",
+    "docker": "Docker",
+    "kubernetes": "Kubernetes",
+    "serverless": "Serverless",
+    "cloud": "Cloud",
+    "microservices": "Microservices",
+    "message-queue": "Message Queue",
     "deployment": "Deployment"
 }

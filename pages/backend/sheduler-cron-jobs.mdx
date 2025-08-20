@@ -1,0 +1,649 @@
+import { Callout, Steps } from "nextra/components";
+
+##  Cron Job / Schedule Job কী?
+
+**Cron Job** হলো এক ধরনের **task scheduler** বা স্বয়ংক্রিয় কাজের সিস্টেম।
+মানে আপনি সার্ভারে একটা কমান্ড বা স্ক্রিপ্ট লিখে রাখবেন, যেটা নির্দিষ্ট সময় পরপর বা নির্দিষ্ট সময়ে অটো চালু হবে।
+
+ উদাহরণ:
+
+* প্রতি রাত ১২টায় ডাটাবেজ ব্যাকআপ নেওয়া।
+* প্রতি ৫ মিনিটে একটা API call করা।
+* প্রতি সোমবার সকালে ক্লায়েন্টকে ইমেইল পাঠানো।
+
+এই কাজগুলো আপনাকে ম্যানুয়ালি করতে হবে না। Cron এগুলো অটোমেটিক করে দেবে।
+
+---
+
+## Cron Job এর কাজ কীভাবে হয়?
+
+Linux/Unix সিস্টেমে একটা **cron daemon (crond)** চলে, যেটা সবসময় ব্যাকগ্রাউন্ডে থাকে।
+এটা দেখে রাখে কে কখন কোন কাজ রান করাবে।
+আপনি যেসব schedule লিখে দেন, সেগুলো `crontab` ফাইলে থাকে।
+
+---
+
+##  Crontab কি?
+
+**Crontab (cron table)** হলো সেই configuration ফাইল যেখানে আপনি লিখে রাখবেন কোন কাজ কখন চলবে।
+আপনি `crontab -e` কমান্ড দিয়ে এটা এডিট করতে পারবেন। 
+
+---
+
+## Cron Job Syntax
+
+```
+* * * * * command_to_execute
+- - - - -
+| | | | |
+| | | | +----- সপ্তাহের দিন (0 - 7) [Sunday = 0 or 7]
+| | | +------- মাস (1 - 12)
+| | +--------- মাসের দিন (1 - 31)
+| +----------- ঘণ্টা (0 - 23)
++------------- মিনিট (0 - 59)
+```
+
+## Cron Expression Example (Cheat Sheet)
+
+* `* * * * *` → প্রতি মিনিটে
+* `*/5 * * * *` → প্রতি ৫ মিনিটে
+* `0 * * * *` → প্রতি ঘণ্টায়
+* `0 0 * * *` → প্রতিদিন রাত ১২টায়
+* `0 9 * * 1` → প্রতি সোমবার সকাল ৯টায়
+
+---
+
+##  উদাহরণ
+
+1. **প্রতি মিনিটে কাজ চালানো**
+
+```
+* * * * * echo "Hello World"
+```
+
+2. **প্রতি ঘণ্টায় কাজ চালানো**
+
+```
+0 * * * * /path/to/script.sh
+```
+
+3. **প্রতি রাত ১২টায় কাজ চালানো**
+
+```
+0 0 * * * /usr/bin/python3 /home/user/backup.py
+```
+
+4. **প্রতি সোমবার সকাল ৯টায় কাজ চালানো**
+
+```
+0 9 * * 1 /path/to/send_report.sh
+```
+
+5. **প্রতি ৫ মিনিটে কাজ চালানো**
+
+```
+*/5 * * * * /path/to/your/command
+```
+
+---
+
+## Cron Job এর ব্যবহার
+
+* ✅ ডাটাবেজ ব্যাকআপ নেওয়া
+* ✅ ইমেইল/নোটিফিকেশন পাঠানো
+* ✅ লগ ফাইল মুছে ফেলা
+* ✅ API / ডেটা ফেচ করা
+* ✅ রিপোর্ট জেনারেট করা
+
+---
+
+##  Cron Job Check করার কমান্ড
+
+* `crontab -l` → সব cron jobs লিস্ট দেখাবে
+* `crontab -e` → নতুন job এড করতে পারবে
+* `systemctl status cron` বা `service cron status` → cron সার্ভিস চলছে কিনা
+
+---
+
+##  Cron Job এবং Scheduler পার্থক্য
+
+* **Cron Job** → সাধারণত Linux/Unix server এ চলে।
+* **Scheduler (like Node.js, Laravel, NestJS, Django Celery ইত্যাদি)** → এরা অ্যাপ্লিকেশন লেভেলের Scheduler।
+  এগুলোও একইভাবে কাজ করে, কিন্তু এরা কোড লেভেলে schedule ম্যানেজ করে।
+
+---
+
+তাই যদি আপনি server-side automation করতে চান, তাহলে Cron Job ব্যবহার করতে পারেন। 
+আর যদি framework ব্যবহার করেন  (Node.js, Laravel, NestJS), তাহলে framework এর built-in scheduler ও ব্যবহার করতে পারেন। 
+
+---
+
+## Cron/Sheduler With Express Js
+
+আপনি যদি **Express.js (Node.js)** দিয়ে Scheduler বানাতে চান, তখন সরাসরি Express কিছু দেয় না। তবে আমরা **Node Scheduler লাইব্রেরি** ব্যবহার করতে পারি।
+
+সবচেয়ে জনপ্রিয় হচ্ছে  **node-cron** অথবা **node-schedule**
+
+চলুন আমরা স্টেপ বাই স্টেপ দেখি। 
+
+---
+
+<Steps>
+### Step 1: Express প্রজেক্ট বানান
+
+```bash
+mkdir express-cron-example
+cd express-cron-example
+npm init -y
+npm install express node-cron
+```
+
+---
+
+### Step 2: `server.js` ফাইল বানান
+
+```js {2,12-24}
+import express from "express";
+import cron from "node-cron";
+
+const app = express();
+const PORT = 3000;
+
+// Simple route
+app.get("/", (req, res) => {
+  res.send("Cron Job Example Running!");
+});
+
+// ✅ Cron Job Example: প্রতি 5 মিনিটে কনসোলে মেসেজ দেখাবে
+cron.schedule("*/5 * * * *", () => {
+  console.log("⏰ This task runs every 5 minutes");
+});
+
+// ✅ প্রতিদিন রাত 12 টায় কাজ চলবে
+cron.schedule("0 0 * * *", () => {
+  console.log("📦 Daily backup job running at midnight...");
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
+```
+
+---
+
+###  Step 3: Run করেন 
+
+```bash
+node server.js
+```
+
+* আপনি Express সার্ভার চালু করে রাখেন
+* Cron job ব্যাকগ্রাউন্ডে অটোমেটিক চলবে।
+
+---
+
+</Steps>
+
+
+
+## Practical Example (API call)
+
+ধরা যাক, আপনি প্রতি ১০ মিনিটে একটা API call করতে চান:
+
+```js
+import fetch from "node-fetch";
+import cron from "node-cron";
+
+cron.schedule("*/10 * * * *", async () => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+  const data = await res.json();
+  console.log("Fetched Data:", data);
+});
+```
+
+---
+
+এভাবে আপনি Express.js সার্ভারের ভিতরে যত ইচ্ছা scheduled task বানাতে পারবেন।
+
+---
+
+## Cron/Scheduler with NestJS
+
+NestJS এ scheduler বানানো **Express থেকে অনেক সহজ** কারণ NestJS এর জন্য অফিসিয়ালভাবে একটা প্যাকেজ আছে  **@nestjs/schedule**
+
+চলুন স্টেপ বাই স্টেপ দেখিঃ 
+
+---
+<Steps>
+
+###  Step 1: প্যাকেজ ইন্সটল করেন
+
+```bash
+npm install --save @nestjs/schedule
+npm install --save-dev @types/cron
+```
+
+---
+
+###  Step 2: `AppModule` এ Import করেন 
+
+```ts
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksModule } from './tasks/tasks.module';
+
+@Module({
+  imports: [
+    ScheduleModule.forRoot(), // ✅ Scheduler enable করা হলো
+    TasksModule,
+  ],
+})
+export class AppModule {}
+```
+
+---
+
+###  Step 3: Task Module বানান
+
+```bash
+nest g module tasks
+nest g service tasks
+```
+
+---
+
+###  Step 4: Scheduler লিখেন 
+
+```ts
+// tasks.service.ts
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, Interval, Timeout } from '@nestjs/schedule';
+
+@Injectable()
+export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
+  // ✅ প্রতি মিনিটে কাজ চলবে
+  @Cron('* * * * *')
+  handleCron() {
+    this.logger.debug('⏰ Called every minute');
+  }
+
+  // ✅ প্রতি 10 সেকেন্ডে কাজ চলবে
+  @Interval(10000)
+  handleInterval() {
+    this.logger.debug('⚡ Called every 10 seconds');
+  }
+
+  // ✅ অ্যাপ স্টার্ট হওয়ার 5 সেকেন্ড পরে একবার চলবে
+  @Timeout(5000)
+  handleTimeout() {
+    this.logger.debug('🚀 Called once after 5 seconds');
+  }
+}
+```
+
+---
+
+###  Step 5: Run করেন
+
+```bash
+npm run start:dev
+```
+
+Console এ দেখবে প্রতি মিনিটে/১০ সেকেন্ডে লগ প্রিন্ট হচ্ছে। 
+
+---
+
+</Steps>
+
+
+## Cron Expression Example (NestJS এও একই)
+
+* `* * * * *` → প্রতি মিনিটে
+* `*/5 * * * *` → প্রতি ৫ মিনিটে
+* `0 * * * *` → প্রতি ঘণ্টায়
+* `0 0 * * *` → প্রতিদিন রাত ১২টায়
+* `0 9 * * 1` → প্রতি সোমবার সকাল ৯টায়
+
+---
+ NestJS এ @nestjs/schedule ব্যবহার করলে কোড **structured** থাকে, এবং Cron / Interval / Timeout সবকিছু ডেকোরেটর দিয়ে সুন্দরভাবে ম্যানেজ করা যায়।
+
+---
+
+## Practical Example 
+
+চলেন একটা **Practical NestJS Scheduler Example** দেখি —
+যেখানে প্রতিদিন রাত ১২টায় ডাটাবেজ ব্যাকআপ হবে আর প্রতি ৫ মিনিটে Stripe এর API hit হবে।
+
+---
+<Steps>
+### Step 1: Install dependency
+
+
+```bash
+npm install --save @nestjs/schedule
+npm install --save-dev @types/cron
+```
+
+---
+
+### Step 2: `AppModule` এ ScheduleModule যোগ করেন
+
+```ts
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksModule } from './tasks/tasks.module';
+
+@Module({
+  imports: [
+    ScheduleModule.forRoot(),
+    TasksModule, // 👈 আমাদের scheduler task module
+  ],
+})
+export class AppModule {}
+```
+
+---
+
+###  Step 3: Task Module + Service বানান 
+
+```bash
+nest g module tasks
+nest g service tasks
+```
+
+---
+
+###  Step 4: Task Service লিখেন 
+
+```ts
+// tasks.service.ts
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import fetch from 'node-fetch';
+
+@Injectable()
+export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
+  // ✅ প্রতিদিন রাত ১২টায় ব্যাকআপ নেওয়া
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleDatabaseBackup() {
+    this.logger.debug('📦 Starting daily database backup...');
+    // এখানে আপনার DB backup logic বসাবে
+    // উদাহরণস্বরূপ ফাইল তৈরি করা
+    // fs.writeFileSync(`/backups/db-${Date.now()}.sql`, dbDump);
+    this.logger.debug('✅ Database backup completed!');
+  }
+
+  // ✅ প্রতি ৫ মিনিটে Stripe API hit করা
+  @Cron('*/5 * * * *')
+  async handleStripeCheck() {
+    this.logger.debug('💳 Checking Stripe API...');
+    try {
+      const res = await fetch('https://api.stripe.com/v1/charges', {
+        headers: {
+          Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`, // আপনার secret key env থেকে নেবে
+        },
+      });
+      const data = await res.json();
+      this.logger.debug(`✅ Stripe data fetched. Found ${data.data?.length || 0} charges`);
+    } catch (err) {
+      this.logger.error('❌ Stripe API call failed', err.message);
+    }
+  }
+}
+```
+
+---
+
+###  Step 5: Run করেন 
+
+```bash
+npm run start:dev
+```
+
+* প্রতি রাত ১২টায় backup log আসবে।
+* প্রতি ৫ মিনিটে Stripe API hit হবে।
+
+---
+</Steps>
+
+
+##  Common CronExpression (NestJS built-in)
+
+NestJS কিছু ready expression দেয়:
+
+* `CronExpression.EVERY_MINUTE` → প্রতি মিনিটে
+* `CronExpression.EVERY_5_MINUTES` → প্রতি ৫ মিনিটে
+* `CronExpression.EVERY_DAY_AT_MIDNIGHT` → প্রতিদিন রাত ১২টায়
+* `CronExpression.EVERY_HOUR` → প্রতি ঘণ্টায়
+
+
+---
+
+### চলুন দেখি **কীভাবে ডাটাবেজ ব্যাকআপ (MySQL বা Postgres) NestJS scheduler দিয়ে ফাইল আকারে সেভ করা যায়**? 
+
+
+###  Concept
+
+1. প্রতিদিন রাত ১২টায় (cron job) **backup command** রান করবে।
+2. এই command `mysqldump` (MySQL এর জন্য) অথবা `pg_dump` (Postgres এর জন্য) ইউজ করে `.sql` ফাইল বানাবে।
+3. ফাইল `/backups` ফোল্ডারে সেভ হবে।
+
+---
+
+<Steps> 
+
+###  Step 1: Install extra packages
+
+```bash
+npm install --save @nestjs/schedule
+npm install --save-dev @types/cron
+```
+
+---
+
+### Step 2: AppModule
+
+```ts
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksModule } from './tasks/tasks.module';
+
+@Module({
+  imports: [
+    ScheduleModule.forRoot(),
+    TasksModule,
+  ],
+})
+export class AppModule {}
+```
+
+---
+
+### Step 3: Task Service
+
+এখানে আমরা **child\_process** ব্যবহার করব কমান্ড রান করার জন্য।
+
+```ts
+// tasks.service.ts
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { exec } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+
+@Injectable()
+export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
+  // ✅ প্রতিদিন রাত ১২টায় ডাটাবেজ ব্যাকআপ নেবে
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleDatabaseBackup() {
+    this.logger.debug('📦 Starting daily database backup...');
+
+    const backupDir = path.join(__dirname, '..', '..', 'backups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir);
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupFile = path.join(backupDir, `backup-${timestamp}.sql`);
+
+    // 👉 যদি MySQL হয়
+    const mysqlCommand = `mysqldump -u ${process.env.DB_USER} -p${process.env.DB_PASSWORD} ${process.env.DB_NAME} > ${backupFile}`;
+
+    // 👉 যদি Postgres হয় (comment/uncomment করে নেন)
+    // const mysqlCommand = `PGPASSWORD=${process.env.DB_PASSWORD} pg_dump -U ${process.env.DB_USER} -h ${process.env.DB_HOST} ${process.env.DB_NAME} > ${backupFile}`;
+
+    exec(mysqlCommand, (error, stdout, stderr) => {
+      if (error) {
+        this.logger.error(`❌ Backup failed: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        this.logger.warn(`⚠️ Backup warning: ${stderr}`);
+      }
+      this.logger.debug(`✅ Backup saved to: ${backupFile}`);
+    });
+  }
+}
+```
+
+---
+
+###  Step 4: .env ফাইলে ডাটাবেজ কনফিগ রাখেন
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=secret
+DB_NAME=mydatabase
+```
+
+---
+
+###  Step 5: Run করেন 
+
+```bash
+npm run start:dev
+```
+
+প্রতিদিন রাত ১২টায় `/backups/backup-2025-08-20-00-00-00.sql` এর মতো ফাইল তৈরি হবে।
+
+---
+
+</Steps>
+
+### চলেন দেখি **কিভাবে এই backup ফাইল AWS S3 এ অটো-আপলোড করা যায়** (cron job এর ভেতরেই)?
+
+
+---
+<Steps> 
+###  Step 1: Install AWS SDK
+
+```bash
+npm install @aws-sdk/client-s3
+```
+
+---
+
+###  Step 2: .env এ S3 Credentials রাখেন
+
+```env
+AWS_REGION=ap-south-1
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_BUCKET_NAME=my-db-backups
+```
+
+---
+
+### Step 3: Task Service আপডেট করেন 
+
+```ts
+// tasks.service.ts
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { exec } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+
+@Injectable()
+export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
+  private s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleDatabaseBackup() {
+    this.logger.debug('📦 Starting daily database backup...');
+
+    const backupDir = path.join(__dirname, '..', '..', 'backups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir);
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupFile = path.join(backupDir, `backup-${timestamp}.sql`);
+
+    // 👉 MySQL Backup Command
+    const backupCommand = `mysqldump -u ${process.env.DB_USER} -p${process.env.DB_PASSWORD} ${process.env.DB_NAME} > ${backupFile}`;
+
+    exec(backupCommand, async (error, stdout, stderr) => {
+      if (error) {
+        this.logger.error(`❌ Backup failed: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        this.logger.warn(`⚠️ Backup warning: ${stderr}`);
+      }
+
+      this.logger.debug(`✅ Backup saved locally: ${backupFile}`);
+
+      // 📤 Upload to AWS S3
+      try {
+        const fileStream = fs.createReadStream(backupFile);
+
+        const uploadParams = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: `db-backups/backup-${timestamp}.sql`, // ফোল্ডার সহ ফাইলের নাম
+          Body: fileStream,
+        };
+
+        await this.s3.send(new PutObjectCommand(uploadParams));
+
+        this.logger.debug(`☁️ Backup uploaded to S3: backup-${timestamp}.sql`);
+      } catch (err) {
+        this.logger.error('❌ S3 Upload Failed', err.message);
+      }
+    });
+  }
+}
+```
+
+---
+
+###  Step 4: Run করেন 
+
+```bash
+npm run start:dev
+```
+
+* প্রতিদিন রাত ১২টায় backup ফাইল তৈরি হবে।
+* তারপর অটোমেটিকভাবে AWS S3 তে আপলোড হয়ে যাবে `db-backups/backup-xxxx.sql` নামে।
+
+---
+</Steps>
