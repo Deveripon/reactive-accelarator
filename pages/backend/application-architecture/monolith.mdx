@@ -1,0 +1,129 @@
+
+
+## Monolithic Architecture 
+
+### 1. What is Monolithic Architecture?
+
+Monolithic Architecture হলো একটি traditional পদ্ধতি যেখানে পুরো application — **User Interface (UI), Business Logic, Database Access** — সব একসাথে **একটি single codebase** এবং **একটি deployable unit** হিসেবে থাকে।
+
+একটা analogy ধরেন →
+ধরে নেন একটা বড় বাড়ি আছে যেখানে রান্নাঘর, drawing room, bedroom সব একই ঘরে। এখন এক ঘরে সবকিছু হচ্ছে,  কোন partition নেই। এটাই মূলত monolith এর ধারণা।
+
+---
+
+### 2. Structure of Monolith
+
+Monolith system সাধারণত এইভাবে সাজানো থাকে:
+
+* **Presentation Layer (UI)** → যেখানে HTML, CSS, JS বা frontend code থাকে।
+* **Business Logic Layer** → যেখানে rules, calculations, order process, authentication ইত্যাদি হয়।
+* **Data Access Layer** → Database এর সাথে কানেকশনের জন্য।
+
+এই সবগুলো একসাথে একটি application এর মধ্যে bundled থাকে।
+
+---
+
+### 3. How Monolithic Application Works
+
+1. User browser থেকে request পাঠায়।
+2. Request monolith app এ যায় (সেই app এর ভেতরে UI + Logic + DB সব আছে)।
+3. App request process করে → database এর সাথে কথা বলে।
+4. Response তৈরি করে আবার browser এ পাঠায়।
+
+---
+
+### 4. Advantages of Monolithic Architecture
+
+✅ Simple to build → শুরুতে developer দের জন্য সহজ।
+✅ Easy to deploy → একটিই deployable file/package, deploy করলেই সব ready।
+✅ Debugging সহজ → সব code একসাথে থাকায় trace করা সহজ।
+✅ Performance → সব component tightly coupled থাকায় inter-process communication এর overhead কম।
+
+---
+
+### 5. Disadvantages of Monolithic Architecture
+
+❌ Scaling problem → যদি user সংখ্যা বেড়ে যায়, তাহলে পুরো application scale করতে হয় (একটা ছোট feature এর জন্যও পুরো app replicate করতে হয়)।
+❌ Codebase বড় হয়ে গেলে maintain করা কঠিন।
+❌ Technology lock → একবার শুরু করলে নতুন tech stack add করা কঠিন।
+❌ Fault tolerance কম → একটি bug পুরো application down করে দিতে পারে।
+❌ Deployment প্রব্লেম  → একটা ছোট update এর জন্যও পুরো app redeploy করতে হয়।
+
+---
+
+### 6. When to use Monolithic Architecture
+
+* Small to medium projects।
+* যখন team size ছোট এবং দ্রুত development দরকার।
+* যেখানে খুব complex scaling এর দরকার নেই।
+* Startup / MVP (Minimum Viable Product) build করার সময়।
+
+---
+
+### 7. When NOT to use
+
+* Very large scale applications।
+* যেখানে অনেক আলাদা আলাদা feature independent ভাবে scale করতে হবে।
+* যেখানে একাধিক technology/framework একসাথে ব্যবহার করতে হবে।
+
+---
+
+### 8. Real Life Examples
+
+* **WordPress CMS** → পুরো system এক codebase এ।
+* **Old E-commerce sites** → Frontend, backend, DB সব একসাথে PHP/Laravel এ।
+* **Desktop software (MS Office এর পুরনো version)** → সব feature tightly coupled।
+
+---
+
+### 9. Scaling in Monolith
+
+* শুধুমাত্র Vertical Scaling (server এর RAM, CPU বাড়ানো) করা যায় ।
+* Load Balancer দিয়ে multiple instances চালানো যায়, কিন্তু সব একই application copy।
+ Independent scaling (যেমন শুধু Payment Service scale করা) সম্ভব না।
+
+---
+
+### 10. Deployment in Monolith
+
+* Whole application deploy হয় একসাথে।
+* Docker image হলেও পুরো app একসাথে build হয়।
+* CI/CD pipeline এ এক পরিবর্তনের জন্য পুরো test suite চালাতে হয়।
+
+---
+
+### 11. Diagram (Textual Representation)
+
+```
+ ------------------------------
+|        Monolithic App        |
+|------------------------------|
+|   Presentation Layer (UI)    |
+|------------------------------|
+|   Business Logic Layer       |
+|------------------------------|
+|   Data Access Layer          |
+ ------------------------------
+             |
+             v
+        Database
+```
+ সব কিছু এক box এর ভেতরে।
+
+---
+
+### 12. Developer Experience
+
+* Beginners → সহজ, কারণ সবকিছু এক codebase এ।
+* Large Team → সমস্যা, কারণ সবাই এক codebase এ কাজ করলে conflict, merge issue হয়।
+
+---
+
+### 13. Summary
+
+* Monolith = **All-in-one Application**.
+* Easy for small projects, painful for large scale.
+* Future এ চাইলে Modular Monolith বা Microservices এ shift করা যায়।
+
+---
+

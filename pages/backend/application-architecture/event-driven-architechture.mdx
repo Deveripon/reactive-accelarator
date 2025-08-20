@@ -1,0 +1,367 @@
+## Event Driven Architecture (EDA) in Microservices
+
+---
+
+### 1. What is Event Driven Architecture?
+
+**Event Driven Architecture** হলো এমন একটা pattern যেখানে services একে অপরের সাথে **events** এর মাধ্যমে communicate করে। 
+
+- **Event** = কোন কিছু ঘটেছে এরকম একটা notification (e.g., "User Registered", "Order Placed", "Payment Completed")
+- Services events **produce** করে এবং অন্য services সেই events **consume** করে
+- **Asynchronous communication** - services একে অপরের জন্য wait করে না
+
+---
+
+### 2. Event vs Traditional API Call
+
+#### Traditional Synchronous Call:
+```
+Order Service → (API Call) → Payment Service → Response
+               ↓ (Waiting...)
+            (Blocked until response)
+```
+
+#### Event Driven Approach:
+```
+Order Service → (Event: "Order Created") → Message Queue
+                                               ↓
+                                        Payment Service (Listens)
+                                        Notification Service (Listens)
+                                        Inventory Service (Listens)
+```
+
+---
+
+### 3. Key Components of EDA
+
+#### A. Event Producer
+- যে service event তৈরি করে এবং publish করে
+- Example: Order Service যখন order create করে তখন "OrderCreated" event produce করে
+
+#### B. Event Consumer  
+- যে service event listen করে এবং তার উপর ভিত্তি করে action নেয়
+- Example: Payment Service "OrderCreated" event শুনে payment process করে
+
+#### C. Event Broker/Message Queue
+- Events গুলো store করে এবং deliver করে
+- Popular tools: **Apache Kafka**, **RabbitMQ**, **AWS SQS**, **Redis Pub/Sub**
+
+#### D. Event Store
+- সব events history রাখার জন্য (Event Sourcing এর জন্য)
+
+---
+
+### 4. Types of Events
+
+#### A. Domain Events
+- Business domain এর important events
+- Example: "UserRegistered", "OrderPlaced", "PaymentCompleted"
+
+#### B. Integration Events  
+- Services এর মধ্যে communication এর জন্য
+- Example: "SendNotification", "UpdateInventory"
+
+#### C. System Events
+- Technical/Infrastructure events  
+- Example: "ServiceStarted", "DatabaseConnected"
+
+---
+
+### 5. Event Flow Example (E-commerce)
+
+```
+1. User places order
+   ↓
+2. Order Service → Publishes "OrderCreated" event
+   ↓
+3. Event gets stored in Message Queue (Kafka)
+   ↓
+4. Multiple services consume the event:
+   - Payment Service → Process payment
+   - Inventory Service → Update stock  
+   - Notification Service → Send confirmation email
+   - Analytics Service → Track order metrics
+```
+
+**Real Event Structure:**
+```json
+{
+  "eventId": "evt_12345",
+  "eventType": "OrderCreated", 
+  "timestamp": "2023-10-20T10:30:00Z",
+  "source": "OrderService",
+  "data": {
+    "orderId": "order_789",
+    "userId": "user_456", 
+    "items": [...],
+    "totalAmount": 1500
+  }
+}
+```
+
+---
+
+### 6. Advantages of Event Driven Architecture
+
+✅ **Loose Coupling** → Services একে অপরের সাথে directly connected না, event এর মাধ্যমে communicate করে
+
+✅ **Asynchronous Processing** → Services parallel এ কাজ করতে পারে, কেউ কারো জন্য wait করে না
+
+✅ **Scalability** → Event consumer গুলো independently scale করা যায়
+
+✅ **Fault Tolerance** → একটা service down থাকলেও event queue তে stored থাকবে, later process হবে
+
+✅ **Real-time Processing** → Events immediately broadcast হয়, real-time updates পাওয়া যায়
+
+✅ **Extensibility** → নতুন service add করতে চাইলে শুধু event listen করলেই হবে, existing code change করতে হবে না
+
+---
+
+### 7. Disadvantages of Event Driven Architecture
+
+❌ **Complex Debugging** → Event flow trace করা কঠিন, কোন event কোথা থেকে এসেছে বুঝা hard
+
+❌ **Eventual Consistency** → Data immediately consistent না, eventually consistent হয়
+
+❌ **Message Queue Dependency** → Message broker down হলে communication stop
+
+❌ **Duplicate Events** → Same event multiple times process হতে পারে (idempotency handle করতে হয়)
+
+❌ **Order of Events** → Events এর order maintain করা challenging
+
+❌ **Testing Complexity** → Integration testing complicated
+
+---
+
+### 8. Event Sourcing Pattern
+
+Event Sourcing হলো এমন একটা pattern যেখানে:
+- Database এ current state store না করে **sequence of events** store করা হয় 
+- Current state events replay করে বের করা হয়
+
+#### Example:
+```
+Traditional Database:
+User Table: {id: 1, name: "John", email: "john@example.com", status: "active"}
+
+Event Sourcing:
+Event Store: 
+- UserCreated {id: 1, name: "John", email: "john@example.com"}
+- UserEmailUpdated {id: 1, newEmail: "john.doe@example.com"}  
+- UserActivated {id: 1}
+```
+
+**Benefits:** Complete audit trail, time travel queries, easy rollback
+
+---
+
+### 9. CQRS (Command Query Responsibility Segregation)
+
+Event Driven Architecture এর সাথে CQRS pattern often ব্যবহার হয়:
+
+- **Command Side** → Write operations, events produce করে
+- **Query Side** → Read operations, events consume করে read models update করে
+
+```
+Commands → Write DB → Events → Read Models → Queries
+```
+
+---
+
+### 10. Message Queue Technologies
+
+#### A. Apache Kafka
+- High throughput, distributed streaming platform
+- Event sourcing এর জন্য perfect
+- Real-time data streaming
+
+#### B. RabbitMQ  
+- Traditional message broker
+- Reliable delivery, routing flexibility
+- AMQP protocol
+
+#### C. AWS SQS/SNS
+- Cloud managed service
+- SQS = Queue, SNS = Pub/Sub
+- Serverless integration
+
+#### D. Redis Pub/Sub
+- In-memory, very fast
+- Simple pub/sub messaging
+- Good for real-time features
+
+---
+
+### 11. Event Patterns
+
+#### A. Pub/Sub (Publish-Subscribe)
+```
+Publisher → Topic → Multiple Subscribers
+```
+
+#### B. Point-to-Point
+```  
+Sender → Queue → Single Receiver
+```
+
+#### C. Request-Reply
+```
+Service A → Request Event → Service B → Reply Event → Service A
+```
+
+---
+
+### 12. Best Practices
+
+#### A. Event Design
+- Events should be **immutable**
+- Include all necessary data (avoid chatty calls)
+- Use clear naming conventions
+- Version your events
+
+#### B. Idempotency
+- Handle duplicate events gracefully
+- Use unique event IDs
+- Implement idempotent consumers
+
+#### C. Error Handling
+- Dead letter queues for failed events
+- Retry mechanisms with exponential backoff  
+- Circuit breaker pattern
+
+#### D. Monitoring
+- Track event flow and latency
+- Monitor queue sizes
+- Alert on failed events
+
+---
+
+### 13. Real-world Examples
+
+#### Netflix
+- User action events → Recommendation engine updates
+- Video streaming events → Analytics and monitoring
+
+#### Uber  
+- Ride request events → Driver matching, pricing, ETA calculation
+- Trip completion events → Payment, rating, analytics
+
+#### Spotify
+- Play events → Recommendation algorithms
+- User interaction events → Playlist suggestions
+
+---
+
+### 14. Implementation Example (Node.js + Kafka)
+
+#### Event Producer:
+```javascript
+// Order Service
+const kafka = require('kafkajs');
+
+async function createOrder(orderData) {
+  // Save order to database
+  const order = await saveOrder(orderData);
+  
+  // Publish event
+  await publishEvent('OrderCreated', {
+    orderId: order.id,
+    userId: order.userId,
+    items: order.items,
+    total: order.total
+  });
+}
+```
+
+#### Event Consumer:
+```javascript  
+// Payment Service
+const consumer = kafka.consumer({ groupId: 'payment-service' });
+
+await consumer.subscribe({ topic: 'OrderCreated' });
+
+await consumer.run({
+  eachMessage: async ({ message }) => {
+    const event = JSON.parse(message.value.toString());
+    
+    if (event.eventType === 'OrderCreated') {
+      await processPayment(event.data);
+    }
+  }
+});
+```
+
+---
+
+### 15. When to Use Event Driven Architecture
+
+✅ **Use When:**
+- Microservices architecture
+- Real-time data processing needed  
+- High scalability requirements
+- Complex workflows with multiple services
+- Need for audit trails
+- Decoupled system design
+
+❌ **Avoid When:**
+- Simple CRUD applications
+- Strong consistency requirements  
+- Small team/simple architecture
+- Immediate response needed (synchronous)
+
+---
+
+### 16. EDA vs API-based Communication
+
+| Aspect | Event Driven | API Calls |
+|--------|--------------|-----------|
+| Coupling | Loose | Tight |
+| Communication | Async | Sync |
+| Scaling | Independent | Coupled |
+| Fault Tolerance | High | Medium |
+| Complexity | High | Low |
+| Debugging | Hard | Easy |
+| Consistency | Eventual | Immediate |
+
+---
+
+### 17. Migration Strategy
+
+#### Step 1: Identify Events
+- Find domain events in your system
+- Start with high-value, low-risk events
+
+#### Step 2: Choose Message Broker  
+- Kafka for high throughput
+- RabbitMQ for reliability
+- Cloud services for simplicity
+
+#### Step 3: Implement Gradually
+- Start with non-critical flows
+- Add monitoring and alerting
+- Gradually migrate critical paths
+
+#### Step 4: Handle Dual Writes
+- Use outbox pattern or CDC (Change Data Capture)
+- Ensure data consistency during migration
+
+---
+
+### 18. Summary
+
+Event Driven Architecture microservices এর জন্য অনেক powerful pattern:
+
+**Key Benefits:**
+- Services decoupled থাকে
+- Asynchronous processing 
+- Better scalability এবং fault tolerance
+- Real-time capabilities
+
+**Key Challenges:**  
+- Debugging complexity
+- Eventual consistency
+- Infrastructure overhead
+
+**Perfect for:** Large scale, complex systems যেখানে real-time processing এবং loose coupling দরকার।
+
+---

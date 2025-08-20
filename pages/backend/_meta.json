@@ -9,12 +9,12 @@
     "logging": "Logging",
     "monitoring": "Monitoring",
     "testing": "Testing",
-    "ci-cd": "CI/CD",
+    "message-queue": "Message Queue",
+    "application-architecture": "Application Architecture",
+    "scaling": "Aplication Scaling",
     "docker": "Docker",
     "kubernetes": "Kubernetes",
-    "serverless": "Serverless",
     "cloud": "Cloud",
-    "microservices": "Microservices",
-    "message-queue": "Message Queue",
+    "ci-cd": "CI/CD",
     "deployment": "Deployment"
 }
