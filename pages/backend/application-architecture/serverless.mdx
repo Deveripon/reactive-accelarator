@@ -1,0 +1,162 @@
+
+## Serverless Architecture
+
+---
+
+### 1. What is Serverless Architecture?
+
+**Serverless Architecture** হলো এমন একটা design pattern যেখানে developer কে **server manage করার চিন্তা করতে হয় না**।
+
+* Server থাকে, কিন্তু পুরোপুরি **cloud provider managed**।
+* Developer শুধু **code লিখে deploy** করে।
+* Automatic scaling, patching, maintenance সব cloud provider করে।
+
+
+---
+
+### 2. Core Principles of Serverless
+
+1. **Function-as-a-Service (FaaS)** → কোডকে ছোট ছোট function হিসেবে deploy করা হয়।
+2. **Event-Driven** → Function trigger হয় **HTTP request, DB event, message queue, cron job** ইত্যাদি দিয়ে।
+3. **No Server Management** → Server, VM, OS সব cloud provider manage করে।
+4. **Auto-Scaling** → Traffic অনুযায়ী functions auto-scale করে।
+5. **Pay-as-you-go** → শুধুমাত্র code execution time ও resource ব্যবহার অনুযায়ী pay।
+
+---
+
+### 3. Structure of Serverless Applications
+
+* **Client / UI** → Browser, Mobile app
+* **API Gateway / HTTP Trigger** → Request route করে
+* **Serverless Functions** → AWS Lambda / Azure Functions / Google Cloud Functions
+* **Databases / Storage** → Cloud-managed DB (DynamoDB, Firebase, CosmosDB)
+* **Message Queue / Event Bus** → Async trigger (SQS, Kafka, EventBridge)
+
+**Example: Photo Upload App**
+
+1. User uploads photo → triggers **Lambda function**
+2. Lambda function → Resizes photo → Stores in **S3 / Cloud Storage**
+3. Event → Another function → Sends email notification
+
+---
+
+### 4. How Serverless Works
+
+ধরা যাক আপনি একটি HTTP API বানাচ্ছেন :
+
+1. User → HTTP request → API Gateway
+2. API Gateway → triggers Lambda function
+3. Function executes business logic → Accesses DB, returns response
+4. Function finish → Resources auto-released
+5. সব auto-scale হয় traffic অনুযায়ী
+
+---
+
+### 5. Advantages of Serverless
+
+✅ **No Server Management** → Server patching, scaling handled by cloud
+✅ **Automatic Scaling** → Zero to thousands of requests handled automatically
+✅ **Cost Efficiency** → Pay only for actual execution time
+✅ **Fast Deployment** → Function-level deployment, small units
+✅ **Focus on Code** → Devs focus on business logic, not infra
+
+---
+
+### 6. Disadvantages
+
+❌ **Cold Start Latency** → First request after idle may be slow
+❌ **Vendor Lock-in** → Code tightly coupled with cloud provider
+❌ **Limited Execution Time** → Functions usually have timeout limits
+❌ **Debugging & Testing** → Local testing harder
+❌ **Complex for Large Apps** → Too many functions = management overhead
+
+---
+
+### 7. When to Use Serverless
+
+* Lightweight APIs / microservices
+* Event-driven apps (file upload, notifications, IoT triggers)
+* Applications with **spiky or unpredictable traffic**
+* Rapid prototyping or MVP
+
+---
+
+### 8. When NOT to Use
+
+* Long-running processes ( > 15 min in AWS Lambda)
+* High-performance / low-latency apps
+* Heavy computation apps (ML training, video rendering)
+* Complex stateful apps (requires session management)
+
+---
+
+### 9. Real-Life Examples
+
+* **Netflix** → Serverless for notifications, image processing
+* **Coca-Cola Freestyle** → Serverless for IoT vending machines
+* **Airbnb** → Serverless functions for lightweight APIs
+* **iRobot** → Robot cloud functions for device events
+
+---
+
+### 10. Scaling in Serverless
+
+* **Automatic & Infinite Scaling** → Functions scale per request
+* No manual intervention needed
+* Pay per execution → Cost optimized
+
+---
+
+### 11. Deployment in Serverless
+
+* **FaaS Platforms** → AWS Lambda, Azure Functions, Google Cloud Functions
+* **Triggers** → API Gateway, Cron Jobs, DB Event, S3 Event
+* **CI/CD** → Serverless Framework, SAM, Terraform, GitHub Actions
+
+---
+
+### 12. Important Concepts
+
+* **Event-Driven** → Functions respond to events, not always-on server
+* **Stateless Functions** → No persistent local state
+* **Managed Services** → DB, Queue, Storage managed by cloud
+* **Observability** → Cloud provider tools (CloudWatch, Stackdriver)
+
+---
+
+### 13. Diagram (Textual Representation)
+
+```
+        User
+         |
+      API Gateway
+         |
+ -----------------------------
+| Function 1 | Function 2     |
+| (HTTP API) | (DB Trigger)   |
+|------------|----------------|
+       |          |
+      DB        Storage / Queue
+```
+
+* Functions triggered by **events**
+* Auto-scale & server handled by cloud
+
+---
+
+### 14. Developer Experience
+
+* Beginners → Easy to start, no infra setup needed
+* Intermediate → Need to learn event-driven design
+* Large Team → Can split logic into small functions, maintain easily
+
+---
+
+### 15. Summary
+
+* **Serverless = No server management**
+* Event-driven, auto-scaled, pay-as-you-go
+* Perfect for lightweight, spiky traffic apps
+* Not suitable for heavy compute or long-running tasks
+
+---
