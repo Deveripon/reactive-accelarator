@@ -1,0 +1,11 @@
+{
+    "monolith": "Monolithic Architecture",
+    "n-tier": "N-tier Architecture",
+    "moduler-monolith": "Moduler Monolithic Architecture",
+    "microservices": "Microservices Architecture",
+    "event-driven-architecture": "Event-driven Architecture",
+    "cloud-native": "Cloud-native Architecture",
+    "serverless": "Serverless Architecture",
+    "monorepo": "Monorepo Architecture"
+
+}
