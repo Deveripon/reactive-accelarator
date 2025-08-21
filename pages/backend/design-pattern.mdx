@@ -1,0 +1,302 @@
+## Design Pattern কি ? 
+
+**Design pattern** মানে হলো — কোডকে এমনভাবে সাজানো ও গঠন করা, যাতে সেটা maintainable, reusable, scalable এবং readable হয়।
+
+এটা কোনো **ready-made code** না, বরং **best practices** বা **architectural solution template**, যেটা আমরা বারবার সমস্যা সমাধান করার সময় ব্যবহার করি।
+
+---
+
+###  কেন দরকার?
+
+Backend এ আমরা বারবার কিছু common সমস্যার মুখোমুখি হই:
+
+* Data access কিভাবে handle করবো?
+* Request/Response flow কিভাবে সাজাবো?
+* Business logic কিভাবে আলাদা করবো?
+* Dependency কিভাবে manage করবো?
+* Scale করতে গেলে কোথায় bottleneck হবে?
+
+এই প্রশ্নগুলোর উত্তর **design pattern** দিয়ে সহজ হয়।
+
+---
+
+##  Commonly Used Design Patterns
+
+
+### 1. **Singleton Pattern**
+
+👉 একটাই instance তৈরি হবে, বারবার নতুন object তৈরি হবে না।
+**Use case**: Database connection pool, caching service (Redis client instance)।
+
+```ts
+// Example in Node.js
+class Database {
+  private static instance: Database;
+  private constructor() {}
+  static getInstance() {
+    if (!Database.instance) {
+      Database.instance = new Database();
+    }
+    return Database.instance;
+  }
+}
+```
+
+---
+
+### 2. **Factory Pattern**
+
+👉 Object তৈরি করার দায়িত্ব আলাদা factory class কে দেওয়া হয়।
+**Use case**: আলাদা আলাদা payment gateway (Stripe, PayPal, Bkash) handle করা।
+
+```ts
+class PaymentFactory {
+  static create(type: string) {
+    if (type === "stripe") return new StripePayment();
+    if (type === "paypal") return new PayPalPayment();
+  }
+}
+```
+
+---
+
+### 3. **Repository Pattern**
+
+👉 Database query logic কে আলাদা repository class এ রাখি, যাতে business logic clean থাকে।
+**Use case**: NestJS/Express backend এ UserRepository vs UserService separation।
+
+```ts
+class UserRepository {
+  async findById(id: number) {
+    return db.user.findUnique({ where: { id } });
+  }
+}
+
+class UserService {
+  constructor(private repo: UserRepository) {}
+  async getProfile(id: number) {
+    return this.repo.findById(id);
+  }
+}
+```
+
+---
+
+### 4. **Observer / Pub-Sub Pattern**
+
+👉 একটা event ঘটলে subscriber গুলো notify পায়।
+**Use case**: Order create হলে → Email পাঠানো, Notification trigger করা।
+
+```ts
+eventEmitter.on("order_created", (data) => {
+  sendEmail(data.user);
+  pushNotification(data.user);
+});
+```
+
+---
+
+### 5. **Strategy Pattern**
+
+👉 এক কাজের জন্য একাধিক algorithm ব্যবহার করা যায়।
+**Use case**: বিভিন্ন discount calculation logic apply করা।
+
+```ts
+class DiscountContext {
+  constructor(private strategy) {}
+  calculate(amount) {
+    return this.strategy.apply(amount);
+  }
+}
+```
+
+---
+
+### 6. **CQRS (Command Query Responsibility Segregation)**
+
+👉 Query (read) এবং Command (write/update) logic আলাদা করা।
+**Use case**: Large scale backend (e.g. Booking system)।
+
+---
+
+### 7. **Decorator Pattern**
+
+👉 একটি class/object এর উপরে অতিরিক্ত feature যোগ করা।
+**Use case**: Middleware system (authentication, logging)।
+
+```ts
+function authMiddleware(handler) {
+  return function (req, res) {
+    if (!req.user) return res.status(401).send("Unauthorized");
+    return handler(req, res);
+  };
+}
+```
+
+---
+
+###  Summary
+
+ design pattern basically:
+
+* কোডকে **clean এবং scalable** রাখার উপায়
+* **Business logic, data access, dependency, event flow** আলাদা করার নিয়ম
+* Large project এ **team collaboration সহজ** করার tool
+
+---
+
+
+## Practical Example  
+
+
+### 📂 Backend Project Structure (NestJS Example)
+
+```
+src/
+ ├── main.ts
+ ├── app.module.ts
+ ├── modules/
+ │    ├── user/
+ │    │    ├── user.controller.ts
+ │    │    ├── user.service.ts
+ │    │    ├── user.repository.ts
+ │    │    ├── user.entity.ts
+ │    │    └── dto/
+ │    ├── booking/
+ │    │    ├── booking.controller.ts
+ │    │    ├── booking.service.ts
+ │    │    ├── booking.repository.ts
+ │    │    ├── booking.entity.ts
+ │    │    └── events/
+ │    │         └── booking.events.ts
+ │    ├── payment/
+ │    │    ├── payment.controller.ts
+ │    │    ├── payment.service.ts
+ │    │    ├── strategies/
+ │    │    │    ├── stripe.strategy.ts
+ │    │    │    ├── paypal.strategy.ts
+ │    │    │    └── bkash.strategy.ts
+ │    │    └── payment.factory.ts
+ │    └── notification/
+ │         ├── notification.service.ts
+ │         └── observers/
+ │             ├── email.observer.ts
+ │             └── sms.observer.ts
+ ├── common/
+ │    ├── middleware/
+ │    │    └── auth.middleware.ts
+ │    ├── decorators/
+ │    │    └── roles.decorator.ts
+ │    └── interceptors/
+ │         └── logging.interceptor.ts
+ └── config/
+      └── database.config.ts
+```
+
+---
+
+###  এখানে কোন Design Pattern কোথায় Use হলো?
+
+### 1. **Singleton Pattern**
+
+* `database.config.ts` → Database connection একবার create হয়ে পুরো system এ reuse হয়।
+* Redis client / Cache manager ও singleton হয়।
+
+---
+
+### 2. **Repository Pattern**
+
+* `user.repository.ts`, `booking.repository.ts`
+  👉 Database access আলাদা হয়ে গেলো, তাই service/business logic clean থাকে।
+
+```ts
+@Injectable()
+export class UserRepository {
+  constructor(private prisma: PrismaService) {}
+  findById(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+}
+```
+
+---
+
+### 3. **Service Layer Pattern**
+
+* `user.service.ts`, `booking.service.ts`
+  👉 সব business logic এখানে থাকে। Controller শুধু API request/response handle করে।
+
+---
+
+### 4. **Factory + Strategy Pattern**
+
+* `payment.factory.ts` + `strategies/`
+  👉 একাধিক payment gateway handle করতে।
+  Factory decide করবে কোন gateway use হবে, আর Strategy pattern এ gateway logic আলাদা থাকবে।
+
+```ts
+class PaymentFactory {
+  static create(method: string): PaymentStrategy {
+    switch (method) {
+      case "stripe": return new StripeStrategy();
+      case "paypal": return new PaypalStrategy();
+      case "bkash": return new BkashStrategy();
+    }
+  }
+}
+```
+
+---
+
+### 5. **Observer (Pub/Sub) Pattern**
+
+* `booking.events.ts` → যখন booking confirm হয়, তখন notification module automatically email/sms পাঠাবে।
+
+```ts
+eventEmitter.emit("booking_confirmed", bookingData);
+```
+
+আর notification module:
+
+```ts
+eventEmitter.on("booking_confirmed", sendEmail);
+eventEmitter.on("booking_confirmed", sendSMS);
+```
+
+---
+
+### 6. **Decorator Pattern**
+
+* `@Roles('admin')` → Custom decorator
+* `auth.middleware.ts` → Middleware দিয়ে request decorate করা হয় (user attach করা হয়)।
+
+---
+
+### 7. **CQRS Pattern (Optional, Large Scale এ)**
+
+👉 Booking module এ read query (যেমন available trips list) আর write command (যেমন booking confirm করা) আলাদা service/class এ split করা যায়।
+
+---
+
+### 8. **Interceptor Pattern**
+
+* `logging.interceptor.ts` → প্রতিটি request এর সময় লগ collect করা।
+* Error handling interceptor ও করা যায়।
+
+---
+
+### Final Flow (Example: A User Books a Trip)
+
+1. User request → `BookingController`
+2. Controller → `BookingService`
+3. Service → `BookingRepository` থেকে data access
+4. Booking confirm হলে → `eventEmitter` trigger → `NotificationService` (Observer pattern)
+5. Payment হলে → `PaymentFactory` → relevant strategy (Stripe/Paypal/Bkash) use করবে
+6. Middleware & Decorator automatically security/logging handle করবে
+
+---
+
+⚡এইভাবে দেখলে বুঝতে পারো — **Design Pattern গুলো আলাদা আলাদা জায়গায় naturally বসে যায়** যখন আমরা একটা structured backend বানাই।
+
+---
+

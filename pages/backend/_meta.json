@@ -1,6 +1,8 @@
 {
     "index": "Overview",
     "webserver": "Web Server",
+    "design-pattern": "Design Patterns",
+    "design-principle": "Design Principles",
     "restapi": "REST API",
     "database": "Database",
     "security": "Security",

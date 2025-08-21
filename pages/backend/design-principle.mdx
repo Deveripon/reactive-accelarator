@@ -1,0 +1,347 @@
+## Design Principle কি? 
+
+**Design Principles** মানে হলো — এমন কিছু মৌলিক guideline যেগুলো মেনে চললে কোড clean, scalable, testable আর maintainable হয়।
+
+এগুলোকে অনেক সময় **foundation of design patterns** ও বলা হয়, কারণ design patterns এই principles এর উপর দাঁড়িয়ে তৈরি।
+
+---
+
+## 🔹 Key Design Principles (Backend/Software Development এ)
+
+### 1. **SOLID Principles**
+
+👉 Object-Oriented design এর সবচেয়ে জনপ্রিয় principle set।
+
+1. **S - Single Responsibility Principle (SRP)**
+
+   * একেকটা class/module এর **একটাই কাজ** থাকবে।
+   * Example: `UserService` শুধু user-related business logic handle করবে, payment logic না।
+
+2. **O - Open/Closed Principle (OCP)**
+
+   * Code **extension এর জন্য open**, কিন্তু **modification এর জন্য closed** হবে।
+   * Example: নতুন payment gateway add করতে চাইলে নতুন class add করবো, existing কোড modify করবো না।
+
+3. **L - Liskov Substitution Principle (LSP)**
+
+   * Parent class এর জায়গায় Child class use করা যাবে, behavior নষ্ট হবে না।
+   * Example: `PaymentStrategy` interface → Stripe/Paypal/Bkash সব জায়গায় interchange করা যাবে।
+
+4. **I - Interface Segregation Principle (ISP)**
+
+   * বড় একটা interface এর বদলে ছোট ছোট interface বানাও।
+   * Example: `IReadable`, `IWritable` আলাদা, যাতে class গুলো only প্রয়োজনীয় method implement করে।
+
+5. **D - Dependency Inversion Principle (DIP)**
+
+   * High-level module, low-level এর উপর depend করবে না → দুজনেই depend করবে abstraction এর উপর।
+   * Example: `BookingService` → `PaymentStrategy` interface use করবে, নির্দিষ্ট Stripe class না।
+
+---
+
+### 2. **DRY (Don’t Repeat Yourself)**
+
+👉 Duplicate code না লিখে reusable function/service বানাতে হবে।
+Example: JWT verify logic আলাদা `AuthService` এ রাখা → controller গুলো বারবার লিখবে না।
+
+---
+
+### 3. **KISS (Keep It Simple, Stupid)**
+
+👉 জটিল করে কিছু বানাবে না, যতটা possible simple রাখো।
+Example: CRUD API বানাতে গিয়ে unnecessary complex inheritance avoid করা।
+
+---
+
+### 4. **YAGNI (You Aren’t Gonna Need It)**
+
+👉 Future-proofing এর নামে অপ্রয়োজনীয় feature লিখবে না।
+Example: User API তে আগে থেকে “multi-role-permission-tree” বানানোর দরকার নাই, simple role দিয়ে শুরু করো।
+
+---
+
+### 5. **Separation of Concerns (SoC)**
+
+👉 আলাদা আলাদা কাজ (concern) আলাদা module এ রাখো।
+Example: Controller → শুধু HTTP request handle করবে, Service → business logic, Repository → database query।
+
+---
+
+### 6. **Encapsulation**
+
+👉 Data hide করে শুধু দরকারি method expose করো।
+Example: User entity → password field private থাকবে, শুধু hash/check method থাকবে।
+
+---
+
+### 7. **Composition Over Inheritance**
+
+👉 Inheritance এর চেয়ে composition use করো, কারণ flexibility বেশি।
+Example: `NotificationService` এর ভেতরে Email/SMS ক্লাস inject করা → আলাদা inheritance tree বানানোর দরকার নেই।
+
+---
+
+### 8. **Design for Change (Flexibility)**
+
+👉 System এমনভাবে design করো যাতে সহজে extend/modify করা যায়।
+Example: Microservice architecture এ নতুন service add করলে অন্যগুলো break না হয়।
+
+---
+
+### 9. **Principle of Least Knowledge (Law of Demeter)**
+
+👉 Objects এর মধ্যে কম interaction রাখো। One object should not know too much about another.
+Example: Controller → Service কে call করবে, কিন্তু service এর internal repository কে directly জানবে না।
+
+---
+
+### 10. **Fail Fast**
+
+👉 Error early detect করো।
+Example: API তে validation middleware রাখো, যেন invalid data আসলে শুরুতেই reject হয়।
+
+---
+
+## ✅ Summary
+
+সবচেয়ে গুরুত্বপূর্ণ principles:
+
+* **SOLID** → maintainable OOP design
+* **DRY** → কোড duplication কমানো
+* **KISS & YAGNI** → simple এবং প্রয়োজনমতো design
+* **SoC & Encapsulation** → code separation এবং নিরাপদ data handling
+* **Composition over Inheritance** → flexible design
+
+---
+
+
+---
+
+## 1. **Single Responsibility Principle (SRP)**
+
+> প্রতিটি class/module এর একটাই কাজ থাকবে।
+
+```ts
+// user.service.ts
+@Injectable()
+export class UserService {
+  constructor(private userRepository: UserRepository) {}
+
+  async createUser(dto: CreateUserDto) {
+    return this.userRepository.create(dto);  // শুধু user related logic
+  }
+
+  async getUser(id: number) {
+    return this.userRepository.findById(id);
+  }
+}
+
+// অন্য file এ payment logic থাকবে PaymentService এ
+```
+
+**Benefit:**
+Code clean থাকে, এক জায়গায় শুধু একটা responsibility handle হয়।
+
+---
+
+## 2. **Open/Closed Principle (OCP)**
+
+> Code extend করার জন্য open, modify করার জন্য closed।
+
+```ts
+// payment.strategy.ts
+interface PaymentStrategy {
+  pay(amount: number): string;
+}
+
+class StripePayment implements PaymentStrategy {
+  pay(amount: number) { return `Paid ${amount} via Stripe`; }
+}
+
+class PaypalPayment implements PaymentStrategy {
+  pay(amount: number) { return `Paid ${amount} via Paypal`; }
+}
+
+// new gateway add করতে হবে → নতুন class add করলেই হবে, existing class change লাগবে না
+```
+
+---
+
+## 3. **Liskov Substitution Principle (LSP)**
+
+> Parent এর জায়গায় child use করলেও system ঠিকঠাক কাজ করবে।
+
+```ts
+const payment: PaymentStrategy = new StripePayment();
+console.log(payment.pay(100)); // এখন PaypalPayment দিয়ে replace করলেও কাজ করবে
+```
+
+---
+
+## 4. **Interface Segregation Principle (ISP)**
+
+> বড় interface না, ছোট ছোট interface ব্যবহার করো।
+
+```ts
+interface IReadable {
+  read(id: number): any;
+}
+
+interface IWritable {
+  create(data: any): any;
+}
+
+// BookRepository শুধু read করবে, CreateRepository শুধু write করবে
+```
+
+---
+
+## 5. **Dependency Inversion Principle (DIP)**
+
+> High-level modules low-level এর উপর depend করবে না, abstraction এর উপর depend করবে।
+
+```ts
+@Injectable()
+class BookingService {
+  constructor(private paymentStrategy: PaymentStrategy) {} // abstraction এর উপর depend
+}
+
+const stripePayment = new StripePayment();
+const bookingService = new BookingService(stripePayment);
+```
+
+---
+
+## 6. **DRY (Don’t Repeat Yourself)**
+
+```ts
+// auth.service.ts
+@Injectable()
+export class AuthService {
+  validateToken(token: string) {
+    // JWT validate logic
+  }
+}
+
+// controller গুলো শুধু AuthService ব্যবহার করবে, বারবার JWT logic লিখবে না
+```
+
+---
+
+## 7. **KISS (Keep It Simple, Stupid)**
+
+```ts
+// Instead of complex nested if-else, use simple strategy pattern
+const strategy = PaymentFactory.create(method);
+strategy.pay(amount);
+```
+
+---
+
+## 8. **YAGNI (You Aren’t Gonna Need It)**
+
+```ts
+// Avoid writing multi-role permission system before it's actually required
+// Start with simple 'user' & 'admin' roles
+```
+
+---
+
+## 9. **Separation of Concerns (SoC)**
+
+```ts
+// controller → request/response
+// service → business logic
+// repository → DB query
+```
+
+Example:
+
+```ts
+// booking.controller.ts
+@Post()
+bookTrip(@Body() dto: BookingDto) {
+  return this.bookingService.createBooking(dto);
+}
+```
+
+---
+
+## 10. **Encapsulation**
+
+```ts
+class UserEntity {
+  private password: string;
+
+  setPassword(pw: string) {
+    this.password = hash(pw);
+  }
+
+  checkPassword(pw: string) {
+    return compareHash(pw, this.password);
+  }
+}
+```
+
+---
+
+## 11. **Composition Over Inheritance**
+
+```ts
+class EmailService { send(email: string) {} }
+class SMSService { send(sms: string) {} }
+
+class NotificationService {
+  constructor(private email: EmailService, private sms: SMSService) {}
+
+  notifyUser(user, message) {
+    this.email.send(message);
+    this.sms.send(message);
+  }
+}
+```
+
+---
+
+## 12. **Principle of Least Knowledge (Law of Demeter)**
+
+```ts
+// Controller calls Service, Service calls Repository
+// Controller never knows how repository works internally
+const user = await userService.getUser(id); // Controller only interacts with service
+```
+
+---
+
+## 13. **Fail Fast**
+
+```ts
+// DTO validation
+@Post()
+createUser(@Body() dto: CreateUserDto) {
+  // class-validator automatically throws error if data invalid
+}
+```
+
+---
+
+💡 **Summary Table (Practical Use)**
+
+| Principle       | Example Module                               |
+| --------------- | -------------------------------------------- |
+| SRP             | UserService / PaymentService                 |
+| OCP             | PaymentStrategy → new gateway addable        |
+| LSP             | PaymentStrategy replaceable                  |
+| ISP             | IReadable / IWritable                        |
+| DIP             | BookingService depends on abstraction        |
+| DRY             | AuthService validateToken used everywhere    |
+| KISS            | Strategy pattern for payments                |
+| YAGNI           | Start with simple roles                      |
+| SoC             | Controller / Service / Repository separation |
+| Encapsulation   | UserEntity password handling                 |
+| Composition     | NotificationService with Email/SMS           |
+| Least Knowledge | Controller → Service only                    |
+| Fail Fast       | DTO validation                               |
+
+---
+
